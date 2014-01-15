@@ -1,3 +1,45 @@
 [submodule "public/lib/famous"]
 	path = public/lib/famous
 	url = git@github.com:Famous/famous.git
+[submodule "public/lib/famous-modifiers"]
+	path = public/lib/famous-modifiers
+	url = git@github.com:Famous/famous-modifiers.git
+[submodule "public/lib/famous-physics"]
+	path = public/lib/famous-physics
+	url = git@github.com:Famous/famous-physics.git
+[submodule "public/lib/famous-sync"]
+	path = public/lib/famous-sync
+	url = git@github.com:Famous/famous-sync.git
+[submodule "public/lib/famous-utils"]
+	path = public/lib/famous-utils
+	url = git@github.com:Famous/utils.git
+[submodule "public/lib/famous-views"]
+	path = public/lib/famous-views
+	url = git@github.com:Famous/famous-views.git
+[submodule "public/lib/famous-widgets"]
+	path = public/lib/famous-widgets
+	url = git@github.com:Famous/famous-widgets.git
+[submodule "public/js/famous"]
+	path = public/js/famous
+	url = git@github.com:Famous/famous.git
+[submodule "public/js/famous-modifiers"]
+	path = public/js/famous-modifiers
+	url = git@github.com:Famous/famous-modifiers.git
+[submodule "famous-physics"]
+	path = famous-physics
+	url = git@github.com:Famous/famous-physics.git
+[submodule "public/js/famous-physics"]
+	path = public/js/famous-physics
+	url = git@github.com:Famous/famous-physics.git
+[submodule "public/js/famous-sync"]
+	path = public/js/famous-sync
+	url = git@github.com:Famous/famous-sync.git
+[submodule "public/js/famous-utils"]
+	path = public/js/famous-utils
+	url = git@github.com:Famous/utils.git
+[submodule "public/js/famous-views"]
+	path = public/js/famous-views
+	url = git@github.com:Famous/famous-views.git
+[submodule "public/js/famous-widgets"]
+	path = public/js/famous-widgets
+	url = git@github.com:Famous/famous-widgets.git
