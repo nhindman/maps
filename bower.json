@@ -1,0 +1,16 @@
+{
+  "name": "points-of-interest",
+  "version": "0.0.0",
+  "homepage": "https://github.com/FamousPrivateBeta/points-of-interest",
+  "authors": [
+    "Daniel Chao <daniel.h.chao@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
