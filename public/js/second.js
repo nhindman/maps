@@ -12,7 +12,7 @@ define(function(require, exports, module){
     section2.setOptions({
       title: 'second',
       navigation: {
-        caption: 'second', icon: '$'
+        caption: 'second', icon: 'YOLO'
       }
     });
     section2.link(surface2);
