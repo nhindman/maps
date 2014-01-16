@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var App = require('app/App');
 
 
+
   // create the App from the template
   var myApp = new App();
 
@@ -12,11 +13,12 @@ define(function(require, exports, module) {
   FamousEngine.pipe(myApp);
 
   // create the various sections
+  require('map')(myApp);
   require('first')(myApp);
   require('second')(myApp);
 
-  // start on the main section
-  myApp.select('main');
+  // start on the map section
+  myApp.select('map');
 
 
 });
