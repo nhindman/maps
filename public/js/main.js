@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var FamousEngine = require('famous/Engine');
   var App = require('app/App');
+  
 
 
   // create the App from the template
@@ -14,6 +15,7 @@ define(function(require, exports, module) {
   // create the various sections
   require('first')(myApp);
   require('second')(myApp);
+  require('map')(myApp);
 
   // start on the main section
   myApp.select('main');
