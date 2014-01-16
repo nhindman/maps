@@ -12,7 +12,6 @@ define(function(require, exports, module){
       navigation: {caption: 'Map', icon: '@'}
     });
     var mapSurface = new Surface({
-      properties: { 'padding': '20px' },
       content: '<div id="map-canvas" />'
     });
     mapSection.link(mapSurface);
