@@ -3,7 +3,8 @@ define(function(require, exports, module){
   var Timer = require('famous/Timer')
   var async = require('../lib/requirejs-plugins/src/async');
   require('../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
- 
+  var FamousEngine = require('famous/Engine');
+
   module.exports = function(myApp){
     var mapSection = myApp.section('map');
     mapSection.setOptions({
@@ -67,6 +68,6 @@ define(function(require, exports, module){
             });
         });
     };
-    Timer.setTimeout(initialize, 3000);
+    Timer.setTimeout(initialize, 1500);
   }
 });
