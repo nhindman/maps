@@ -2,21 +2,17 @@ define(function(require, exports, module) {
   var FamousEngine = require('famous/Engine');
   var App = require('app/App');
 
-
   // create the App from the template
-  var myApp = new App();
+  var app = new App();
 
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
-  mainDisplay.link(myApp);
-  FamousEngine.pipe(myApp);
+  mainDisplay.link(app);
+  FamousEngine.pipe(app);
 
   // create the various sections
-  require('first')(myApp);
-  require('second')(myApp);
+  require('app/views/map')(app, mainDisplay);
 
   // start on the main section
-  myApp.select('main');
-
-
+  app.select('map');
 });
