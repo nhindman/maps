@@ -4,7 +4,8 @@ define(function(require, exports, module){
     ScrollView     = require('famous-views/Scrollview'),
     Draggable      = require('famous-modifiers/Draggable'),
     PhysicsEngine  = require('famous-physics/PhysicsEngine');
-    PhysicsTracker = require('famous-physics/utils/PhysicsTracker');
+    PhysicsTracker = require('famous-physics/utils/PhysicsTracker'),
+    View           = require('famous/View');
 
   module.exports = function(myApp, mainDisplay){
 
@@ -24,29 +25,34 @@ define(function(require, exports, module){
       direction: 'x'
     });
 
+
+    var draggable, view;
+
     for(var i = 0; i < 10; i++){
 
       // create a new surface and push it into the array of surfaces
-      point = new Surface({
+      draggable       = new Draggable();
+      view            = new View();
+      cardSurface     = new Surface({
         size: [80, 80],
         properties: {
-          'background-color': 'steelblue',
-          'border-radius': '50%'
+          'background-color': 'steelblue'
         }
       });
-      pointsOfInterest.push(point);
 
-      // create a particle and bind it to the surface
-      var particle = PE.createBody({
-        shape: PE.BODIES.CIRCLE,
-        r: 40,
-        p: [0,0,0]
+      cardSurface.on('touchmove', function(event){
+        if(event.touches[0].clientY > 250){
+          cardSurface.unpipe(scrollView);
+        }
       });
-      particle.link(point);
 
-      // bind touch events to each surface
-      var physicsTracker = new PhysicsTracker(particle, {scale: 1});
-      point.pipe(physicsTracker);
+      cardSurface.pipe(draggable);
+      view._link(draggable).link(cardSurface);
+
+      pointsOfInterest.push(view);
+      cardSurface.pipe(scrollView);
+
+
     }
 
     scrollView.sequenceFrom(pointsOfInterest);
