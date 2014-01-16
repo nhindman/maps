@@ -1,3 +1,7 @@
+#map-canvas {
+    height: 100%;
+    width: 100%;
+}
 body {
     font-family: open_sansregular, sans-serif;
     color: #fff;
