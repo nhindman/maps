@@ -56,7 +56,7 @@ yelp.geo({ term: 'food', lat: 0, long: 0 }, function(error, data) {});
 Client.prototype.geo = function(params, callback) {
   // console.log(base_url + 'search' + '?' + 'll=' + params.lat + ',' + params.long);
   return this.oauth.get(
-    base_url + 'search' + '?' + 'll=' + params.lat + ',' + params.long + '&category_filter=' + params.filter, 
+    base_url + 'search' + '?' + 'll=' + params.lat + ',' + params.long + '&category_filter=' + params.filter + '&radius_filter=' + params.radius, 
     this.oauthToken, 
     this.oauthTokenSecret, 
     function(error, data, response) {

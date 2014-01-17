@@ -21,7 +21,8 @@ app.get('/yelp/geo', function(req, res) {
   var params = {
     lat: query.lat || 37.788022,
     long: query.long || -122.399797,
-    filter: query.filter || 'arts'
+    filter: query.filter || 'arts',
+    radius: query.radius || 3218
   }
 
   yelp.geo(params, function(error, data) {

@@ -10,7 +10,7 @@ define(function(require, exports, module){
 
   module.exports = function(mapSection){
 
-
+    var map;
     var mapSurface = new Surface({
       content: '<div id="map-canvas" />'
     });
@@ -26,19 +26,20 @@ define(function(require, exports, module){
         disableDoubleClickZoom: true
       };
 
-      var map = new google.maps.Map(document.getElementById('map-canvas'),
+      map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
-      var pos;
+      var currentPos;
       navigator.geolocation.getCurrentPosition(function(position) {
-        pos = new google.maps.LatLng(position.coords.latitude,
+        currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
-        map.setCenter(pos);
+        map.setCenter(currentPos);
 
         var marker = new google.maps.Marker({
-          position: pos,
+          position: currentPos,
           draggable: false,
-          title: "You are here!"
+          title: "You are here!",
+          animation: 'DROP'
         });
 
         marker.setMap(map);
@@ -53,19 +54,35 @@ define(function(require, exports, module){
         });
 
         google.maps.event.addListener(map, 'idle', function() {
-          
+          pingYelp(map.center.d, map.center.e);
         })
       });
     };
 
+    var pingYelp = function(lat, lng) {
+      console.log(lat);
+      console.log(lng);
+      $.ajax({
+        type: 'GET',
+        url: '/yelp/geo/',
+        data: {lat: lat, long: lng},
+        success: function(data) {
+          console.log(data);
+        },
+        error: function() {
+          console.log("Ajax post request error");
+        }
+      });
+    }
+
     var calcRoute = function() {
       var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
       navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = new google.maps.LatLng(position.coords.latitude,
+        var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
         var directionsService = new google.maps.DirectionsService();
         var request = {
-          origin: pos,
+          origin: currentPos,
           destination: newLocation,
           provideRouteAlternatives: false,
           travelMode: google.maps.TravelMode.WALKING
@@ -77,7 +94,7 @@ define(function(require, exports, module){
         });
       });
     };
-    Timer.setTimeout(initialize, 1500);
 
+    Timer.setTimeout(initialize, 1500);
   }
 });
