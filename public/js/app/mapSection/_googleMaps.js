@@ -19,11 +19,13 @@ define(function(require, exports, module){
     
     var initialize = function() {
       directionsDisplay = new google.maps.DirectionsRenderer();
+
       var mapOptions = {
         zoom: 14,
         disableDefaultUI: true,
         disableDoubleClickZoom: true
       };
+
       var map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
@@ -32,21 +34,27 @@ define(function(require, exports, module){
         pos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
         map.setCenter(pos);
+
         var marker = new google.maps.Marker({
           position: pos,
           draggable: false,
           title: "You are here!"
         });
-        marker.setMap(map);
-        var contentString = '<div id="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>'
 
+        marker.setMap(map);
+
+        var contentString = '<div id="content">Your current location</div>'
 
         var infowindow = new google.maps.InfoWindow({
           content: contentString
         });
         google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
+          infowindow.open(map, marker);
         });
+
+        google.maps.event.addListener(map, 'idle', function() {
+          
+        })
       });
     };
 
@@ -60,7 +68,7 @@ define(function(require, exports, module){
           origin: pos,
           destination: newLocation,
           provideRouteAlternatives: false,
-          travelMode: google.maps.TravelMode.DRIVING
+          travelMode: google.maps.TravelMode.WALKING
         }
         directionsService.route(request, function(result, status) {
           if (status == google.maps.DirectionsStatus.OK) {
