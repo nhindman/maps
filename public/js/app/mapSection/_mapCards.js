@@ -9,7 +9,7 @@ define(function(require, exports, module){
   // helper function to handle rotation and position
   var rotatePos = function(theta, x, y){
     return new Modifier({
-      transform: Matrix.rotateY(theta),
+      transform: Matrix.move(Matrix.rotateY(theta), [0, 0, 50]),
       origin: [x, y]
     });
   };
