@@ -5,7 +5,6 @@ define(function(require, exports, module) {
   // create the App from the template
   var app = new App();
 
-
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
   mainDisplay.setPerspective(500);
@@ -13,7 +12,7 @@ define(function(require, exports, module) {
   FamousEngine.pipe(app);
 
   // create the various sections
-  require('app/mapSection/main')(app);
+  require('app/mapSection/mapSection')(app);
 
   // start on the main section
   app.select('map');
