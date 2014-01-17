@@ -20,7 +20,9 @@ define(function(require, exports, module){
     var initialize = function() {
       directionsDisplay = new google.maps.DirectionsRenderer();
       var mapOptions = {
-        zoom: 14
+        zoom: 14,
+        disableDefaultUI: true,
+        disableDoubleClickZoom: true
       };
       var map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
