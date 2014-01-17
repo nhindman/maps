@@ -1,20 +1,15 @@
 define(function(require, exports, module){
   var
-  Surface          = require('famous/Surface'),
-  Matrix           = require('famous/Matrix'),
-  Modifier         = require('famous/Modifier'),
-  Timer            = require('famous/Timer'),
-  async            = require('../../../lib/requirejs-plugins/src/async');
+    Surface          = require('famous/Surface'),
+    Matrix           = require('famous/Matrix'),
+    Modifier         = require('famous/Modifier'),
+    Timer            = require('famous/Timer'),
+    async            = require('../../../lib/requirejs-plugins/src/async');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
-  module.exports = function(app){
+  module.exports = function(mapSection){
 
-    var mapSection = app.section('map');
-    mapSection.setOptions({
-      title: 'Map',
-      navigation: {caption: 'Map', icon: '@'}
-    });
 
     var mapSurface = new Surface({
       content: '<div id="map-canvas" />'
@@ -73,8 +68,6 @@ define(function(require, exports, module){
       });
     };
     Timer.setTimeout(initialize, 1500);
-
-    require('app/mapSection/map-cards')(mapSection);
 
   }
 });

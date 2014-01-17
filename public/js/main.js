@@ -13,7 +13,7 @@ define(function(require, exports, module) {
   FamousEngine.pipe(app);
 
   // create the various sections
-  require('app/mapSection/map')(app);
+  require('app/mapSection/main')(app);
 
   // start on the main section
   app.select('map');
