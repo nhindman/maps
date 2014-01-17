@@ -1,114 +1,114 @@
 define(function(require, exports, module) {
-    var View = require('famous/View');
-    var EventHandler = require('famous/EventHandler');
-    var OptionsManager = require('famous/OptionsManager');
-    var RenderNode = require('famous/RenderNode');
-    var Utility = require('famous/Utility');
+  var View = require('famous/View');
+  var EventHandler = require('famous/EventHandler');
+  var OptionsManager = require('famous/OptionsManager');
+  var RenderNode = require('famous/RenderNode');
+  var Utility = require('famous/Utility');
+  
+  var HeaderFooterLayout = require('famous-views/HeaderFooterLayout');
+  var EdgeSwapper = require('famous-views/EdgeSwapper');
+  
+  var NavigationBar = require('famous-widgets/NavigationBar');
+  var TitleBar = require('famous-widgets/TitleBar');
+
+  function App(options) {
+    // extend from view
+    View.apply(this, arguments);
+
+    // create the layout
+    this.layout = new HeaderFooterLayout();
+
+    // create the header
+    this.header = new TitleBar(this.options.header);
+
+    // create the navigation bar
+    this.navigation = new NavigationBar(this.options.navigation);
+
+    // create the content area
+    this.contentArea = new EdgeSwapper(this.options.content);
+
+    // link endpoints of layout to widgets
+    this.layout.id['header'].link(this.header);
+    this.layout.id['footer'].link(Utility.transformInFront).link(this.navigation);
+    this.layout.id['content'].link(Utility.transformBehind).link(this.contentArea);
     
-    var HeaderFooterLayout = require('famous-views/HeaderFooterLayout');
-    var EdgeSwapper = require('famous-views/EdgeSwapper');
-    
-    var NavigationBar = require('famous-widgets/NavigationBar');
-    var TitleBar = require('famous-widgets/TitleBar');
+    // assign received events to content area
+    this.eventInput.pipe(this.contentArea);
 
-    function App(options) {
-        // extend from view
-        View.apply(this, arguments);
+    // navigation events are app events
+    EventHandler.setOutputHandler(this, this.navigation);
 
-        // create the layout
-        this.layout = new HeaderFooterLayout();
+    // declare the render nodes
+    this._currentSection = undefined;
+    this._sections = {};
+    this._sectionTitles = {};
 
-        // create the header
-        this.header = new TitleBar(this.options.header);
+    // respond to the the selection of a different section
+    this.navigation.on('select', function(data) {
+      this._currentSection = data.id;
+      this.header.show(this._sectionTitles[data.id]);
+      this.contentArea.show(this._sections[data.id].get());
+    }.bind(this));
 
-        // create the navigation bar
-        this.navigation = new NavigationBar(this.options.navigation);
+    // assign the layout to this view
+    this._link(this.layout);
+  };
+  App.prototype = Object.create(View.prototype);
+  App.prototype.constructor = App;
 
-        // create the content area
-        this.contentArea = new EdgeSwapper(this.options.content);
+  App.DEFAULT_OPTIONS = {
+    header: {
+      size: [undefined, 50],
+      inTransition: true,
+      outTransition: true,
+      look: {
+        size: [undefined, 50],
+        classes: ['header']
+      }
+    },
+    navigation: {
+      size: [undefined, 50],
+      direction: Utility.Direction.X,
+      buttons: {
+        onClasses: ['navigation', 'on'],
+        offClasses: ['navigation', 'off'],
+        inTransition: true,
+        outTransition: true
+      }
+    },
+    content: {
+      inTransition: true,
+      outTransition: true,
+      overlap: true
+    }
+  };
 
-        // link endpoints of layout to widgets
-        this.layout.id['header'].link(this.header);
-        this.layout.id['footer'].link(Utility.transformInFront).link(this.navigation);
-        this.layout.id['content'].link(Utility.transformBehind).link(this.contentArea);
-        
-        // assign received events to content area
-        this.eventInput.pipe(this.contentArea);
+  App.prototype.getState = function() {
+    return this._currentSection;
+  };
 
-        // navigation events are app events
-        EventHandler.setOutputHandler(this, this.navigation);
+  App.prototype.section = function(id) {
+    // create the section if it doesn't exist
+    if(!(id in this._sections)) {
+      this._sections[id] = new RenderNode();
 
-        // declare the render nodes
-        this._currentSection = undefined;
-        this._sections = {};
-        this._sectionTitles = {};
+      // make it possible to set the section's properties
+      this._sections[id].setOptions = (function(options) {
+        this._sectionTitles[id] = options.title;
+        this.navigation.defineSection(id, {
+           content: '<span class="icon">' + options.navigation.icon + '</span><br />' + options.navigation.caption
+        });
+      }).bind(this);
+    }
+    return this._sections[id];
+  };
 
-        // respond to the the selection of a different section
-        this.navigation.on('select', function(data) {
-            this._currentSection = data.id;
-            this.header.show(this._sectionTitles[data.id]);
-            this.contentArea.show(this._sections[data.id].get());
-        }.bind(this));
+  App.prototype.select = function(id) {
+    this._currentSection = id;
+    if(!(id in this._sections)) return false;
+    this.navigation.select(id);
+    return true;
+  };
 
-        // assign the layout to this view
-        this._link(this.layout);
-    };
-    App.prototype = Object.create(View.prototype);
-    App.prototype.constructor = App;
-
-    App.DEFAULT_OPTIONS = {
-        header: {
-            size: [undefined, 50],
-            inTransition: true,
-            outTransition: true,
-            look: {
-                size: [undefined, 50],
-                classes: ['header']
-            }
-        },
-        navigation: {
-            size: [undefined, 50],
-            direction: Utility.Direction.X,
-            buttons: {
-                onClasses: ['navigation', 'on'],
-                offClasses: ['navigation', 'off'],
-                inTransition: true,
-                outTransition: true
-            }
-        },
-        content: {
-            inTransition: true,
-            outTransition: true,
-            overlap: true
-        }
-    };
-
-    App.prototype.getState = function() {
-        return this._currentSection;
-    };
-
-    App.prototype.section = function(id) {
-        // create the section if it doesn't exist
-        if(!(id in this._sections)) {
-            this._sections[id] = new RenderNode();
-
-            // make it possible to set the section's properties
-            this._sections[id].setOptions = (function(options) {
-                this._sectionTitles[id] = options.title;
-                this.navigation.defineSection(id, {
-                   content: '<span class="icon">' + options.navigation.icon + '</span><br />' + options.navigation.caption
-                });
-            }).bind(this);
-        }
-        return this._sections[id];
-    };
-
-    App.prototype.select = function(id) {
-        this._currentSection = id;
-        if(!(id in this._sections)) return false;
-        this.navigation.select(id);
-        return true;
-    };
-
-    module.exports = App;
+  module.exports = App;
 });
