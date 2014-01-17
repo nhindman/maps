@@ -35,6 +35,8 @@ define(function(require, exports, module){
                        position.coords.longitude);
         map.setCenter(currentPos);
 
+        console.log(currentPos);
+
         var marker = new google.maps.Marker({
           position: currentPos,
           draggable: false,
@@ -60,14 +62,22 @@ define(function(require, exports, module){
     };
 
     var pingYelp = function(lat, lng) {
-      console.log(lat);
-      console.log(lng);
       $.ajax({
         type: 'GET',
         url: '/yelp/geo/',
         data: {lat: lat, long: lng},
         success: function(data) {
           console.log(data);
+          for (var i = 0; i < data.length; i++) {
+            var placeLoc = new google.maps.LatLng(data[i].location.coordinate.latitude, data[i].location.coordinate.longitude);
+            var marker = new google.maps.Marker({
+              position: placeLoc,
+              draggable: false,
+              title: "You are here!",
+              animation: 'DROP'
+            });
+            marker.setMap(map);
+          }
         },
         error: function() {
           console.log("Ajax post request error");
