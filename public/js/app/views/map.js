@@ -1,61 +1,86 @@
 define(function(require, exports, module){
   var
-    Surface        = require('famous/Surface'),
-    ScrollView     = require('famous-views/Scrollview'),
-    Draggable      = require('famous-modifiers/Draggable'),
-    PhysicsEngine  = require('famous-physics/PhysicsEngine');
-    PhysicsTracker = require('famous-physics/utils/PhysicsTracker'),
-    View           = require('famous/View');
+    Surface          = require('famous/Surface'),
+    ScrollView       = require('famous-views/Scrollview'),
+    Draggable        = require('famous-modifiers/Draggable'),
+    PhysicsEngine    = require('famous-physics/PhysicsEngine'),
+    PhysicsTracker   = require('famous-physics/utils/PhysicsTracker'),
+    View             = require('famous/View'),
+    ContainerSurface = require('famous/ContainerSurface'),
+    Matrix           = require('famous/Matrix'),
+    Modifier         = require('famous/Modifier'),
+    Drag             = require('famous-physics/forces/Drag'),
+    RotationalDrag   = require('famous-physics/forces/RotationalDrag'),
+    Spring           = require('famous-physics/forces/Spring');
 
-  module.exports = function(myApp, mainDisplay){
+  module.exports = function(app, mainDisplay){
+
+    mainDisplay.setPerspective(500);
 
     var
       PE             = new PhysicsEngine(),
       physicsTracker = new PhysicsTracker();
 
-    var mySection = myApp.section('map');
-    mySection.setOptions({
+    var
+      cardSize   = [80, 120],
+      cardBottom = 0.95;
+
+    var mapSection = app.section('map');
+    mapSection.setOptions({
       title: 'Map',
       navigation: {caption: 'Map', icon: '@'}
     });
+    
 
-    var pointsOfInterest = [];
-    var scrollView = new ScrollView({
-      itemSpacing: 10,
-      direction: 'x'
+    var goldenGateSurface = new Surface({
+      size: cardSize,
+      properties: {
+        backgroundImage: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+      },
+      classes: ['card']
     });
 
+    var ATTSurface = new Surface({
+      size: cardSize,
+      properties: {
+        backgroundImage: 'url(http://www.pa-wireless.org/images/80_DSC02893.JPG)'
+      },
+      classes: ['card']
+    });
 
-    var draggable, view;
-
-    for(var i = 0; i < 10; i++){
-
-      // create a new surface and push it into the array of surfaces
-      draggable       = new Draggable();
-      view            = new View();
-      cardSurface     = new Surface({
-        size: [80, 80],
+    var rotateY = function(theta, x, y){
+      return new Modifier({
+        transform: Matrix.rotateY(theta),
+        origin: [x, y]
+      });
+    };
+    var cardSurface;
+    // create objects to the left of center
+    for(var i = 1; i < 11; i++){
+      cardSurface = new Surface({
+        size: cardSize,
         properties: {
-          'background-color': 'steelblue'
-        }
+          backgroundColor: 'steelblue'
+        },
+        classes: ['card']
       });
-
-      cardSurface.on('touchmove', function(event){
-        if(event.touches[0].clientY > 250){
-          cardSurface.unpipe(scrollView);
-        }
-      });
-
-      cardSurface.pipe(draggable);
-      view._link(draggable).link(cardSurface);
-
-      pointsOfInterest.push(view);
-      cardSurface.pipe(scrollView);
-
-
+      mapSection.add(rotateY(-1.3, 0.53 + (0.5/10)*i, cardBottom)).link(cardSurface);
     }
 
-    scrollView.sequenceFrom(pointsOfInterest);
-    mySection.add(scrollView);
+    // create objects to the right of center
+
+    for(var i = 1; i < 11; i++){
+      cardSurface = new Surface({
+        size: cardSize,
+        properties: {
+          backgroundColor: 'steelblue'
+        },
+        classes: ['card']
+      });
+      mapSection.add(rotateY(1.3, 0.47 - (0.5/10)*i, cardBottom)).link(cardSurface);
+    }
+
+    mapSection.add(new Modifier({origin: [0.5, cardBottom]})).link(goldenGateSurface);
+
   }
 });

@@ -75,3 +75,7 @@ body {
 .navigation.on .icon {
     color: hsl(207, 75%, 65%);
 }
+
+.card {
+    border: 10px solid white;
+}
