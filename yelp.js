@@ -33,7 +33,7 @@ Client.prototype.get = function(resource, params, callback) {
 }
 
 /*
-Exampe:
+Example:
 yelp.search({term: "food", location: "Montreal"}, function(error, data) {});
 */
 Client.prototype.search = function(params, callback) {
@@ -50,20 +50,20 @@ Client.prototype.business = function(id, callback) {
 
 
 /*
-Exampe:
-yelp.geo({ term: 'food', lat: 0, long: 0 }, function(error, data) {});
+Example:
+yelp.geo({ lat: 0, long: 0, filter : 'arts', radius : 1000 }, function(error, data) {});
 */
 Client.prototype.geo = function(params, callback) {
-  // console.log(base_url + 'search' + '?' + 'll=' + params.lat + ',' + params.long);
-  return this.oauth.get(
-    base_url + 'search' + '?' + 'll=' + params.lat + ',' + params.long + '&category_filter=' + params.filter, 
-    this.oauthToken, 
-    this.oauthTokenSecret, 
-    function(error, data, response) {
-      if(!error) data = JSON.parse(data);
-      callback(error, data, response);
-    }
-  );
+  // Set default values
+  var params = {
+    lat: params.lat || 37.788022,
+    long: params.long || -122.399797,
+    filter: params.filter || 'arts',
+    radius: params.radius || 3218,
+    ll: params.lat + ',' + params.long
+  }
+
+  return this.get('search', params, callback);
 }
 
 // @see http://www.yelp.com/developers/documentation/v2/authentication
