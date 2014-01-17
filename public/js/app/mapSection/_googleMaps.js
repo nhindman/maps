@@ -34,7 +34,7 @@ define(function(require, exports, module){
         map.setCenter(pos);
         var marker = new google.maps.Marker({
           position: pos,
-          draggable: true,
+          draggable: false,
           title: "You are here!"
         });
         marker.setMap(map);
