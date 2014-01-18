@@ -1,4 +1,54 @@
+// dummy data
+var data = [
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Golden Gate Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bay Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Steph Curry'
+  },
+  {
+    name: 'Klay Thompson'
+  }
+];
+
 define(function(require, exports, module){
+  var
+    Surface      = require('famous/Surface'),
+    Modifier     = require('famous/Modifier'),
+    Matrix       = require('famous/Matrix'),
+    ViewSequence = require('famous/ViewSequence');
 
   /////////////////
   //// OPTIONS ////
@@ -8,19 +58,14 @@ define(function(require, exports, module){
     cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1.3,         // rotational Y angle of skew
     cardOffset   = 0.15,        // offset between skewed cards and the front facing card
-    curve        = 'linear',
-    easeDuration = 250,
-    zPosFaceCard = 120,
-    yPosFaceCard = -15;
+    curve        = 'linear',    // transition curve type
+    easeDuration = 250,         // amount of time for cards to transition
+    zPosFaceCard = 120,         // z position offset for the face card
+    yPosFaceCard = -15;         // y position offset for the face card
 
-  // require modules
-  var
-    Surface      = require('famous/Surface'),
-    Modifier     = require('famous/Modifier'),
-    Matrix       = require('famous/Matrix'),
-    ViewSequence = require('famous/ViewSequence');
-
-  var currentFace = null;
+  //////////////////////////
+  //// HELPER FUNCTIONS ////
+  //////////////////////////
 
   // helper function to handle rotation and position
   var rotatePos = function(theta, x, y, yPos, zPos){
@@ -32,6 +77,7 @@ define(function(require, exports, module){
     });
   };
 
+  // helper function to rotate positions from surfaces plus offsets
   var transformCard = function(surface, Xoffset, direction){
     var
       theta,
@@ -61,58 +107,12 @@ define(function(require, exports, module){
       curve: curve
     });
   }
-  // helper function to rotate positions from surfaces plus offsets
-
-  var data = [
-    {
-      name: 'Splash'
-    },
-    {
-      name: 'Bros'
-    },
-    {
-      name: 'Splash'
-    },
-    {
-      name: 'Golden Gate Bridge',
-      image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-    },
-    {
-      name: 'Splash'
-    },
-    {
-      name: 'Bros'
-    },
-    {
-      name: 'Splash'
-    },
-    {
-      name: 'Bay Bridge',
-      image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-    },
-    {
-      name: 'Bros'
-    },
-    {
-      name: 'Splash'
-    },
-    {
-      name: 'Bros'
-    },
-    {
-      name: 'Steph Curry'
-    },
-    {
-      name: 'Klay Thompson'
-    }
-  ];
 
   module.exports = function(mapSection, Engine){
 
     // storage for our various surfaces and modifiers
     var
       cardSurfaces = [],
-      // modifiers = [],
       currentFace;
 
     // helper function to create cards and display them at proper skew
