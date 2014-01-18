@@ -68,7 +68,7 @@ define(function(require, exports, module){
       name: 'Splash'
     },
     {
-      name: 'Splash'
+      name: 'Bros'
     },
     {
       name: 'Splash'
@@ -81,7 +81,7 @@ define(function(require, exports, module){
       name: 'Splash'
     },
     {
-      name: 'Splash'
+      name: 'Bros'
     },
     {
       name: 'Splash'
@@ -91,7 +91,7 @@ define(function(require, exports, module){
       image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
     },
     {
-      name: 'Splash'
+      name: 'Bros'
     },
     {
       name: 'Splash'
@@ -176,7 +176,6 @@ define(function(require, exports, module){
     //////////////////////////////
 
     var setFace = function(faceIndex){
-
       var
         increment = 1 / (data.length - 1),
         Xoffset;
@@ -185,40 +184,16 @@ define(function(require, exports, module){
         if(index < faceIndex && cardSurface.angle !== "left"){
           Xoffset = (increment * index * (1 - cardOffset));
           transformCard(cardSurface, Xoffset, "left");
-          // cardSurface.modifier.setTransform(Matrix.move(Matrix.rotateY(rotateYAngle), [0,0,50]), {
-          //   duration: easeDuration,
-          //   curve: curve
-          // });
-          // cardSurface.modifier.setOrigin([Xoffset, cardBottom], {
-          //   duration: easeDuration,
-          //   curve: curve
-          // });
         }
 
         if(index === faceIndex && cardSurface.angle !== "center"){
           Xoffset = (increment * index);
           transformCard(cardSurface, Xoffset, "center");
-          // modifier.setTransform(Matrix.move(Matrix.rotateY(0), [0,0,80]), {
-          //   duration: easeDuration,
-          //   curve: curve
-          // });
-          // modifier.setOrigin([Xoffset, cardBottom], {
-          //   duration: easeDuration,
-          //   curve: curve
-          // };
         }
 
         if(index > faceIndex && cardSurface.angle !== "right"){
           Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
           transformCard(cardSurface, Xoffset, "right")
-          // modifier.setTransform(Matrix.move(Matrix.rotateY(-rotateYAngle), [0,0,50]), {
-          //   duration: easeDuration,
-          //   curve: curve
-          // });
-          // modifier.setOrigin([Xoffset, cardBottom], {
-          //   duration: easeDuration,
-          //   curve: curve
-          // });
         }
       })
       currentFace = faceIndex;
