@@ -16,9 +16,10 @@ app.get('/yelp/geo', function(req, res) {
   // Get the url query parameters
   var query = url.parse(req.url, true).query;
 
-  yelp.geo({ lat: query.lat, long: query.long || -122.399797 }, function(error, data) {
+  yelp.geo({ lat: query.lat, long: query.long }, function(error, data) {
     if(error) {
       console.log('Error:', error);
+      res.send('Error: ' + error.data);
     } else {
       res.send(data.businesses);
     }
