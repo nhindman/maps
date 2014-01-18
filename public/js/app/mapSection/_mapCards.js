@@ -81,6 +81,88 @@ var data = [
   },
   {
     name: 'Klay Thompson'
+  },
+    {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Golden Gate Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bay Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Steph Curry'
+  },
+  {
+    name: 'Klay Thompson'
+  },
+    {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Golden Gate Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bay Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Steph Curry'
+  },
+  {
+    name: 'Klay Thompson'
   }
 ];
 
@@ -159,7 +241,7 @@ define(function(require, exports, module){
       cardSurfaces = [],
       currentFace,
       scrollview = new Scrollview({
-        itemSpacing: -80
+        itemSpacing: -70
       }),
       renderNode;
 
