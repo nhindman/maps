@@ -81,99 +81,17 @@ var data = [
   },
   {
     name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
   }
 ];
 
 define(function(require, exports, module){
   var
-    Surface      = require('famous/Surface'),
+    Surface      = require('./customSurface'),
     Modifier     = require('famous/Modifier'),
     Matrix       = require('famous/Matrix'),
     ViewSequence = require('famous/ViewSequence'),
     Scrollview = require('./customScrollView'),
-    RenderNode = require('famous/RenderNode')
+    RenderNode = require('./customRenderNode')
 
   /////////////////
   //// OPTIONS ////
@@ -241,7 +159,7 @@ define(function(require, exports, module){
       cardSurfaces = [],
       currentFace,
       scrollview = new Scrollview({
-        itemSpacing: -70
+        itemSpacing: -50,
       }),
       renderNode;
 
@@ -277,31 +195,38 @@ define(function(require, exports, module){
         }
 
         if(i < faceIndex){
-          Xoffset = (increment * i * (1 - cardOffset));
+          // Xoffset = (increment * i * (1 - cardOffset));
+          Xoffset = 0;
           modifier = rotatePos(rotateYAngle, Xoffset, cardBottom);
           cardSurface.angle = 'left';
         }
 
         if(i === faceIndex){
-          Xoffset = (increment * i);
+          // Xoffset = (increment * i);
+          Xoffset = 0;
           modifier = rotatePos(0, Xoffset, cardBottom, yPosFaceCard, zPosFaceCard);
           cardSurface.angle = 'center';
         }
 
         if(i > faceIndex){
-          Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
+          Xoffset = 0;
+          // Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
           modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
           cardSurface.angle = 'right';
         }
-
         cardSurface.modifier = modifier;
-        rendernode = new RenderNode();
+        rendernode = new RenderNode({index: i});
+        cardSurface.pipe(rendernode);
+        rendernode.on('touchmove', function(event, node){
+          // console.log(node);
+          setFace(node.index);
+        });
         rendernode.add(modifier).link(cardSurface);
         // mapSection.add(modifier).link(cardSurface);
         cardSurfaces.push(rendernode);
       }
     };
-    createCards(5);
+    createCards(cardSurfaces.length/2);
     scrollview.sequenceFrom(cardSurfaces);
     Engine.pipe(scrollview);
     mapSection.add(new Modifier({origin: [0, .95]})).link(scrollview);
@@ -317,17 +242,20 @@ define(function(require, exports, module){
 
       cardSurfaces.forEach(function(cardSurface, index){
         if(index < faceIndex && rendernode.object[0].object.angle !== "left"){
-          Xoffset = (increment * index * (1 - cardOffset));
+          Xoffset = 0;
+          // Xoffset = (increment * index * (1 - cardOffset));
           transformCard(cardSurface, Xoffset, "left");
         }
 
         if(index === faceIndex && rendernode.object[0].object.angle !== "center"){
-          Xoffset = (increment * index);
+          Xoffset = 0;
+          // Xoffset = (increment * index);
           transformCard(cardSurface, Xoffset, "center");
         }
 
         if(index > faceIndex && rendernode.object[0].object.angle !== "right"){
-          Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
+          Xoffset = 0;
+          // Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
           transformCard(cardSurface, Xoffset, "right")
         }
       })
@@ -372,16 +300,23 @@ define(function(require, exports, module){
     //   setRightFace(viewSequence.getNext());
 
     // };
+    // scrollview.on('touchstart', function(){
+    //   console.log('click')
+    // })
+    // cardSurfaces[0].on('touchmove', function(event){
+    //   console.log(cardSurfaces[0]);
+    // });
 
-    Engine.on('touchmove', function(event){
-      var height = window.innerHeight * 0.95 - 120;
-      if(event.touches[0].pageY > height){
-        var increment = window.innerWidth / (data.length);
-        var cardIndex = Math.floor(event.touches[0].pageX/increment);
-        if(cardIndex !== currentFace){
-          setFace(cardIndex);
-        }
-      }
-    });
+    // Engine.on('touchmove', function(event){
+    //   var height = window.innerHeight * 0.95 - 120;
+    //   setFace(scrollview.getCurrentNode().index);
+    //   if(event.touches[0].pageY > height){
+    //     var increment = window.innerWidth / (data.length);
+    //     var cardIndex = Math.floor(event.touches[0].pageX/increment);
+    //     if(cardIndex !== currentFace){
+    //       // setFace(cardIndex);
+    //     }
+    //   }
+    // });
   };
 });

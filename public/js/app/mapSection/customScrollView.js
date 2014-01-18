@@ -114,7 +114,6 @@ define(function(require, exports, module) {
 
         this._offsets = {};
     }
-
     function _handleStart(event) {
         this.touchCount = event.count;
         if(event.count === undefined) this.touchCount = 1;
