@@ -40,6 +40,47 @@ var data = [
   },
   {
     name: 'Klay Thompson'
+  },
+    {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Golden Gate Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bay Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Steph Curry'
+  },
+  {
+    name: 'Klay Thompson'
   }
 ];
 
@@ -48,7 +89,9 @@ define(function(require, exports, module){
     Surface      = require('famous/Surface'),
     Modifier     = require('famous/Modifier'),
     Matrix       = require('famous/Matrix'),
-    ViewSequence = require('famous/ViewSequence');
+    ViewSequence = require('famous/ViewSequence'),
+    Scrollview = require('./customScrollView'),
+    RenderNode = require('famous/RenderNode')
 
   /////////////////
   //// OPTIONS ////
@@ -78,7 +121,7 @@ define(function(require, exports, module){
   };
 
   // helper function to rotate positions from surfaces plus offsets
-  var transformCard = function(surface, Xoffset, direction){
+  var transformCard = function(rendernode, Xoffset, direction){
     var
       theta,
       y = 0,
@@ -97,13 +140,13 @@ define(function(require, exports, module){
         theta = -rotateYAngle;
         break;
     }
-    surface.angle = direction;
-    surface.modifier.halt();
-    surface.modifier.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
+    rendernode.object[0].object.angle = direction;
+    rendernode.object[0].object.modifier.halt();
+    rendernode.object[0].object.modifier.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
       duration: easeDuration,
       curve: curve
     });
-    surface.modifier.setOrigin([Xoffset, cardBottom], {
+    rendernode.object[0].object.modifier.setOrigin([Xoffset, cardBottom], {
       duration: easeDuration,
       curve: curve
     });
@@ -114,7 +157,11 @@ define(function(require, exports, module){
     // storage for our various surfaces and modifiers
     var
       cardSurfaces = [],
-      currentFace;
+      currentFace,
+      scrollview = new Scrollview({
+        itemSpacing: -80
+      }),
+      renderNode;
 
     // helper function to create cards and display them at proper skew
     // "face" is the card that is not skewed
@@ -166,11 +213,16 @@ define(function(require, exports, module){
         }
 
         cardSurface.modifier = modifier;
-        mapSection.add(modifier).link(cardSurface);
-        cardSurfaces.push(cardSurface);
+        rendernode = new RenderNode();
+        rendernode.add(modifier).link(cardSurface);
+        // mapSection.add(modifier).link(cardSurface);
+        cardSurfaces.push(rendernode);
       }
     };
     createCards(5);
+    scrollview.sequenceFrom(cardSurfaces);
+    Engine.pipe(scrollview);
+    mapSection.add(new Modifier({origin: [0, .95]})).link(scrollview);
 
     //////////////////////////////
     //// ARRAY IMPLEMENTATION ////
@@ -182,17 +234,17 @@ define(function(require, exports, module){
         Xoffset;
 
       cardSurfaces.forEach(function(cardSurface, index){
-        if(index < faceIndex && cardSurface.angle !== "left"){
+        if(index < faceIndex && rendernode.object[0].object.angle !== "left"){
           Xoffset = (increment * index * (1 - cardOffset));
           transformCard(cardSurface, Xoffset, "left");
         }
 
-        if(index === faceIndex && cardSurface.angle !== "center"){
+        if(index === faceIndex && rendernode.object[0].object.angle !== "center"){
           Xoffset = (increment * index);
           transformCard(cardSurface, Xoffset, "center");
         }
 
-        if(index > faceIndex && cardSurface.angle !== "right"){
+        if(index > faceIndex && rendernode.object[0].object.angle !== "right"){
           Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
           transformCard(cardSurface, Xoffset, "right")
         }
