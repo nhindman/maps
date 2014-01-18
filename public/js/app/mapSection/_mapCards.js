@@ -55,13 +55,13 @@ define(function(require, exports, module){
   /////////////////
   var
     cardSize     = [80, 120],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
-    cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
+    cardBottom   = 1.05,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1.3,         // rotational Y angle of skew
     cardOffset   = 0.15,        // offset between skewed cards and the front facing card
-    curve        = 'linear',    // transition curve type
+    curve        = 'easeInOut',    // transition curve type
     easeDuration = 250,         // amount of time for cards to transition
     zPosFaceCard = 120,         // z position offset for the face card
-    yPosFaceCard = -15;         // y position offset for the face card
+    yPosFaceCard = -100;         // y position offset for the face card
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
@@ -98,6 +98,7 @@ define(function(require, exports, module){
         break;
     }
     surface.angle = direction;
+    surface.modifier.halt();
     surface.modifier.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
       duration: easeDuration,
       curve: curve
@@ -245,7 +246,6 @@ define(function(require, exports, module){
         var cardIndex = Math.floor(event.touches[0].pageX/increment);
         if(cardIndex !== currentFace){
           setFace(cardIndex);
-          console.log('set face on ' + cardIndex);
         }
       }
     });
