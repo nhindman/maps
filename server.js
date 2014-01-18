@@ -46,8 +46,11 @@ app.get('/points', function(req, res) {
       venue.state       = venues[i].venue.location.state;
       // venue.crossStreet = venues[i].venue.location.crossStreet;
 
-      var photo         = venues[i].venue.photos.groups[0].items[0];
-      venue.photo       = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
+      venue.photo       = null;
+      if(venues[i].venue.photos.groups[0]) {
+        var photo         = venues[i].venue.photos.groups[0].items[0];
+        venue.photo       = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
+      }
 
       results.push(venue);
     }
