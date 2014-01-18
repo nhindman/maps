@@ -1,45 +1,64 @@
-var config  = require('./config.js');
-var express = require('express');
-var url     = require('url');
-var yelp    = require('./yelp').createClient({
-  consumer_key: config.yelp.consumerKey, 
-  consumer_secret: config.yelp.consumerSecret,
-  token: config.yelp.token,
-  token_secret: config.yelp.tokenSecret
-});
+var config  = require('./config.js'),
+    express = require('express'),
+    url     = require('url'),
+    foursquare = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
 
-var app = express.createServer();
+var app = express();
 
-// Yelp API endpoints
-// FIXME: Not stuck on using 'yelp' in endpoint name
-app.get('/yelp/geo', function(req, res) {
+app.get('/points', function(req, res) {
 
-  // Get the url query parameters
   var query = url.parse(req.url, true).query;
 
-  // Provide default values
-  var params = {
-    lat: query.lat || 37.788022,
-    long: query.long || -122.399797,
-    filter: query.filter || 'arts',
-    radius: query.radius || 3218
-  }
+  var options = {
+    ll : query.lat + ',' + query.long,
+    radius: query.radius || 3218, 
+    venuePhotos: 1,
+    section: query.cat || 'sights', 
+    // section: 'topPicks',
+    limit: query.limit || 50
+  };
 
-  yelp.geo(params, function(error, data) {
-    if(error) {
-      console.log('Error:', error);
-    } else {
-      
-      // Loop through all listed businesses
-      // for(var i = 0; i < data.businesses.length; i++) {
-      //   console.log(data.businesses[i].name);
-      //   console.log(data.businesses[i].location);
-      // }
+  foursquare.venues.explore(options, function(responseCode, data) {
 
-      res.send(data.businesses);
+    if(responseCode !== 200) {
+      res.send('Error retrieving 4square results', data)
+      return;
     }
+    
+    var results = [];
+
+    if(!data.response.groups && data.response.groups.length < 1) {
+      console.log('Error, response data had no venues');
+      res.send(results);
+      return;
+    }
+
+    var venues = data.response.groups[0].items;
+
+    for(var i = 0; i < venues.length; i++) {
+      // console.log(venues[i].venue);
+      var venue         = {};
+      venue.name        = venues[i].venue.name;
+      venue.lat         = venues[i].venue.location.lat;
+      venue.long        = venues[i].venue.location.lng;
+      venue.address     = venues[i].venue.location.address;
+      venue.city        = venues[i].venue.location.city;
+      venue.state       = venues[i].venue.location.state;
+      // venue.crossStreet = venues[i].venue.location.crossStreet;
+
+      venue.photo       = null;
+      if(venues[i].venue.photos.groups[0]) {
+        var photo       = venues[i].venue.photos.groups[0].items[0];
+        venue.photo     = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
+      }
+
+      results.push(venue);
+    }
+
+    res.send(results);
+
   });
-  
+
 });
 
 // Serve every static file in public dir

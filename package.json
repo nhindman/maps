@@ -28,7 +28,8 @@
   "dependencies": {
     "express": "~3.4.8",
     "querystring": "~0.2.0",
-    "oauth": "~0.9.11"
+    "oauth": "~0.9.11",
+    "node-foursquare-venues": "~0.1.0"
   },
   "license": "MIT",
   "engines": {

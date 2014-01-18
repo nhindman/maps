@@ -56,15 +56,16 @@ define(function(require, exports, module){
         });
 
         google.maps.event.addListener(map, 'idle', function() {
-          pingYelp(map.center.d, map.center.e);
+          pingDataApi(map.center.d, map.center.e);
         })
       });
     };
 
-    var pingYelp = function(lat, lng) {
+    var pingDataApi = function(lat, lng) {
+      console.log('API is being pinged');
       $.ajax({
         type: 'GET',
-        url: '/yelp/geo/',
+        url: '/points/',
         data: {lat: lat, long: lng},
         success: function(data) {
           var markerArr = [];
@@ -72,14 +73,14 @@ define(function(require, exports, module){
           var iterator = 0;
 
           for (var i = 0; i < data.length; i++) {
-            placesArr.push(new google.maps.LatLng(data[i].location.coordinate.latitude, data[i].location.coordinate.longitude));
+            placesArr.push(new google.maps.LatLng(data[i].lat, data[i].long));
           }
 
-          var drop = function () {
+          var drop = function() {
             for (var i = 0; i < placesArr.length; i++) {
               setTimeout(function() {
                 addMarker();
-              }, i * 200);
+              }, i * 50);
             }
           }
 
@@ -88,7 +89,7 @@ define(function(require, exports, module){
               position: placesArr[iterator],
               map: map,
               draggable: false,
-              title: 'enter yelp title here',
+              title: 'enter data name here',
               animation: google.maps.Animation.DROP
             }));
             iterator++;
