@@ -1,30 +1,61 @@
 var config  = require('./config.js'),
     express = require('express'),
     url     = require('url'),
-    yelp    = require('./yelp').createClient({
-      consumer_key: config.yelp.consumerKey, 
-      consumer_secret: config.yelp.consumerSecret,
-      token: config.yelp.token,
-      token_secret: config.yelp.tokenSecret
-    });
+    foursquare = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
 
-var app = express.createServer();
+var app = express();
 
-// Yelp API endpoints
-app.get('/yelp/geo', function(req, res) {
+app.get('/points', function(req, res) {
 
-  // Get the url query parameters
   var query = url.parse(req.url, true).query;
 
-  yelp.geo({ lat: query.lat, long: query.long }, function(error, data) {
-    if(error) {
-      console.log('Error:', error);
-      res.send('Error: ' + error.data);
-    } else {
-      res.send(data.businesses);
+  var options = {
+    ll : query.lat + ',' + query.long,
+    radius: query.radius || 3218, 
+    venuePhotos: 1,
+    section: query.cat || 'sights', 
+    // section: 'topPicks',
+    limit: query.limit || 50
+  };
+
+  foursquare.venues.explore(options, function(responseCode, data) {
+
+    if(responseCode !== 200) {
+      res.send('Error retrieving 4square results', data)
+      return;
     }
+    
+    var results = [];
+
+    if(!data.response.groups && data.response.groups.length < 1) {
+      console.log('Error, response data had no venues');
+      res.send(results);
+      return;
+    }
+
+    var venues = data.response.groups[0].items;
+
+    for(var i = 0; i < venues.length; i++) {
+      // console.log(venues[i].venue);
+      var venue         = {};
+      venue.name        = venues[i].venue.name;
+      venue.lat         = venues[i].venue.location.lat;
+      venue.long        = venues[i].venue.location.lng;
+      venue.address     = venues[i].venue.location.address;
+      venue.city        = venues[i].venue.location.city;
+      venue.state       = venues[i].venue.location.state;
+      // venue.crossStreet = venues[i].venue.location.crossStreet;
+
+      var photo         = venues[i].venue.photos.groups[0].items[0];
+      venue.photo       = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
+
+      results.push(venue);
+    }
+
+    res.send(results);
+
   });
-  
+
 });
 
 // Serve every static file in public dir
