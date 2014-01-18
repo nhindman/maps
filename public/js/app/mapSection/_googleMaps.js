@@ -67,17 +67,34 @@ define(function(require, exports, module){
         url: '/yelp/geo/',
         data: {lat: lat, long: lng},
         success: function(data) {
-          console.log(data);
+          var markerArr = [];
+          var placesArr = [];
+          var iterator = 0;
+
           for (var i = 0; i < data.length; i++) {
-            var placeLoc = new google.maps.LatLng(data[i].location.coordinate.latitude, data[i].location.coordinate.longitude);
-            var marker = new google.maps.Marker({
-              position: placeLoc,
-              draggable: false,
-              title: "You are here!",
-              animation: 'DROP'
-            });
-            marker.setMap(map);
+            placesArr.push(new google.maps.LatLng(data[i].location.coordinate.latitude, data[i].location.coordinate.longitude));
           }
+
+          var drop = function () {
+            for (var i = 0; i < placesArr.length; i++) {
+              setTimeout(function() {
+                addMarker();
+              }, i * 200);
+            }
+          }
+
+          var addMarker = function() {
+            markerArr.push(new google.maps.Marker({
+              position: placesArr[iterator],
+              map: map,
+              draggable: false,
+              title: 'enter yelp title here',
+              animation: google.maps.Animation.DROP
+            }));
+            iterator++;
+          }
+
+          drop();
         },
         error: function() {
           console.log("Ajax post request error");
