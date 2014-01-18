@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
-  mainDisplay.setPerspective(800);
+  mainDisplay.setPerspective(2000);
   mainDisplay.link(app);
   FamousEngine.pipe(app);
 

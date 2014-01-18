@@ -55,13 +55,13 @@ define(function(require, exports, module){
   /////////////////
   var
     cardSize     = [80, 120],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
-    cardBottom   = 1.05,        // absolute percentage between the bottom of the cards and the bottom of the page
+    cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1.3,         // rotational Y angle of skew
-    cardOffset   = 0.15,        // offset between skewed cards and the front facing card
+    cardOffset   = 0.25,        // offset between skewed cards and the front facing card
     curve        = 'easeInOut',    // transition curve type
     easeDuration = 250,         // amount of time for cards to transition
     zPosFaceCard = 120,         // z position offset for the face card
-    yPosFaceCard = -100;         // y position offset for the face card
+    yPosFaceCard = -25;         // y position offset for the face card
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
