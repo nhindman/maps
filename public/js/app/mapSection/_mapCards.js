@@ -8,8 +8,10 @@ define(function(require, exports, module){
     cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1.3,         // rotational Y angle of skew
     cardOffset   = 0.15,        // offset between skewed cards and the front facing card
-    curve        = 'easeInOut',
-    easeDuration = 250;
+    curve        = 'linear',
+    easeDuration = 250,
+    zPosFaceCard = 120,
+    yPosFaceCard = -15;
 
   // require modules
   var
@@ -21,29 +23,36 @@ define(function(require, exports, module){
   var currentFace = null;
 
   // helper function to handle rotation and position
-  var rotatePos = function(theta, x, y, z){
-    z = z || 50;
+  var rotatePos = function(theta, x, y, yPos, zPos){
+    yPos = yPos || 0;
+    zPos = zPos || 50;
     return new Modifier({
-      transform: Matrix.move(Matrix.rotateY(theta), [0, 0, z]),
+      transform: Matrix.move(Matrix.rotateY(theta), [0, yPos, zPos]),
       origin: [x, y]
     });
   };
 
   var transformCard = function(surface, Xoffset, direction){
-    var theta;
+    var
+      theta,
+      y = 0,
+      z = 50;
+
     switch(direction){
       case "left":
         theta = rotateYAngle;
         break;
       case "center":
         theta = 0;
+        y = yPosFaceCard;
+        z = zPosFaceCard;
         break;
       case "right":
         theta = -rotateYAngle;
         break;
     }
     surface.angle = direction;
-    surface.modifier.setTransform(Matrix.move(Matrix.rotateY(theta), [0,0,80]), {
+    surface.modifier.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
       duration: easeDuration,
       curve: curve
     });
@@ -145,7 +154,7 @@ define(function(require, exports, module){
 
         if(i === faceIndex){
           Xoffset = (increment * i);
-          modifier = rotatePos(0, Xoffset, cardBottom, 80);
+          modifier = rotatePos(0, Xoffset, cardBottom, yPosFaceCard, zPosFaceCard);
           cardSurface.angle = 'center';
         }
 
