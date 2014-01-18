@@ -1,7 +1,7 @@
-var config  = require('./config.js'),
-    express = require('express'),
-    url     = require('url'),
-    foursquare = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
+var config      = require('./config.js'),
+    express     = require('express'),
+    url         = require('url'),
+    foursquare  = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
 
 var app = express();
 
