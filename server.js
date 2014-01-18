@@ -36,8 +36,9 @@ app.get('/points', function(req, res) {
     var venues = data.response.groups[0].items;
 
     for(var i = 0; i < venues.length; i++) {
-      // console.log(venues[i].venue);
+      // console.log(venues[i]);
       var venue         = {};
+      venue.id          = venues[i].venue.id;
       venue.name        = venues[i].venue.name;
       venue.lat         = venues[i].venue.location.lat;
       venue.long        = venues[i].venue.location.lng;
