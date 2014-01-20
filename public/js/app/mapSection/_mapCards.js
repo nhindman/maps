@@ -184,9 +184,10 @@ define(function(require, exports, module){
     rotateYAngle = 1,         // rotational Y angle of skew
     cardOffset   = 0.25,        // offset between skewed cards and the front facing card
     curve        = 'easeInOut',    // transition curve type
-    easeDuration = 100,         // amount of time for cards to transition
+    easeDuration = 150,         // amount of time for cards to transition
     zPosFaceCard = 120,         // z position offset for the face card
-    yPosFaceCard = -25;         // y position offset for the face card
+    yPosFaceCard = -25,         // y position offset for the face card
+    cardSpacing  = -50;
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
@@ -241,15 +242,20 @@ define(function(require, exports, module){
   module.exports = function(mapSection, Engine){
 
     // storage for our various surfaces and modifiers
+    var centerIndex = Math.floor((window.innerWidth / Math.abs(cardSpacing)) / 2)
+
     var
       cardSurfaces = [],
       currentFace,
       scrollview = new Scrollview({
-        itemSpacing: -50,
+        itemSpacing: cardSpacing
+        // clipSize: window.innerWidth/2*1.2,
+        // edgePeriod: 150
       }, function(pos){
-        setFace(scrollview.getCurrentNode().get().index + 4);
+        setFace(scrollview.getCurrentNode().get().index + centerIndex);
       }),
       renderNode;
+
 
     // helper function to create cards and display them at proper skew
     // "face" is the card that is not skewed
@@ -259,6 +265,8 @@ define(function(require, exports, module){
       var increment = 1 / (data.length - 1);
 
       var i, cardSurface, Xoffset, modifier;
+
+      Xoffset = window.innerWidth/2;
 
       for(i = 0; i < data.length; i++){
 
@@ -308,9 +316,6 @@ define(function(require, exports, module){
         }
         cardSurface.modifier = modifier;
         cardSurface.pipe(rendernode);
-        scrollview.on('moving', function(){
-          setFace(scrollview.getCurrentNode().get().index + 4);
-        });
         // rendernode.on('touchmove', function(event, node){
         //   setFace(scrollview.getCurrentNode().get().index + 4);
         // });
@@ -334,10 +339,10 @@ define(function(require, exports, module){
         cardSurfaces.push(rendernode);
       }
     };
-    createCards(cardSurfaces.length/2);
+    createCards(centerIndex);
     scrollview.sequenceFrom(cardSurfaces);
     Engine.pipe(scrollview);
-    mapSection.add(new Modifier({origin: [0, .95]})).link(scrollview);
+    mapSection.add(scrollview);
 
     //////////////////////////////
     //// ARRAY IMPLEMENTATION ////
@@ -385,6 +390,6 @@ define(function(require, exports, module){
     //     }
     //   }
     // });
-  setFace(4)
+  // setFace(centerIndex)
   };
 });

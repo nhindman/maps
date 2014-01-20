@@ -82,7 +82,6 @@ define(function(require, exports, module) {
         this.drag = new Drag();
 
         this.sync = new GenericSync((function() {
-            console.log(this.getPosition());
             return -this.getPosition();
         }).bind(this), {direction: (this.options.direction == Utility.Direction.X) ? GenericSync.DIRECTION_X : GenericSync.DIRECTION_Y});
         
