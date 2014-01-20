@@ -73,7 +73,13 @@ define(function(require, exports, module){
         success: function(data) {
           var markerArr = [];
           var placesArr = [];
+          var onloadDataArr = [];
           var iterator = 0;
+
+          for (var i = 0; i < data.length; i++) {
+            var marker = new google.maps.LatLng(data[i].lat, data[i].long);
+            onloadDataArr.push(marker);
+          }
 
           if (firstLoad) {
             firstLoad = false;
@@ -100,8 +106,8 @@ define(function(require, exports, module){
             }
           }
 
-          var drop = function(newData) {
-            setTimeout(function(newerData) {
+          var drop = function() {
+            setTimeout(function() {
               addMarker();
             }, i * 50);
           }
