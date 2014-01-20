@@ -224,7 +224,6 @@ define(function(require, exports, module){
         break;
     }
     rendernode.angle = direction;
-    // rendernode.object[0].object.modifier.halt();
     var mod = rendernode.object[0].modifiers[0];
     if (mod) {
       mod.halt();
@@ -304,7 +303,6 @@ define(function(require, exports, module){
           Xoffset = 0;
           modifier = rotatePos(0, Xoffset, cardBottom, yPosFaceCard, zPosFaceCard);
           rendernode.angle = 'center';
-          // cardSurface.angle = 'center';
         }
 
         if(i > faceIndex){
@@ -312,30 +310,11 @@ define(function(require, exports, module){
           // Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
           modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
           rendernode.angle = 'right';
-          // cardSurface.angle = 'right';
         }
         cardSurface.modifier = modifier;
         cardSurface.pipe(rendernode);
-        // rendernode.on('touchmove', function(event, node){
-        //   setFace(scrollview.getCurrentNode().get().index + 4);
-        // });
-        // rendernode.on('touchstart', function(event, node){
-        //   setFace(scrollview.getCurrentNode().get().index + 4);
-        //   console.log(node);
-        //   // setFace(node.index);
-        // });
-        // rendernode.on('touchend', function(event, node){
-        //   setFace(scrollview.getCurrentNode().get().index + 4);
-        //   console.log(node);
-        //   // setFace(node.index);
-        // });
-        // rendernode.on('move', function(event, node){
-        //   setFace(scrollview.getCurrentNode().get().index + 4);
-        //   console.log(node);
-        //   // setFace(node.index);
-        // });
+
         rendernode.add(modifier).link(cardSurface);
-        // mapSection.add(modifier).link(cardSurface);
         cardSurfaces.push(rendernode);
       }
     };
@@ -377,19 +356,5 @@ define(function(require, exports, module){
       })
       currentFace = faceIndex;
     };
-
-
-    // Engine.on('touchmove', function(event){
-    //   var height = window.innerHeight * 0.95 - 120;
-    //   setFace(scrollview.getCurrentNode().index);
-    //   if(event.touches[0].pageY > height){
-    //     var increment = window.innerWidth / (data.length);
-    //     var cardIndex = Math.floor(event.touches[0].pageX/increment);
-    //     if(cardIndex !== currentFace){
-    //       // setFace(cardIndex);
-    //     }
-    //   }
-    // });
-  // setFace(centerIndex)
   };
 });
