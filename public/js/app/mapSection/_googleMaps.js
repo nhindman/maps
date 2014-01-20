@@ -10,6 +10,9 @@ define(function(require, exports, module){
 
   module.exports = function(mapSection){
 
+    var firstLoad = true;
+    var currentMarkers = [];
+
     var map;
     var mapSurface = new Surface({
       content: '<div id="map-canvas" />'
@@ -21,7 +24,7 @@ define(function(require, exports, module){
       directionsDisplay = new google.maps.DirectionsRenderer();
 
       var mapOptions = {
-        zoom: 14,
+        zoom: 15,
         disableDefaultUI: true,
         disableDoubleClickZoom: true
       };
@@ -72,16 +75,35 @@ define(function(require, exports, module){
           var placesArr = [];
           var iterator = 0;
 
-          for (var i = 0; i < data.length; i++) {
-            placesArr.push(new google.maps.LatLng(data[i].lat, data[i].long));
+          if (firstLoad) {
+            firstLoad = false;
+            for (var i = 0; i < data.length; i++) {
+              var marker = new google.maps.LatLng(data[i].lat, data[i].long);
+              placesArr.push(marker);
+              currentMarkers.push([data[i].id, marker]);
+            }
           }
 
-          var drop = function() {
-            for (var i = 0; i < placesArr.length; i++) {
-              setTimeout(function() {
-                addMarker();
-              }, i * 50);
+          for (var i = 0; i < data.length; i++) {
+            var status = true;
+
+            for (var j = 0; j < currentMarkers.length; j++) {
+              if (currentMarkers[j][0] === data[i].id) {
+                status = false;
+              }
             }
+
+            if (status) {
+              var marker = new google.maps.LatLng(data[i].lat, data[i].long);
+              placesArr.push(marker);
+              currentMarkers.push([data[i].id, marker]);              
+            }
+          }
+
+          var drop = function(newData) {
+            setTimeout(function(newerData) {
+              addMarker();
+            }, i * 50);
           }
 
           var addMarker = function() {
@@ -95,7 +117,9 @@ define(function(require, exports, module){
             iterator++;
           }
 
-          drop();
+          for (var i = 0; i < placesArr.length; i++) {
+            drop(data);
+          }
         },
         error: function() {
           console.log("Ajax post request error");
