@@ -185,8 +185,8 @@ define(function(require, exports, module){
     cardOffset   = 0.25,        // offset between skewed cards and the front facing card
     curve        = 'easeInOut',    // transition curve type
     easeDuration = 150,         // amount of time for cards to transition
-    zPosFaceCard = 120,         // z position offset for the face card
-    yPosFaceCard = -25,         // y position offset for the face card
+    zPosFaceCard = 400,         // z position offset for the face card
+    yPosFaceCard = -40,         // y position offset for the face card
     cardSpacing  = -50;
 
   //////////////////////////
@@ -231,10 +231,10 @@ define(function(require, exports, module){
         duration: easeDuration,
         curve: curve
       });
-      mod.setOrigin([Xoffset, cardBottom], {
-        duration: easeDuration,
-        curve: curve
-      });
+      // mod.setOrigin([Xoffset, cardBottom], {
+      //   duration: easeDuration,
+      //   curve: curve
+      // });
     }
   }
 
@@ -247,11 +247,13 @@ define(function(require, exports, module){
       cardSurfaces = [],
       currentFace,
       scrollview = new Scrollview({
-        itemSpacing: cardSpacing
-        // clipSize: window.innerWidth/2*1.2,
+        itemSpacing: cardSpacing,
+        clipSize: window.innerWidth/5,
+        speedLimit: 1.3
         // edgePeriod: 150
       }, function(pos){
-        setFace(scrollview.getCurrentNode().get().index + centerIndex);
+        var faceIndex = Math.min(data.length - 1, scrollview.getCurrentNode().get().index)
+        setFace(faceIndex);
       }),
       renderNode;
 
@@ -293,7 +295,10 @@ define(function(require, exports, module){
         if(i < faceIndex){
           // Xoffset = (increment * i * (1 - cardOffset));
           Xoffset = 0;
-          modifier = rotatePos(rotateYAngle, Xoffset, cardBottom);
+          // modifier = rotatePos(rotateYAngle, Xoffset, cardBottom);
+          modifier = new Modifier({
+            transform: Matrix.rotateY(rotateYAngle)
+          });
           // cardSurface.angle = 'left';
           rendernode.angle = 'left';
         }
@@ -301,14 +306,19 @@ define(function(require, exports, module){
         if(i === faceIndex){
           // Xoffset = (increment * i);
           Xoffset = 0;
-          modifier = rotatePos(0, Xoffset, cardBottom, yPosFaceCard, zPosFaceCard);
+          modifier = new Modifier({
+            transform: Matrix.move(Matrix.rotateY(0), [0,yPosFaceCard,zPosFaceCard])
+          });
           rendernode.angle = 'center';
         }
 
         if(i > faceIndex){
           Xoffset = 0;
           // Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
-          modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
+          // modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
+          modifier = new Modifier({
+            transform: Matrix.rotateY(-rotateYAngle)
+          })
           rendernode.angle = 'right';
         }
         cardSurface.modifier = modifier;
@@ -318,10 +328,14 @@ define(function(require, exports, module){
         cardSurfaces.push(rendernode);
       }
     };
-    createCards(centerIndex);
+    createCards(0);
     scrollview.sequenceFrom(cardSurfaces);
     Engine.pipe(scrollview);
-    mapSection.add(scrollview);
+    mapSection
+    .add(new Modifier({
+      transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.7, 0)
+    }))
+    .link(scrollview);
 
     //////////////////////////////
     //// ARRAY IMPLEMENTATION ////
