@@ -246,6 +246,8 @@ define(function(require, exports, module){
       currentFace,
       scrollview = new Scrollview({
         itemSpacing: -50,
+      }, function(pos){
+        setFace(scrollview.getCurrentNode().get().index + 4);
       }),
       renderNode;
 
@@ -306,7 +308,7 @@ define(function(require, exports, module){
         }
         cardSurface.modifier = modifier;
         cardSurface.pipe(rendernode);
-        scrollview.on('update', function(){
+        scrollview.on('moving', function(){
           setFace(scrollview.getCurrentNode().get().index + 4);
         });
         // rendernode.on('touchmove', function(event, node){
@@ -342,6 +344,9 @@ define(function(require, exports, module){
     //////////////////////////////
 
     var setFace = function(faceIndex){
+      if(currentFace === faceIndex){
+        return;
+      }
       var
         increment = 1 / (data.length - 1),
         Xoffset;
@@ -368,50 +373,6 @@ define(function(require, exports, module){
       currentFace = faceIndex;
     };
 
-
-    ////////////////////////////////////
-    //// LINKED LIST IMPLEMENTATION ////
-    ////////////////////////////////////
-
-    // var increment = 1 / (data.length - 1);
-
-
-    // var setFace = function(index){
-
-    //   // set center
-    //   var viewSequence = new ViewSequence(cardSurfaces, index, false);
-    //   var Xoffset = increment * viewSequence.index;
-    //   transformCard(viewSequence.get(), Xoffset, 'center');
-
-    //   // recursively set left angles
-    //   function setLeftFace(view){
-    //     if(view.get().angle === 'left' || !view.getPrevious()){
-    //       return;
-    //     }
-    //     Xoffset = (increment * view.index * (1 - cardOffset));
-    //     transformCard(view.get(), Xoffset, 'left');
-    //     setLeftFace(view.getPrevious());
-    //   }
-    //   setLeftFace(viewSequence.getPrevious());
-
-    //   // recursively set right angles
-    //   function setRightFace(view){
-    //     if(view.get().angle === 'right' || !view.getNext()){
-    //       return;
-    //     }
-    //     Xoffset = (increment * view.index) * (1 - cardOffset) + cardOffset;
-    //     transformCard(view.get(), Xoffset, 'right');
-    //     setRightFace(view.getNext());
-    //   }
-    //   setRightFace(viewSequence.getNext());
-
-    // };
-    // scrollview.on('touchstart', function(){
-    //   console.log('click')
-    // })
-    // cardSurfaces[0].on('touchmove', function(event){
-    //   console.log(cardSurfaces[0]);
-    // });
 
     // Engine.on('touchmove', function(event){
     //   var height = window.innerHeight * 0.95 - 120;

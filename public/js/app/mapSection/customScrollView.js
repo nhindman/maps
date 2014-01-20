@@ -48,7 +48,13 @@ define(function(require, exports, module) {
      *     Context.link(scrollview);
      * });
      */
-    function Scrollview(options) {
+    function Scrollview(options, movingCallback) {
+
+        if(movingCallback){
+            this.movingCallback = function(pos){
+                movingCallback(pos);
+            };
+        }
         this.options = {
             direction: Utility.Direction.X,
             rails: true,
@@ -293,7 +299,11 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.setPosition = function(pos) {
+        // this.sync.emit('moving', pos)
         this.particle.setPos([pos, 0, 0]);
+        if(this.movingCallback){
+            this.movingCallback(pos);
+        }
     }
 
     Scrollview.prototype.getVelocity = function() {
