@@ -81,6 +81,88 @@ var data = [
   },
   {
     name: 'Klay Thompson'
+  },
+    {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Golden Gate Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bay Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Steph Curry'
+  },
+  {
+    name: 'Klay Thompson'
+  },
+    {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Golden Gate Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bay Bridge',
+    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Splash'
+  },
+  {
+    name: 'Bros'
+  },
+  {
+    name: 'Steph Curry'
+  },
+  {
+    name: 'Klay Thompson'
   }
 ];
 
@@ -99,10 +181,10 @@ define(function(require, exports, module){
   var
     cardSize     = [80, 120],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
     cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
-    rotateYAngle = 1.3,         // rotational Y angle of skew
+    rotateYAngle = 1,         // rotational Y angle of skew
     cardOffset   = 0.25,        // offset between skewed cards and the front facing card
     curve        = 'easeInOut',    // transition curve type
-    easeDuration = 250,         // amount of time for cards to transition
+    easeDuration = 100,         // amount of time for cards to transition
     zPosFaceCard = 120,         // z position offset for the face card
     yPosFaceCard = -25;         // y position offset for the face card
 
@@ -140,16 +222,20 @@ define(function(require, exports, module){
         theta = -rotateYAngle;
         break;
     }
-    rendernode.object[0].object.angle = direction;
-    rendernode.object[0].object.modifier.halt();
-    rendernode.object[0].object.modifier.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
-      duration: easeDuration,
-      curve: curve
-    });
-    rendernode.object[0].object.modifier.setOrigin([Xoffset, cardBottom], {
-      duration: easeDuration,
-      curve: curve
-    });
+    rendernode.angle = direction;
+    // rendernode.object[0].object.modifier.halt();
+    var mod = rendernode.object[0].modifiers[0];
+    if (mod) {
+      mod.halt();
+      mod.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
+        duration: easeDuration,
+        curve: curve
+      });
+      mod.setOrigin([Xoffset, cardBottom], {
+        duration: easeDuration,
+        curve: curve
+      });
+    }
   }
 
   module.exports = function(mapSection, Engine){
@@ -194,33 +280,53 @@ define(function(require, exports, module){
           });
         }
 
+        rendernode = new RenderNode({index: i});
         if(i < faceIndex){
           // Xoffset = (increment * i * (1 - cardOffset));
           Xoffset = 0;
           modifier = rotatePos(rotateYAngle, Xoffset, cardBottom);
-          cardSurface.angle = 'left';
+          // cardSurface.angle = 'left';
+          rendernode.angle = 'left';
         }
 
         if(i === faceIndex){
           // Xoffset = (increment * i);
           Xoffset = 0;
           modifier = rotatePos(0, Xoffset, cardBottom, yPosFaceCard, zPosFaceCard);
-          cardSurface.angle = 'center';
+          rendernode.angle = 'center';
+          // cardSurface.angle = 'center';
         }
 
         if(i > faceIndex){
           Xoffset = 0;
           // Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
           modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
-          cardSurface.angle = 'right';
+          rendernode.angle = 'right';
+          // cardSurface.angle = 'right';
         }
         cardSurface.modifier = modifier;
-        rendernode = new RenderNode({index: i});
         cardSurface.pipe(rendernode);
-        rendernode.on('touchmove', function(event, node){
-          // console.log(node);
-          setFace(node.index);
+        scrollview.on('update', function(){
+          setFace(scrollview.getCurrentNode().get().index + 4);
         });
+        // rendernode.on('touchmove', function(event, node){
+        //   setFace(scrollview.getCurrentNode().get().index + 4);
+        // });
+        // rendernode.on('touchstart', function(event, node){
+        //   setFace(scrollview.getCurrentNode().get().index + 4);
+        //   console.log(node);
+        //   // setFace(node.index);
+        // });
+        // rendernode.on('touchend', function(event, node){
+        //   setFace(scrollview.getCurrentNode().get().index + 4);
+        //   console.log(node);
+        //   // setFace(node.index);
+        // });
+        // rendernode.on('move', function(event, node){
+        //   setFace(scrollview.getCurrentNode().get().index + 4);
+        //   console.log(node);
+        //   // setFace(node.index);
+        // });
         rendernode.add(modifier).link(cardSurface);
         // mapSection.add(modifier).link(cardSurface);
         cardSurfaces.push(rendernode);
@@ -240,23 +346,23 @@ define(function(require, exports, module){
         increment = 1 / (data.length - 1),
         Xoffset;
 
-      cardSurfaces.forEach(function(cardSurface, index){
-        if(index < faceIndex && rendernode.object[0].object.angle !== "left"){
+      cardSurfaces.forEach(function(rendernode, index){
+        if(index < faceIndex && rendernode.angle !== "left"){
           Xoffset = 0;
           // Xoffset = (increment * index * (1 - cardOffset));
-          transformCard(cardSurface, Xoffset, "left");
+          transformCard(rendernode, Xoffset, "left");
         }
 
-        if(index === faceIndex && rendernode.object[0].object.angle !== "center"){
+        if(index === faceIndex && rendernode.angle !== "center"){
           Xoffset = 0;
           // Xoffset = (increment * index);
-          transformCard(cardSurface, Xoffset, "center");
+          transformCard(rendernode, Xoffset, "center");
         }
 
-        if(index > faceIndex && rendernode.object[0].object.angle !== "right"){
+        if(index > faceIndex && rendernode.angle !== "right"){
           Xoffset = 0;
           // Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
-          transformCard(cardSurface, Xoffset, "right")
+          transformCard(rendernode, Xoffset, "right")
         }
       })
       currentFace = faceIndex;
@@ -318,5 +424,6 @@ define(function(require, exports, module){
     //     }
     //   }
     // });
+  setFace(4)
   };
 });
