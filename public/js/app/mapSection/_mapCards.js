@@ -1,170 +1,4 @@
-// dummy data
-var data = [
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  }
-];
+var data = [];
 
 define(function(require, exports, module){
   var
@@ -258,73 +92,35 @@ define(function(require, exports, module){
       }),
       renderNode;
 
+    currentFace = 0;
 
-    // helper function to create cards and display them at proper skew
-    // "face" is the card that is not skewed
-    var createCards = function(faceIndex){
-
-      // this is the incremenet amount for X position for every card not including offset
-      var increment = 1 / (data.length - 1);
-
-      var i, cardSurface, Xoffset, modifier, options;
-
-      Xoffset = window.innerWidth/2;
-
-      for(i = 0; i < data.length; i++){
-        options = {
-          size: cardSize,
-          content: data[i].name,
-          properties: {},
-          classes: ['card']
-        };
-        if (i === 0 || i === data.length - 1) {
-          options.properties.visibility = 'hidden';
+    var addCard = function(location){
+      data.push(location);
+      var options = {
+        size: cardSize,
+        content: location.name,
+        classes: ['card'],
+        properties: {
+          backgroundImage: "url(" + location.photo + ")",
+          backgroundSize: "80px"
         }
-        if (data[i].image) {
-          options.properties.backgroundImage = data[i].image;
-        } else {
-          options.properties.backgroundColor = 'steelblue';
-        }
-        cardSurface = new Surface(options);
-        rendernode = new RenderNode({index: i});
-        if(i < faceIndex){
-          // Xoffset = (increment * i * (1 - cardOffset));
-          Xoffset = 0;
-          // modifier = rotatePos(rotateYAngle, Xoffset, cardBottom);
-          modifier = new Modifier({
-            transform: Matrix.rotateY(rotateYAngle)
-          });
-          // cardSurface.angle = 'left';
-          rendernode.angle = 'left';
-        }
-
-        if(i === faceIndex){
-          // Xoffset = (increment * i);
-          Xoffset = 0;
-          modifier = new Modifier({
-            transform: Matrix.move(Matrix.rotateY(0), [0,yPosFaceCard,zPosFaceCard])
-          });
-          rendernode.angle = 'center';
-        }
-
-        if(i > faceIndex){
-          Xoffset = 0;
-          // Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
-          // modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
-          modifier = new Modifier({
-            transform: Matrix.rotateY(-rotateYAngle)
-          })
-          rendernode.angle = 'right';
-        }
-        // cardSurface.modifier = modifier;
-        cardSurface.pipe(rendernode);
-        rendernode.add(modifier).link(cardSurface);
-        // rendernode.object[0].object.pipe(scrollview);
-        cardSurfaces.push(rendernode);
       }
+      var index = data.length - 1;
+      var cardSurface = new Surface(options);
+      var renderNode = new RenderNode({ index: index });
+      var rotation = index > currentFace ? -rotateYAngle : 0;
+
+      var modifier = new Modifier({
+        transform: Matrix.rotateY(rotation)
+      });
+      cardSurface.pipe(renderNode);
+      renderNode.add(modifier).link(cardSurface);
+      cardSurfaces.push(renderNode);
     };
-    createCards(1);
-    scrollview.sequenceFrom(cardSurfaces);
+    // createCards(1);
+    setTimeout(function(){
+      scrollview.sequenceFrom(cardSurfaces);
+    }, 10000);
     // Engine.pipe(scrollview);
     mapSection
     .add(new Modifier({
@@ -332,9 +128,9 @@ define(function(require, exports, module){
     }))
     .link(scrollview);
 
-    //////////////////////////////
-    //// ARRAY IMPLEMENTATION ////
-    //////////////////////////////
+    var removeCard = function(){
+
+    }
 
     var setFace = function(faceIndex){
       if(currentFace === faceIndex){
@@ -365,5 +161,9 @@ define(function(require, exports, module){
       })
       currentFace = faceIndex;
     };
+
+    return {
+      addCard: addCard
+    }
   };
 });

@@ -10,8 +10,8 @@ define(function(require, exports, module){
     });
 
     // add the various components and logic for this section
-    require('app/mapSection/_googleMaps')(mapSection);
-    require('app/mapSection/_mapCards')(mapSection, FamousEngine);
+    var cardCallback = require('app/mapSection/_mapCards')(mapSection, FamousEngine);
+    require('app/mapSection/_googleMaps')(mapSection, cardCallback);
 
   }
 });

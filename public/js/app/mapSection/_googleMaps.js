@@ -8,14 +8,15 @@ define(function(require, exports, module){
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
-  module.exports = function(mapSection){
+  module.exports = function(mapSection, cards){
 
 
     var currentMarkers = {};
 
     var map;
     var mapSurface = new Surface({
-      content: '<div id="map-canvas" />'
+      content: '<div id="map-canvas" />',
+      size: [window.innerWidth, window.innerHeight*0.7]
     });
 
     mapSection.add(mapSurface);
@@ -70,18 +71,8 @@ define(function(require, exports, module){
         url: '/points/',
         data: {lat: lat, long: lng},
         success: function(data) {
-          // var placesArr = [];
-          // var onloadDataArr = [];
-          // var garbageCollectorArr = [];
-          // var iterator = 0;
-
+          console.log(data);
           dataIDs = {};
-
-          // for (var i = 0; i < data.length; i++) {
-          //   if(!currentMarkers[data[i].id]){
-          //   }
-          // }
-
           var currentView = map.getBounds();
 
           for(var ID in currentMarkers){
@@ -103,6 +94,7 @@ define(function(require, exports, module){
                     animation: google.maps.Animation.DROP
                   });
                   currentMarkers[data[0].id] = marker;
+                  cards.addCard(data[0]);
                 }
               }
               dataIDs[data[0].id] = true;
@@ -110,91 +102,8 @@ define(function(require, exports, module){
                 drop(data.splice(1));
               }, 50);
             }
-            //   for(var ID in currentMarkers){
-            //     if(!dataIDs[ID]){
-            //       currentMarkers[ID].setMap(null);
-            //       delete(currentMarkers[ID]);
-            //     }
-            //   }
-            // }
           }
           drop(data);
-
-
-          // if (firstLoad) {
-          //   firstLoad = false;
-          //   for (var i = 0; i < data.length; i++) {
-          //     var marker = new google.maps.LatLng(data[i].lat, data[i].long);
-          //     placesArr.push(marker);
-          //     currentMarkers.push([data[i].id, marker]);
-          //   }
-          // }
-
-          // for (var i = 0; i < data.length; i++) {
-          //   var status = true;
-
-          //   for (var j = 0; j < currentMarkers.length; j++) {
-          //     if (currentMarkers[j][0] === data[i].id) {
-          //       status = false;
-          //     }
-          //   }
-
-          //   if (status) {
-          //     var marker = new google.maps.LatLng(data[i].lat, data[i].long);
-          //     placesArr.push(marker);
-          //     currentMarkers.push([data[i].id, marker]);              
-          //   }
-          // }
-
-          // var drop = function() {
-          //   for (var i = 0; i < placesArr.length; i++) {
-          //     setTimeout(function() {
-          //       addMarker();
-          //     }, i*50);
-          //   }
-          // };
-
-          // var addMarker = function() {
-          //   var gMarker = new google.maps.Marker({
-          //     position: placesArr[iterator],
-          //     map: map,
-          //     draggable: false,
-          //     title: 'enter data name here',
-          //     animation: google.maps.Animation.DROP
-          //   });
-          //   iterator++;
-
-          //   garbageCollect(gMarker);
-          // };
-
-          // var clearMarkers = function(markersArr) {
-          //   for (var i = 0; i < markersArr.length; i++) {
-          //     console.log(markersArr[i]);
-          //     markersArr[i].setMap(null);
-          //   }
-
-          //   garbageCollectorArr = [];
-          // };
-
-          // var garbageCollect = function(gMarker) {
-          //   for (var i = 0; i < currentMarkers.length; i++) {
-          //     var status = false;
-
-          //     for (var j = 0; j < onloadDataArr.length; j++) {
-          //       if (currentMarkers[i][0] === onloadDataArr[j][0]) {
-          //         status = true;
-          //       }
-          //     }
-
-          //     if (!status) {
-          //       garbageCollectorArr.push(gMarker);
-          //       currentMarkers.splice(i, 1);
-          //     }
-          //   }
-
-          //   clearMarkers(garbageCollectorArr);
-          //   console.log(garbageCollectorArr);
-          // };
 
         },
         error: function() {
