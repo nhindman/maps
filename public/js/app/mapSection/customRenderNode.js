@@ -53,6 +53,10 @@ define(function(require, exports, module) {
         return this.object;
     };
 
+    RenderNode.prototype.pipe = function(target) { 
+        return eventHandler.pipe(target);
+    };
+
     /**
      * Set the wrapped (@link renderableComponent}
      *

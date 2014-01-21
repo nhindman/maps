@@ -18,6 +18,7 @@ define(function(require, exports, module){
     mapSection.add(mapSurface);
     
     var initialize = function() {
+      console.log('initialize');
       directionsDisplay = new google.maps.DirectionsRenderer();
       var mapOptions = {
         zoom: 14
@@ -46,6 +47,7 @@ define(function(require, exports, module){
             infowindow.open(map,marker);
         });
       });
+      window.clearInterval(intervalID);
     };
 
     var calcRoute = function() {
@@ -67,7 +69,8 @@ define(function(require, exports, module){
         });
       });
     };
-    Timer.setTimeout(initialize, 1500);
+    var intervalID = window.setInterval(initialize, 0);
+    // Timer.setTimeout(initialize, 1500);
 
   }
 });

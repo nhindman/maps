@@ -173,7 +173,8 @@ define(function(require, exports, module){
     Matrix       = require('famous/Matrix'),
     ViewSequence = require('famous/ViewSequence'),
     Scrollview = require('./customScrollView'),
-    RenderNode = require('./customRenderNode')
+    RenderNode = require('./customRenderNode'),
+    App = require('../App');
 
   /////////////////
   //// OPTIONS ////
@@ -265,32 +266,26 @@ define(function(require, exports, module){
       // this is the incremenet amount for X position for every card not including offset
       var increment = 1 / (data.length - 1);
 
-      var i, cardSurface, Xoffset, modifier;
+      var i, cardSurface, Xoffset, modifier, options;
 
       Xoffset = window.innerWidth/2;
 
       for(i = 0; i < data.length; i++){
-
-        if (data[i].image) {
-          cardSurface = new Surface({
-            size: cardSize,
-            content: data[i].name,
-            properties: {
-              backgroundImage: data[i].image
-            },
-            classes: ['card']
-          });
-        } else {
-          cardSurface = new Surface({
-            size: cardSize,
-            content: data[i].name,
-            properties: {
-              backgroundColor: 'steelblue'
-            },
-            classes: ['card']
-          });
+        options = {
+          size: cardSize,
+          content: data[i].name,
+          properties: {},
+          classes: ['card']
+        };
+        if (i === data.length - 1) {
+          options.properties.visibility = 'hidden';
         }
-
+        if (data[i].image) {
+          options.properties.backgroundImage = data[i].image;
+        } else {
+          options.properties.backgroundColor = 'steelblue';
+        }
+        cardSurface = new Surface(options);
         rendernode = new RenderNode({index: i});
         if(i < faceIndex){
           // Xoffset = (increment * i * (1 - cardOffset));
@@ -321,16 +316,16 @@ define(function(require, exports, module){
           })
           rendernode.angle = 'right';
         }
-        cardSurface.modifier = modifier;
+        // cardSurface.modifier = modifier;
         cardSurface.pipe(rendernode);
-
         rendernode.add(modifier).link(cardSurface);
+        // rendernode.object[0].object.pipe(scrollview);
         cardSurfaces.push(rendernode);
       }
     };
     createCards(0);
     scrollview.sequenceFrom(cardSurfaces);
-    Engine.pipe(scrollview);
+    // Engine.pipe(scrollview);
     mapSection
     .add(new Modifier({
       transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.7, 0)

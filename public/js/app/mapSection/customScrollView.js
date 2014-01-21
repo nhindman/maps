@@ -62,7 +62,7 @@ define(function(require, exports, module) {
             itemSpacing: 0,
             clipSize: undefined,
             margin: undefined,
-            drag: 0.001,
+            drag: 0.002,
             edgeGrip: 0.5,
             edgePeriod: 300,
             edgeDamp: 1,
@@ -398,7 +398,12 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.sequenceFrom = function(node) {
-        if(node instanceof Array) node = new ViewSequence(node);
+        if(node instanceof Array) {
+            for (var i = 0; i < node.length; i++) {
+                node[i].pipe(this);
+            }
+            node = new ViewSequence(node);
+        }
         this.node = node;
         this._lastFrameNode = node;
     }
