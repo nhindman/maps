@@ -24,7 +24,7 @@ define(function(require, exports, module) {
      */
     function RenderNode(object) {
         if (object){
-            this.index = object.index;
+            this.id = object.id;
         }
         this.modifiers = [];
         this.object = undefined;

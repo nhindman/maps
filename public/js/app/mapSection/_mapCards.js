@@ -1,5 +1,3 @@
-var data = [];
-
 define(function(require, exports, module){
   var
     Surface      = require('./customSurface'),
@@ -15,13 +13,13 @@ define(function(require, exports, module){
   /////////////////
   var
     cardSize     = [80, 120],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
-    cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
+    cardBottom   = 1,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1,         // rotational Y angle of skew
     cardOffset   = 0.25,        // offset between skewed cards and the front facing card
     curve        = 'easeInOut',    // transition curve type
     easeDuration = 150,         // amount of time for cards to transition
     zPosFaceCard = 400,         // z position offset for the face card
-    yPosFaceCard = -40,         // y position offset for the face card
+    yPosFaceCard = -60,         // y position offset for the face card
     cardSpacing  = -50;
 
   //////////////////////////
@@ -39,7 +37,7 @@ define(function(require, exports, module){
   };
 
   // helper function to rotate positions from surfaces plus offsets
-  var transformCard = function(rendernode, Xoffset, direction){
+  var transformCard = function(rendernode, direction){
     var
       theta,
       y = 0,
@@ -66,10 +64,6 @@ define(function(require, exports, module){
         duration: easeDuration,
         curve: curve
       });
-      // mod.setOrigin([Xoffset, cardBottom], {
-      //   duration: easeDuration,
-      //   curve: curve
-      // });
     }
   }
 
@@ -87,16 +81,35 @@ define(function(require, exports, module){
         speedLimit: 1.3
         // edgePeriod: 150
       }, function(pos){
-        var faceIndex = Math.min(data.length - 1, scrollview.getCurrentNode().get().index)
+        var faceIndex = Math.min(cardSurfaces.length - 1, cardSurfaces.indexOf(scrollview.getCurrentNode().get()));
         setFace(faceIndex);
       }),
       renderNode;
 
     currentFace = 0;
 
+    var setFace = function(faceIndex){
+      if(currentFace === faceIndex){
+        return;
+      }
+      cardSurfaces.forEach(function(rendernode, index){
+        if(index < faceIndex && rendernode.angle !== "left"){
+          transformCard(rendernode, "left");
+        }
+        if(index === faceIndex && rendernode.angle !== "center"){
+          transformCard(rendernode, "center");
+        }
+        if(index > faceIndex && rendernode.angle !== "right"){
+          transformCard(rendernode, "right")
+        }
+      })
+      currentFace = faceIndex;
+    };
+
+    var first = true;
+
     var addCard = function(location){
-      data.push(location);
-      var options = {
+      var cardSurface = new Surface({
         size: cardSize,
         content: location.name,
         classes: ['card'],
@@ -104,66 +117,45 @@ define(function(require, exports, module){
           backgroundImage: "url(" + location.photo + ")",
           backgroundSize: "80px"
         }
-      }
-      var index = data.length - 1;
-      var cardSurface = new Surface(options);
-      var renderNode = new RenderNode({ index: index });
-      var rotation = index > currentFace ? -rotateYAngle : 0;
-
-      var modifier = new Modifier({
-        transform: Matrix.rotateY(rotation)
       });
+
+      var renderNode = new RenderNode({id: location.id});
+      var rotation = !cardSurfaces.length ? 0 : -rotateYAngle;
+      var transform = Matrix.rotateY(rotation);
+      if(!cardSurfaces.length){
+        transform = Matrix.move(Matrix.rotateY(0), [0,yPosFaceCard,zPosFaceCard]);
+      }
+      var modifier = new Modifier({
+        transform: transform
+      });
+
       cardSurface.pipe(renderNode);
       renderNode.add(modifier).link(cardSurface);
+      renderNode.modifier = modifier;
       cardSurfaces.push(renderNode);
+      if(first){
+        scrollview.sequenceFrom(cardSurfaces);
+        first = false;
+      }
     };
-    // createCards(1);
-    setTimeout(function(){
-      scrollview.sequenceFrom(cardSurfaces);
-    }, 10000);
     // Engine.pipe(scrollview);
     mapSection
     .add(new Modifier({
-      transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.7, 0)
+      transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.75, 0)
     }))
     .link(scrollview);
 
-    var removeCard = function(){
-
-    }
-
-    var setFace = function(faceIndex){
-      if(currentFace === faceIndex){
-        return;
+    var removeCard = function(id){
+      for(var i = 0; i < cardSurfaces.length; i++){
+        if(cardSurfaces[i].id === id){
+          return cardSurfaces.splice(i, 1);
+        }
       }
-      var
-        increment = 1 / (data.length - 1),
-        Xoffset;
-
-      cardSurfaces.forEach(function(rendernode, index){
-        if(index < faceIndex && rendernode.angle !== "left"){
-          Xoffset = 0;
-          // Xoffset = (increment * index * (1 - cardOffset));
-          transformCard(rendernode, Xoffset, "left");
-        }
-
-        if(index === faceIndex && rendernode.angle !== "center"){
-          Xoffset = 0;
-          // Xoffset = (increment * index);
-          transformCard(rendernode, Xoffset, "center");
-        }
-
-        if(index > faceIndex && rendernode.angle !== "right"){
-          Xoffset = 0;
-          // Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
-          transformCard(rendernode, Xoffset, "right")
-        }
-      })
-      currentFace = faceIndex;
     };
 
     return {
-      addCard: addCard
-    }
+      addCard: addCard,
+      removeCard: removeCard
+    };
   };
 });
