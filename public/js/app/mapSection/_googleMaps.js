@@ -38,8 +38,6 @@ define(function(require, exports, module){
                        position.coords.longitude);
         map.setCenter(currentPos);
 
-        console.log(currentPos);
-
         var marker = new google.maps.Marker({
           position: currentPos,
           draggable: false,
@@ -71,14 +69,14 @@ define(function(require, exports, module){
         url: '/points/',
         data: {lat: lat, long: lng},
         success: function(data) {
-          var markerArr = [];
           var placesArr = [];
           var onloadDataArr = [];
+          var garbageCollectorArr = [];
           var iterator = 0;
 
           for (var i = 0; i < data.length; i++) {
             var marker = new google.maps.LatLng(data[i].lat, data[i].long);
-            onloadDataArr.push(marker);
+            onloadDataArr.push([data[i].id, marker]);
           }
 
           if (firstLoad) {
@@ -107,25 +105,56 @@ define(function(require, exports, module){
           }
 
           var drop = function() {
-            setTimeout(function() {
-              addMarker();
-            }, i * 50);
+            for (var i = 0; i < placesArr.length; i++) {
+              setTimeout(function() {
+                addMarker();
+              }, i * 50);
+            }
           }
 
           var addMarker = function() {
-            markerArr.push(new google.maps.Marker({
+            var gMarker = new google.maps.Marker({
               position: placesArr[iterator],
               map: map,
               draggable: false,
               title: 'enter data name here',
               animation: google.maps.Animation.DROP
-            }));
+            });
             iterator++;
+
+            // garbageCollect(gMarker);
           }
 
-          for (var i = 0; i < placesArr.length; i++) {
-            drop(data);
+          var clearMarkers = function(markersArr) {
+            for (var i = 0; i < markersArr.length; i++) {
+              console.log(markersArr[i]);
+              markersArr[i].setMap(null);
+            }
+
+            garbageCollectorArr = [];
           }
+
+          var garbageCollect = function(gMarker) {
+            for (var i = 0; i < currentMarkers.length; i++) {
+              var status = false;
+
+              for (var j = 0; j < onloadDataArr.length; j++) {
+                if (currentMarkers[i][0] === onloadDataArr[j][0]) {
+                  status = true;
+                }
+              }
+
+              if (!status) {
+                garbageCollectorArr.push(gMarker);
+                currentMarkers.splice(i, 1);
+              }
+            }
+
+            clearMarkers(garbageCollectorArr);
+            console.log(garbageCollectorArr);
+          }
+
+          drop();
         },
         error: function() {
           console.log("Ajax post request error");
