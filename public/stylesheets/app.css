@@ -81,5 +81,6 @@ body {
 }
 
 .card {
-    border: 10px solid white;
+    border: 5px solid white;
+    border-radius: 3%;
 }

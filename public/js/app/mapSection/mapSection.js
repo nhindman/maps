@@ -1,6 +1,6 @@
 define(function(require, exports, module){
 
-  module.exports = function(app){
+  module.exports = function(app, FamousEngine){
 
     // create the section
     var mapSection = app.section('map');
@@ -11,7 +11,7 @@ define(function(require, exports, module){
 
     // add the various components and logic for this section
     require('app/mapSection/_googleMaps')(mapSection);
-    require('app/mapSection/_mapCards')(mapSection);
+    require('app/mapSection/_mapCards')(mapSection, FamousEngine);
 
   }
 });

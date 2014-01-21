@@ -1,7 +1,7 @@
-var config  = require('./config.js'),
-    express = require('express'),
-    url     = require('url'),
-    foursquare = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
+var config      = require('./config.js'),
+    express     = require('express'),
+    url         = require('url'),
+    foursquare  = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
 
 var app = express();
 
@@ -36,7 +36,7 @@ app.get('/points', function(req, res) {
     var venues = data.response.groups[0].items;
 
     for(var i = 0; i < venues.length; i++) {
-      // console.log(venues[i].venue);
+      // console.log(venues[i]);
       var venue         = {};
       venue.id          = venues[i].venue.id;
       venue.name        = venues[i].venue.name;

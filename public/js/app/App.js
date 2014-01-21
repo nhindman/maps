@@ -29,7 +29,7 @@ define(function(require, exports, module) {
 
     // link endpoints of layout to widgets
     this.layout.id['header'].link(this.header);
-    this.layout.id['footer'].link(Utility.transformInFront).link(this.navigation);
+    // this.layout.id['footer'].link(Utility.transformInFront).link(this.navigation);
     this.layout.id['content'].link(Utility.transformBehind).link(this.contentArea);
     
     // assign received events to content area

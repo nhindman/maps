@@ -1,17 +1,15 @@
 define(function(require, exports, module){
   var
-    Surface          = require('famous/Surface'),
-    Matrix           = require('famous/Matrix'),
-    Modifier         = require('famous/Modifier'),
-    Timer            = require('famous/Timer'),
-    async            = require('../../../lib/requirejs-plugins/src/async');
+    Surface  = require('famous/Surface'),
+    Matrix   = require('famous/Matrix'),
+    Modifier = require('famous/Modifier'),
+    Timer    = require('famous/Timer'),
+    async    = require('../../../lib/requirejs-plugins/src/async');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
   module.exports = function(mapSection){
 
-    var firstLoad = true;
-    // var currentMarkers = [];
 
     var currentMarkers = {};
 
@@ -62,6 +60,7 @@ define(function(require, exports, module){
           pingDataApi(map.center.d, map.center.e);
         })
       });
+      window.clearInterval(intervalID);
     };
 
     var pingDataApi = function(lat, lng) {
@@ -223,7 +222,8 @@ define(function(require, exports, module){
         });
       });
     };
+    var intervalID = window.setInterval(initialize, 0);
+    // Timer.setTimeout(initialize, 1500);
 
-    Timer.setTimeout(initialize, 1500);
   }
 });
