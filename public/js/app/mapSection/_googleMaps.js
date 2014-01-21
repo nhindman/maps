@@ -11,7 +11,9 @@ define(function(require, exports, module){
   module.exports = function(mapSection){
 
     var firstLoad = true;
-    var currentMarkers = [];
+    // var currentMarkers = [];
+
+    var currentMarkers = {};
 
     var map;
     var mapSurface = new Surface({
@@ -24,7 +26,7 @@ define(function(require, exports, module){
       directionsDisplay = new google.maps.DirectionsRenderer();
 
       var mapOptions = {
-        zoom: 15,
+        zoom: 17,
         disableDefaultUI: true,
         disableDoubleClickZoom: true
       };
@@ -69,92 +71,132 @@ define(function(require, exports, module){
         url: '/points/',
         data: {lat: lat, long: lng},
         success: function(data) {
-          var placesArr = [];
-          var onloadDataArr = [];
-          var garbageCollectorArr = [];
-          var iterator = 0;
+          // var placesArr = [];
+          // var onloadDataArr = [];
+          // var garbageCollectorArr = [];
+          // var iterator = 0;
 
-          for (var i = 0; i < data.length; i++) {
-            var marker = new google.maps.LatLng(data[i].lat, data[i].long);
-            onloadDataArr.push([data[i].id, marker]);
-          }
+          dataIDs = {};
 
-          if (firstLoad) {
-            firstLoad = false;
-            for (var i = 0; i < data.length; i++) {
-              var marker = new google.maps.LatLng(data[i].lat, data[i].long);
-              placesArr.push(marker);
-              currentMarkers.push([data[i].id, marker]);
+          // for (var i = 0; i < data.length; i++) {
+          //   if(!currentMarkers[data[i].id]){
+          //   }
+          // }
+
+          var currentView = map.getBounds();
+
+          for(var ID in currentMarkers){
+            if(!currentView.contains(currentMarkers[ID].position)){
+              currentMarkers[ID].setMap(null);
+              delete currentMarkers[ID];
             }
           }
 
-          for (var i = 0; i < data.length; i++) {
-            var status = true;
-
-            for (var j = 0; j < currentMarkers.length; j++) {
-              if (currentMarkers[j][0] === data[i].id) {
-                status = false;
-              }
-            }
-
-            if (status) {
-              var marker = new google.maps.LatLng(data[i].lat, data[i].long);
-              placesArr.push(marker);
-              currentMarkers.push([data[i].id, marker]);              
-            }
-          }
-
-          var drop = function() {
-            for (var i = 0; i < placesArr.length; i++) {
-              setTimeout(function() {
-                addMarker();
-              }, i * 50);
-            }
-          }
-
-          var addMarker = function() {
-            var gMarker = new google.maps.Marker({
-              position: placesArr[iterator],
-              map: map,
-              draggable: false,
-              title: 'enter data name here',
-              animation: google.maps.Animation.DROP
-            });
-            iterator++;
-
-            // garbageCollect(gMarker);
-          }
-
-          var clearMarkers = function(markersArr) {
-            for (var i = 0; i < markersArr.length; i++) {
-              console.log(markersArr[i]);
-              markersArr[i].setMap(null);
-            }
-
-            garbageCollectorArr = [];
-          }
-
-          var garbageCollect = function(gMarker) {
-            for (var i = 0; i < currentMarkers.length; i++) {
-              var status = false;
-
-              for (var j = 0; j < onloadDataArr.length; j++) {
-                if (currentMarkers[i][0] === onloadDataArr[j][0]) {
-                  status = true;
+          var drop = function(data){
+            if(data.length){
+              if(currentView.contains(new google.maps.LatLng(data[0].lat, data[0].long))){
+                if(!currentMarkers[data[0].id]){
+                  var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(data[0].lat, data[0].long),
+                    map: map,
+                    draggable: false,
+                    title: 'enter data name here',
+                    animation: google.maps.Animation.DROP
+                  });
+                  currentMarkers[data[0].id] = marker;
                 }
               }
-
-              if (!status) {
-                garbageCollectorArr.push(gMarker);
-                currentMarkers.splice(i, 1);
-              }
+              dataIDs[data[0].id] = true;
+              setTimeout(function(){
+                drop(data.splice(1));
+              }, 50);
             }
-
-            clearMarkers(garbageCollectorArr);
-            console.log(garbageCollectorArr);
+            //   for(var ID in currentMarkers){
+            //     if(!dataIDs[ID]){
+            //       currentMarkers[ID].setMap(null);
+            //       delete(currentMarkers[ID]);
+            //     }
+            //   }
+            // }
           }
+          drop(data);
 
-          drop();
+
+          // if (firstLoad) {
+          //   firstLoad = false;
+          //   for (var i = 0; i < data.length; i++) {
+          //     var marker = new google.maps.LatLng(data[i].lat, data[i].long);
+          //     placesArr.push(marker);
+          //     currentMarkers.push([data[i].id, marker]);
+          //   }
+          // }
+
+          // for (var i = 0; i < data.length; i++) {
+          //   var status = true;
+
+          //   for (var j = 0; j < currentMarkers.length; j++) {
+          //     if (currentMarkers[j][0] === data[i].id) {
+          //       status = false;
+          //     }
+          //   }
+
+          //   if (status) {
+          //     var marker = new google.maps.LatLng(data[i].lat, data[i].long);
+          //     placesArr.push(marker);
+          //     currentMarkers.push([data[i].id, marker]);              
+          //   }
+          // }
+
+          // var drop = function() {
+          //   for (var i = 0; i < placesArr.length; i++) {
+          //     setTimeout(function() {
+          //       addMarker();
+          //     }, i*50);
+          //   }
+          // };
+
+          // var addMarker = function() {
+          //   var gMarker = new google.maps.Marker({
+          //     position: placesArr[iterator],
+          //     map: map,
+          //     draggable: false,
+          //     title: 'enter data name here',
+          //     animation: google.maps.Animation.DROP
+          //   });
+          //   iterator++;
+
+          //   garbageCollect(gMarker);
+          // };
+
+          // var clearMarkers = function(markersArr) {
+          //   for (var i = 0; i < markersArr.length; i++) {
+          //     console.log(markersArr[i]);
+          //     markersArr[i].setMap(null);
+          //   }
+
+          //   garbageCollectorArr = [];
+          // };
+
+          // var garbageCollect = function(gMarker) {
+          //   for (var i = 0; i < currentMarkers.length; i++) {
+          //     var status = false;
+
+          //     for (var j = 0; j < onloadDataArr.length; j++) {
+          //       if (currentMarkers[i][0] === onloadDataArr[j][0]) {
+          //         status = true;
+          //       }
+          //     }
+
+          //     if (!status) {
+          //       garbageCollectorArr.push(gMarker);
+          //       currentMarkers.splice(i, 1);
+          //     }
+          //   }
+
+          //   clearMarkers(garbageCollectorArr);
+          //   console.log(garbageCollectorArr);
+          // };
+
         },
         error: function() {
           console.log("Ajax post request error");
