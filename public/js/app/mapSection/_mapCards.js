@@ -277,7 +277,7 @@ define(function(require, exports, module){
           properties: {},
           classes: ['card']
         };
-        if (i === data.length - 1) {
+        if (i === 0 || i === data.length - 1) {
           options.properties.visibility = 'hidden';
         }
         if (data[i].image) {
@@ -323,7 +323,7 @@ define(function(require, exports, module){
         cardSurfaces.push(rendernode);
       }
     };
-    createCards(0);
+    createCards(1);
     scrollview.sequenceFrom(cardSurfaces);
     // Engine.pipe(scrollview);
     mapSection
