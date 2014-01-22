@@ -99,7 +99,6 @@ define(function(require, exports, module){
 
     mapSurface.on('click', function(e){
       applyTorque(e, 1)
-      console.log('click event triggered');
     });
 
     body.add(new Modifier(Matrix.translate(0,0,.1))).link(mapSurface);
