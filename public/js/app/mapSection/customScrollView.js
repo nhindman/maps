@@ -301,6 +301,9 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.setPosition = function(pos) {
+        if(this._springAttached){
+            _detachAgents();
+        }
         this.particle.setPos([pos, 0, 0]);
         if(this.movingCallback){
             this.movingCallback(pos);

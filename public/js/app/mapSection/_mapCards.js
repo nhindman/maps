@@ -11,7 +11,8 @@ define(function(require, exports, module){
   //// OPTIONS ////
   /////////////////
   var
-    cardSize     = [(window.innerWidth / 3), (window.innerWidth / 3) * 1.5],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
+    cardWidth   = Math.min(window.innerWidth/3, window.innerHeight/5);
+    cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
     cardBottom   = 1,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1,         // rotational Y angle of skew
     cardOffset   = 0.25,        // offset between skewed cards and the front facing card
@@ -182,7 +183,7 @@ define(function(require, exports, module){
     // Engine.pipe(scrollview);
     mapSection
     .add(new Modifier({
-      // transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.75, 20),
+      transform: Matrix.translate(0, 0, 20),
       origin: [0.5,1]
     }))
     .link(scrollview);
