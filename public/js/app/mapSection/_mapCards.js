@@ -67,7 +67,7 @@ define(function(require, exports, module){
     }
   }
 
-  module.exports = function(mapSection, Engine){
+  module.exports = function(mapSection, Engine, eventHandler){
 
     // storage for our various surfaces and modifiers
     var centerIndex = Math.floor((window.innerWidth / Math.abs(cardSpacing)) / 2)
@@ -92,12 +92,18 @@ define(function(require, exports, module){
       if(currentFace === faceIndex){
         return;
       }
+
+      if(cardSurfaces[faceIndex]){
+        eventHandler.emit('focus', cardSurfaces[faceIndex].id);
+      }
+
       cardSurfaces.forEach(function(rendernode, index){
         if(index < faceIndex && rendernode.angle !== "left"){
           transformCard(rendernode, "left");
         }
         if(index === faceIndex && rendernode.angle !== "center"){
           transformCard(rendernode, "center");
+          // TODO: set "icon" property on marker to a .png 
         }
         if(index > faceIndex && rendernode.angle !== "right"){
           transformCard(rendernode, "right")
@@ -138,6 +144,7 @@ define(function(require, exports, module){
         first = false;
       }
     };
+
     // Engine.pipe(scrollview);
     mapSection
     .add(new Modifier({

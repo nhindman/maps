@@ -1,5 +1,7 @@
 define(function(require, exports, module){
 
+  var EventHandler = require('famous/EventHandler');
+
   module.exports = function(app, FamousEngine){
 
     // create the section
@@ -9,9 +11,11 @@ define(function(require, exports, module){
       navigation: {caption: 'Map', icon: '@'}
     });
 
+    var eventHandler = new EventHandler();
+
     // add the various components and logic for this section
-    var cardCallback = require('app/mapSection/_mapCards')(mapSection, FamousEngine);
-    require('app/mapSection/_googleMaps')(mapSection, cardCallback);
+    var cardCallback = require('app/mapSection/_mapCards')(mapSection, FamousEngine, eventHandler);
+    require('app/mapSection/_googleMaps')(mapSection, cardCallback, eventHandler);
 
   }
 });

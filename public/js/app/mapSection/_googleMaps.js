@@ -140,8 +140,7 @@ define(function(require, exports, module){
     }
   ]
 
-  module.exports = function(mapSection, cards){
-
+  module.exports = function(mapSection, cards, eventHandler){
 
     var currentMarkers = {};
 
@@ -150,13 +149,13 @@ define(function(require, exports, module){
       content: '<div id="map-canvas" />',
       size: [window.innerWidth, window.innerHeight*0.72]
     });
-
     mapSection.add(mapSurface);
-    
+
     var initialize = function() {
       directionsDisplay = new google.maps.DirectionsRenderer();
 
       var mapOptions = {
+    
         zoom: 15,
         disableDefaultUI: true,
         disableDoubleClickZoom: true,
@@ -224,9 +223,11 @@ define(function(require, exports, module){
                 map: map,
                 draggable: false,
                 title: 'enter data name here',
-                animation: google.maps.Animation.DROP
+                animation: google.maps.Animation.DROP,
+                icon: 'img/blueMarker.png'
               });
               currentMarkers[data[0].id] = marker;
+              // console.log(currentMarkers[data[0].id]);
               cards.addCard(data[0]);
             }
             dataIDs[data[0].id] = true;
@@ -235,6 +236,18 @@ define(function(require, exports, module){
             }, 50);
           }
           drop(data);
+
+          eventHandler.on('focus', function(id) {
+
+            for (var markerID in currentMarkers) {
+              if (markerID === id) {
+                currentMarkers[markerID].setOptions({ icon: 'img/blueMarkerHighlight.png' });
+              } else {
+                currentMarkers[markerID].setOptions({ icon: 'img/blueMarker.png' });
+              }
+            }
+
+          });
 
         },
         error: function() {
