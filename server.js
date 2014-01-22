@@ -11,7 +11,7 @@ app.get('/points', function(req, res) {
 
   var options = {
     ll : query.lat + ',' + query.long,
-    radius: query.radius || 500, 
+    radius: query.radius || 15000,
     venuePhotos: 1,
     section: query.cat || 'sights', 
     // section: 'topPicks',
