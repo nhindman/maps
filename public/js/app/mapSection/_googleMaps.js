@@ -4,11 +4,66 @@ define(function(require, exports, module){
     Matrix   = require('famous/Matrix'),
     Modifier = require('famous/Modifier'),
     Timer    = require('famous/Timer'),
-    async    = require('../../../lib/requirejs-plugins/src/async');
+    async    = require('../../../lib/requirejs-plugins/src/async'),
+
+    // Include physics for map torque
+    PhysicsEngine = require('famous-physics/PhysicsEngine'),
+    Vector = require('famous-physics/math/Vector'),
+    Quaternion = require('famous-physics/math/Vector'),
+    TorqueSpring = require('famous-physics/forces/TorqueSpring'),
+    Spring = require('famous-physics/forces/Spring');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
   module.exports = function(mapSection, cards, eventHandler){
+    var pushStrength            = 0, 
+        torqueStrength          = .009,
+        torqueSpringDamping     = 20,
+        torqueSpringPeriod      = 4,
+        forceSpringDamping      = .95,
+        forceSpringPeriod       = 2100,
+        dragStrength            = .01;
+
+    var map;
+    var mapSurface = new Surface({
+      content: '<div id="map-canvas" />',
+      size: [window.innerWidth, window.innerHeight]
+    });
+
+    var PE = new PhysicsEngine();
+    var force  = new Vector(0,0,-pushStrength);
+    var torque = new Vector(0,0,-torqueStrength);
+
+    function applyTorque(e, side){
+      var location = new Vector(
+        (e.offsetX - body.size[0]/2)*side,
+       -(e.offsetY - body.size[1]/2)*side,
+        0
+      );
+
+      body.applyForce(force);
+      body.applyTorque(location.cross(torque));
+    };
+
+
+    var body = PE.createBody({
+        shape : PE.BODIES.RECTANGLE,
+        size : [window.innerWidth, window.innerHeight]
+    });
+    
+    var torqueSpring = new TorqueSpring({
+      anchor : new Quaternion(0,0,0,0),
+      period : torqueSpringPeriod,
+      dampingRatio : torqueSpringDamping
+    });
+
+    var spring = new Spring({
+      anchor : [0,0,0],
+      period : forceSpringPeriod,
+      dampingRatio : forceSpringDamping
+    });
+
+    PE.attach([spring]);
 
     var queryRadius = 1500 // meters
 
@@ -42,12 +97,20 @@ define(function(require, exports, module){
     var boundMarkers = {};
     var highlightedID;
 
-    var map;
-    var mapSurface = new Surface({
-      content: '<div id="map-canvas" />'
-    //   size: [window.innerWidth, window.innerHeight*0.72]
+    mapSurface.on('click', function(e){
+      applyTorque(e, 1)
+      console.log('click event triggered');
     });
-    mapSection.add(mapSurface)
+
+    body.add(new Modifier(Matrix.translate(0,0,.1))).link(mapSurface);
+    // mapSection.add(new Modifier({origin : [.5,.5]})).link(PE);
+    mapSection.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
+
+    function attachTorqueSpring(){
+      mapSection.attachedSpring = PE.attach(torqueSpring);
+    }
+
+    attachTorqueSpring();
 
     var reQuery = function(){
       var newCenter = {
