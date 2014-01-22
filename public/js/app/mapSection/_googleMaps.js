@@ -12,7 +12,7 @@ define(function(require, exports, module){
 
 
 
-    var queryRadius = 3000 // meters
+    var queryRadius = 1500 // meters
 
     var currentLatLng;
     navigator.geolocation.getCurrentPosition(function(position){
@@ -20,8 +20,24 @@ define(function(require, exports, module){
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
+      var currentPos = new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
+      map.setCenter(currentPos);
+      var marker = new google.maps.Marker({
+        position: currentPos,
+        draggable: false,
+        title: "You are here!",
+        animation: 'DROP',
+        map: map
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map, marker);
+      });
+
+      google.maps.event.addListener(map, 'bounds_changed', function() {
+        addAndRemoveCards();
+        reQuery();
+      });
       fetchData();
-      initialize();
     });
 
     var data;
@@ -40,7 +56,7 @@ define(function(require, exports, module){
         lat: map.getCenter().d,
         lng: map.getCenter().e
       };
-      if (findDistance(currentLatLng, newCenter) > queryRadius / 4){
+      if (findDistance(currentLatLng, newCenter) > queryRadius / 2){
         currentLatLng = newCenter;
         fetchData();
         dropMarkers();
@@ -54,7 +70,7 @@ define(function(require, exports, module){
         data: {
           lat: currentLatLng.lat,
           long: currentLatLng.lng,
-          radius: queryRadius/2
+          radius: queryRadius
         },
         success: function(apiData){
           data = apiData;
@@ -137,30 +153,7 @@ define(function(require, exports, module){
       map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
-      var currentPos = new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
-      map.setCenter(currentPos);
-      var marker = new google.maps.Marker({
-        position: currentPos,
-        draggable: false,
-        title: "You are here!",
-        animation: 'DROP',
-        map: map
-      });
-
-      var contentString = '<div id="content">Your current location</div>'
-
-      var infowindow = new google.maps.InfoWindow({
-        content: contentString
-      });
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker);
-      });
-
-      google.maps.event.addListener(map, 'bounds_changed', function() {
-        addAndRemoveCards();
-        reQuery();
-      });
-      // window.clearInterval(intervalID);
+      window.clearInterval(intervalID);
     };
 
     var calcRoute = function() {
@@ -182,7 +175,7 @@ define(function(require, exports, module){
         });
       });
     };
-    // var intervalID = window.setInterval(initialize, 0);
+    var intervalID = window.setInterval(initialize, 0);
 
   }
 });

@@ -5,7 +5,7 @@ define(function(require, exports, module){
     // create the section
     var mapSection = app.section('map');
     mapSection.setOptions({
-      title: 'Map',
+      title: 'poing',
       navigation: {caption: 'Map', icon: '@'}
     });
 

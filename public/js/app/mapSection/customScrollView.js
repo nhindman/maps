@@ -193,6 +193,9 @@ define(function(require, exports, module) {
     }
 
     function _normalizeState() {
+        if(!this.node){
+            return;
+        }
         var atEdge = false;
         while(!atEdge && this.getPosition() < 0) {
             var prevNode = this.node.getPrevious ? this.node.getPrevious() : undefined;
