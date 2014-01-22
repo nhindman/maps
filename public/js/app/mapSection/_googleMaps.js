@@ -69,8 +69,8 @@ define(function(require, exports, module){
         });
       });
     };
-    var intervalID = window.setInterval(initialize, 0);
-    // Timer.setTimeout(initialize, 1500);
+    // var intervalID = window.setInterval(initialize, 0);
+    // window.setTimeout(initialize, 0);
 
   }
 });

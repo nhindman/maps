@@ -298,7 +298,6 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.setPosition = function(pos) {
-        // this.sync.emit('moving', pos)
         this.particle.setPos([pos, 0, 0]);
         if(this.movingCallback){
             this.movingCallback(pos);

@@ -165,6 +165,7 @@ var data = [
     name: 'Klay Thompson'
   }
 ];
+data = data.concat(data);
 
 define(function(require, exports, module){
   var
@@ -181,7 +182,7 @@ define(function(require, exports, module){
   /////////////////
   var
     cardSize     = [80, 120],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
-    cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
+    cardBottom   = 1,        // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 1,         // rotational Y angle of skew
     cardOffset   = 0.25,        // offset between skewed cards and the front facing card
     curve        = 'easeInOut',    // transition curve type
@@ -243,7 +244,6 @@ define(function(require, exports, module){
 
     // storage for our various surfaces and modifiers
     var centerIndex = Math.floor((window.innerWidth / Math.abs(cardSpacing)) / 2)
-
     var
       cardSurfaces = [],
       currentFace,
@@ -253,8 +253,8 @@ define(function(require, exports, module){
         speedLimit: 1.3
         // edgePeriod: 150
       }, function(pos){
-        var faceIndex = Math.min(data.length - 1, scrollview.getCurrentNode().get().index)
-        setFace(faceIndex);
+        var faceIndex = Math.min(data.length - 1, scrollview.getCurrentNode().get().index);
+          setFace(faceIndex);
       }),
       renderNode;
 
