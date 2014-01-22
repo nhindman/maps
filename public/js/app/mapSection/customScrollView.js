@@ -63,7 +63,7 @@ define(function(require, exports, module) {
             clipSize: undefined,
             margin: undefined,
             drag: 0.002,
-            edgeGrip: 0.5,
+            edgeGrip: 0.001,
             edgePeriod: 300,
             edgeDamp: 1,
             paginated: false,
@@ -301,7 +301,6 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.setPosition = function(pos) {
-        // this.sync.emit('moving', pos)
         this.particle.setPos([pos, 0, 0]);
         if(this.movingCallback){
             this.movingCallback(pos);

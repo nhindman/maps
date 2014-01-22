@@ -1,12 +1,11 @@
 define(function(require, exports, module){
   var
-    Surface      = require('./customSurface'),
-    Modifier     = require('famous/Modifier'),
-    Matrix       = require('famous/Matrix'),
-    ViewSequence = require('famous/ViewSequence'),
-    Scrollview = require('./customScrollView'),
-    RenderNode = require('./customRenderNode'),
-    App = require('../App');
+    Surface       = require('./customSurface'),
+    Modifier      = require('famous/Modifier'),
+    Matrix        = require('famous/Matrix'),
+    ViewSequence  = require('famous/ViewSequence'),
+    Scrollview    = require('./customScrollView'),
+    RenderNode    = require('./customRenderNode');
 
   /////////////////
   //// OPTIONS ////
@@ -19,8 +18,8 @@ define(function(require, exports, module){
     curve        = 'easeInOut',    // transition curve type
     easeDuration = 150,         // amount of time for cards to transition
     zPosFaceCard = 200,         // z position offset for the face card
-    yPosFaceCard = -100,         // y position offset for the face card
-    cardSpacing  = -cardSize[0]*0.5;
+    yPosFaceCard = -20,         // y position offset for the face card
+    cardSpacing  = -cardSize[0] * 0.5;
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
@@ -51,6 +50,9 @@ define(function(require, exports, module){
         theta = 0;
         y = yPosFaceCard;
         z = zPosFaceCard;
+        rendernode.object[0].object.setProperties({
+          boxShadow: '3px 3px 3px black'
+        });
         break;
       case "right":
         theta = -rotateYAngle;
@@ -67,7 +69,7 @@ define(function(require, exports, module){
     }
   }
 
-  module.exports = function(mapSection, Engine){
+  module.exports = function(mapSection, Engine, eventHandler){
 
     // create a surface to prevent the map from being clickable
     var blockingSurface = new Surface({
@@ -76,13 +78,11 @@ define(function(require, exports, module){
     });
 
     var blockingMod = new Modifier({
-      // origin: [0,1],
       transform: Matrix.translate(0, window.innerHeight - window.innerHeight*0.18, 1)
     });
 
     mapSection.add(blockingMod).link(blockingSurface);
 
-    // storage for our various surfaces and modifiers
     var centerIndex = Math.floor((window.innerWidth / Math.abs(cardSpacing)) / 2)
 
     var
@@ -90,9 +90,27 @@ define(function(require, exports, module){
       currentFace,
       renderNode;
 
+    eventHandler.on('focusCard', function(id){
+      var clickedCardIndex;
+      var currentCardIndex = scrollview.getCurrentNode().index;
+      for(var i = 0; i < cardSurfaces.length; i++){
+        if(cardSurfaces[i].id === id){
+          clickedCardIndex = i;
+          break;
+        }
+      }
+      console.log('clicked card is ' + clickedCardIndex);
+      console.log('current card is ' + currentCardIndex);
+      console.log('change amount should be ' + scrollview.getSize()[0] * amount);
+      var amount = clickedCardIndex - currentCardIndex;
+      scrollview.setPosition(scrollview.getSize()[0] * amount);
+      setFace(clickedCardIndex);
+    });
+
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
-      clipSize: window.innerWidth/5,
+      clipSize: 0.01,
+      margin: window.innerWidth,
       speedLimit: 1.3,
       drag: 0.004
       // edgePeriod: 150
@@ -107,6 +125,11 @@ define(function(require, exports, module){
       if(currentFace === faceIndex){
         return;
       }
+
+      if(cardSurfaces[faceIndex]){
+        eventHandler.emit('focus', cardSurfaces[faceIndex].id);
+      }
+
       cardSurfaces.forEach(function(rendernode, index){
         if(index < faceIndex && rendernode.angle !== "left"){
           transformCard(rendernode, "left");
@@ -131,7 +154,6 @@ define(function(require, exports, module){
           backgroundColor: "steelblue",
           backgroundImage: "url(" + location.photo + ")",
           backgroundSize: "auto " + cardSize[1] + "px"
-          // backgroundColor: 'steelblue'
         }
       });
 
@@ -149,7 +171,6 @@ define(function(require, exports, module){
 
       cardSurface.pipe(renderNode);
       renderNode.add(modifier).link(cardSurface);
-      // renderNode.modifier = modifier;
       cardSurfaces.push(renderNode);
       if(first){
         scrollview.sequenceFrom(cardSurfaces);
@@ -157,10 +178,12 @@ define(function(require, exports, module){
         first = false;
       }
     };
+
     // Engine.pipe(scrollview);
     mapSection
     .add(new Modifier({
-      transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.75, 20)
+      // transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.75, 20),
+      origin: [0.5,1]
     }))
     .link(scrollview);
 
@@ -172,10 +195,7 @@ define(function(require, exports, module){
 
             setTimeout(function(){
               setFace(0);
-
-              // resequence the scrollview
               scrollview.sequenceFrom(cardSurfaces);
-              
             }, 0)
           }
           return cardSurfaces.splice(i, 1);
