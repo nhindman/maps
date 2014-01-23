@@ -4,18 +4,23 @@ define(function(require, exports, module){
     Matrix   = require('famous/Matrix'),
     Modifier = require('famous/Modifier'),
     Timer    = require('famous/Timer'),
-    async    = require('../../../lib/requirejs-plugins/src/async');
+    async    = require('../../../lib/requirejs-plugins/src/async'),
+    RenderNode = require('famous/RenderNode');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
-  module.exports = function(mapSection){
+  module.exports = function(displays){
 
 
     var mapSurface = new Surface({
-      content: '<div id="map-canvas" />'
+      content: '<div id="map-canvas" />',
+      size: [window.innerWidth, window.innerHeight]
     });
+    var mapNode = new RenderNode();
+    mapNode.link(mapSurface);
 
-    mapSection.add(mapSurface);
+    // mapSection.add(mapSurface);
+    displays.push(mapNode);
     
     var initialize = function() {
       console.log('initialize');
@@ -69,8 +74,7 @@ define(function(require, exports, module){
         });
       });
     };
-    // var intervalID = window.setInterval(initialize, 0);
-    // window.setTimeout(initialize, 0);
+    var intervalID = window.setInterval(initialize, 0);
 
   }
 });

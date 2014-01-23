@@ -2,7 +2,7 @@ define(function(require, exports, module) {
   var
     FamousEngine = require('famous/Engine'),
     App          = require('app/App'),
-    Scrollview = require('app/mapSection/customScrollView'),
+    Scrollview = require('famous-views/ScrollView'),
     Surface = require('famous/Surface'),
     RenderNode = require('app/mapSection/customRenderNode'),
     Modifier = require('famous/Modifier'),
@@ -13,17 +13,17 @@ define(function(require, exports, module) {
 
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
-  // mainDisplay.setPerspective(2000);
+  mainDisplay.setPerspective(2000);
   // mainDisplay.link(app);
-  // FamousEngine.pipe(app);
+  FamousEngine.pipe(app);
 
   // create the various sections
-  // require('app/mapSection/mapSection')(app, FamousEngine);
-  // var splash = require('app/splashSection/splash');
-  // mainDisplay.link(splashSurface);
+  // require('app/splashSection/splashSection')(app);
+  // mainDisplay.link(splashSection);
+  // console.log(map);
 
   // start on the main section
-  // app.select('splash');
+  // app.select('map');
 
   //Create a scrollview
   var displays = [];
@@ -33,32 +33,43 @@ define(function(require, exports, module) {
     height = window.innerHeight,
     width = window.innerWidth,
     mod;
-  for (var i = 0; i < 10; i++){
-    splashSurface = new Surface({
-      content: '<img src="js/app/splashSection/san-francisco-morning-fog.jpg" />',
-      size: [height, width]
-    });
-    splashNode = new RenderNode();
-    splashNode.link(splashSurface);
-    mod = new Modifier();
-    displays.push(splashNode);
+  mod = new Modifier({
+    // transform: Matrix.rotateY(1)
+  });
+  var mod2 = new Modifier({
+    transform: Matrix.translate(0, 0, -30)
+  });
+  window.swap = function(){
+    mod.setTransform(Matrix.translate(500, 0, -20), {duration: 250});
+    mod2.setTransform(Matrix.translate(-500, 0, 20), {duration: 250}, secondSwap);
   }
-  var scrollview = new Scrollview({}, function(pos){
-    console.log(pos)
-  });
-  scrollview.setOptions({
-    paginated: true,
-    itemSpacing: window.innerWidth + 88,
-    direction: 'x'
-  });
-  FamousEngine.pipe(scrollview);
-  // FamousEngine.on('touchmove', function(one, two){
-  //   console.log(one, two);
-  // })
-  scrollview.sequenceFrom(displays);
-  scrollview.on('moving', function(one, two){
-    console.log(one, two)
-  })
-  mainDisplay.link(scrollview);
+  var secondSwap = function(){
+    mod.setTransform(Matrix.translate(window.innerWidth/2, 0, -60), {duration: 150});
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 500}, thirdSwap)
+   };
+  var thirdSwap = function(){
+    mod.setTransform(Matrix.translate(-window.innerWidth/1000, 0, -100), {duration: 150});
+  };
+  window.swapBack = function(){
+    mod.setTransform(Matrix.translate(-500, 0, 20), {duration: 250});
+    mod2.setTransform(Matrix.translate(500, 0, -20), {duration: 250}, secondSwapBack);
+  };
+  var secondSwapBack = function(){
+    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 500})
+    mod2.setTransform(Matrix.translate(window.innerWidth/2, 0, -60), {duration: 150}, thirdSwapBack);
+  };
+  var thirdSwapBack = function(){
+    mod2.setTransform(Matrix.translate(-window.innerWidth/1000, 0, -100), {duration: 150});
+  };
+  displays.push(new Surface({
+      content: '<img src="./js/app/splashSection/san-francisco-morning-fog.jpg"/>',
+      size: [window.innerWidth, window.innerHeight],
+    }))
+  require('app/mapSection/_googleMaps')(displays);
+  // for (i = 0; i < displays.length; i++) {
+    // mainDisplay.add(mod).link(displays[0]);
+    mainDisplay.add(mod).link(displays[1]);
+    mainDisplay.add(mod2).link(displays[0]);
+  // }
 
 });
