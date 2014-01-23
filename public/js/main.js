@@ -14,63 +14,44 @@ define(function(require, exports, module) {
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
   mainDisplay.setPerspective(300);
-  // mainDisplay.link(app);
   FamousEngine.pipe(app);
 
-  // create the various sections
-  // require('app/splashSection/splashSection')(app);
-  // mainDisplay.link(splashSection);
-  // console.log(map);
-
-  // start on the main section
-  // app.select('map');
-
-  //Create a scrollview
-  var displays = [];
   var
     splashSurface,
     spashNode,
     height = window.innerHeight,
     width = window.innerWidth,
-    mod;
-  mod = new Modifier({
-    // transform: Matrix.rotateY(1)
-  });
-  var mod2 = new Modifier({
+    displays = [],
+    mod,
+    mod2;
+  mod = new Modifier({});
+  mod2 = new Modifier({
     transform: Matrix.translate(window.innerWidth/1000, 0, -100)
   });
-  var curve = 'spring';
   window.swap = function(){
-    mod.setTransform(Matrix.translate(500, 0, -20), {duration: 550});
-    mod2.setTransform(Matrix.translate(-1200, 0, 20), {duration: 550}, secondSwap);
+    mod.setTransform(Matrix.move(Matrix.rotateY(-0.05),[500, 0, -40]), {duration: 400, curve: 'easeOut'});
+    mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [-1200, 0, 40]), {duration: 400, curve: 'easeOut'}, secondSwap);
   }
   var secondSwap = function(){
-    mod.setTransform(Matrix.translate(window.innerWidth/2, 0, -60), {duration: 550});
-    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 550}, thirdSwap)
+    mod.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -90]), {duration: 400, curve: 'easeIn'});    
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'})
    };
-  var thirdSwap = function(){
-    mod.setTransform(Matrix.translate(-window.innerWidth/1000, 0, -100), {duration: 550});
-  };
   window.swapBack = function(){
-    mod.setTransform(Matrix.translate(500, 0, 20), {duration: 550});
-    mod2.setTransform(Matrix.translate(-1200, 0, -20), {duration: 550}, secondSwapBack);
+    mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [500, 0, 40]), {duration: 400, curve: 'easeOut'});
+    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-1200, 0, -40]), {duration: 400, curve: 'easeOut'}, secondSwapBack);
   };
   var secondSwapBack = function(){
-    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 550})
-    mod2.setTransform(Matrix.translate(-window.innerWidth/2, 0, -60), {duration: 550}, thirdSwapBack);
+    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'})
+    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-window.innerWidth/2, 0, -90]), {duration: 400, curve: 'easeIn'}, thirdSwapBack);
   };
   var thirdSwapBack = function(){
-    mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 550});
+    mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 400});
   };
   displays.push(new Surface({
       content: '<img src="./js/app/splashSection/san-francisco-morning-fog.jpg"/>',
       size: [window.innerWidth, window.innerHeight],
-    }))
+  }))
   require('app/mapSection/_googleMaps')(displays);
-  // for (i = 0; i < displays.length; i++) {
-    // mainDisplay.add(mod).link(displays[0]);
-    mainDisplay.add(mod).link(displays[1]);
-    mainDisplay.add(mod2).link(displays[0]);
-  // }
-
+  mainDisplay.add(mod).link(displays[1]);
+  mainDisplay.add(mod2).link(displays[0]);
 });
