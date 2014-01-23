@@ -78,9 +78,43 @@ body {
 }
 
 .card {
-    border-radius: 5%;
+    line-height: 1.1em;
+    letter-spacing: -1px;
+    box-sizing: border-box;
+    border-radius: 3%;
+    font-weight: 700;
+    background-size: cover;
+    background-color: steelblue;
+    /*text-transform: uppercase;*/
+    padding: 5px;
+    text-shadow: 0px 1px 0px rgba(0,0,0,0.7);
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.7), 0px 1px 0px rgba(255,255,255,0.7) inset, 0px -1px 0px rgba(0,0,0,0.5) inset; 
+}
+
+.bigCard {
+    line-height: 1.1em;
+    letter-spacing: -1px;
+    box-sizing: border-box;
+    background-color: steelblue;
+    background-size: cover;
+    border-radius: 3%;
     font-weight: 700;
     text-transform: uppercase;
+    padding: 10px;
+    text-shadow: 0px 1px 0px rgba(0,0,0,0.7);
+    /*box-shadow: 0px 1px 3px rgba(0,0,0,0.7), 0px 1px 0px rgba(255,255,255,0.7) inset, 0px -1px 0px rgba(0,0,0,0.5) inset; */
+    /*background-image:   -webkit-gradient(linear, left top, left bottom, from(rgba(41, 41, 41, 0.00)), to(rgba(43, 43, 44, 1.00))).
+                        -webkit-linear-gradient(top, rgba(41, 41, 41, 0.00), rgba(43, 43, 44, 1.00));
+*/
+}
+
+.hide {
+    visibility: hidden;
+    display: none;
+}
+
+.blur {
+    -webkit-filter: blur(1px);
 }
 
 .blocker {
