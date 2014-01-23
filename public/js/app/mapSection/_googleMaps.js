@@ -4,11 +4,13 @@ define(function(require, exports, module){
     Matrix   = require('famous/Matrix'),
     Modifier = require('famous/Modifier'),
     Timer    = require('famous/Timer'),
-    async    = require('../../../lib/requirejs-plugins/src/async');
+    async    = require('../../../lib/requirejs-plugins/src/async'),
+    RenderNode = require('famous/RenderNode'),
+    FamousEngine = require('famous/Engine');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
-  module.exports = function(mapSection, eventHandler){
+  module.exports = function(mainDisplay, eventHandler){
 
     var queryRadius = 1500 // meters
 
@@ -28,8 +30,11 @@ define(function(require, exports, module){
     mapSurface.on('deploy', function(){
       initialize();
     });
+    var mapNode = new RenderNode();
+    mapNode.add(mapSurface);
+    require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler);
 
-    mapSection.add(mapSurface);
+    // mainDisplay.add(mapSurface);
 
     var reQuery = function(){
       var newCenter = {
@@ -148,6 +153,7 @@ define(function(require, exports, module){
       }
     }
 
+
     var initialize = function() {
       directionsDisplay = new google.maps.DirectionsRenderer();
 
@@ -212,6 +218,6 @@ define(function(require, exports, module){
       });
     };
     // var intervalID = window.setInterval(initialize, 0);
-
+    return mapNode;
   }
 });

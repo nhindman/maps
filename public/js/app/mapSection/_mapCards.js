@@ -18,7 +18,7 @@ define(function(require, exports, module){
     cardOffset   = 0.25,                           // offset between skewed cards and the front facing card
     curve        = 'easeInOut',                    // transition curve type
     easeDuration = 150,                            // amount of time for cards to transition
-    zPosFaceCard = 200,                            // z position offset for the face card
+    zPosFaceCard = 130,                            // z position offset for the face card
     yPosFaceCard = -20,                            // y position offset for the face card
     // cardSpacing  = Math.floor(-cardSize[0] * 0.5);
     cardSpacing  = 0;
@@ -60,7 +60,7 @@ define(function(require, exports, module){
     }
   }
 
-  module.exports = function(mapSection, Engine, eventHandler){
+  module.exports = function(mapNode, Engine, eventHandler){
 
     /////////////
     // BLOCKER //
@@ -75,7 +75,7 @@ define(function(require, exports, module){
       transform: Matrix.translate(0, window.innerHeight - cardSize[1], 40)
     });
 
-    mapSection.add(blockingMod).link(blockingSurface);
+    mapNode.add(blockingMod).link(blockingSurface);
 
 
     ////////////////
@@ -209,12 +209,11 @@ define(function(require, exports, module){
 
     /////////////////////////////////////////////
 
-    mapSection
+    mapNode
     .add(new Modifier({
-      transform: Matrix.translate(0, 0, 20),
+      transform: Matrix.translate(0, 0, -50),
       origin: [0.5,1]
     }))
     .link(scrollview);
-
   };
 });
