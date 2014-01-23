@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
-  mainDisplay.setPerspective(2000);
+  mainDisplay.setPerspective(300);
   // mainDisplay.link(app);
   FamousEngine.pipe(app);
 
@@ -37,29 +37,30 @@ define(function(require, exports, module) {
     // transform: Matrix.rotateY(1)
   });
   var mod2 = new Modifier({
-    transform: Matrix.translate(0, 0, -30)
+    transform: Matrix.translate(window.innerWidth/1000, 0, -100)
   });
+  var curve = 'spring';
   window.swap = function(){
-    mod.setTransform(Matrix.translate(500, 0, -20), {duration: 250});
-    mod2.setTransform(Matrix.translate(-500, 0, 20), {duration: 250}, secondSwap);
+    mod.setTransform(Matrix.translate(500, 0, -20), {duration: 550});
+    mod2.setTransform(Matrix.translate(-1200, 0, 20), {duration: 550}, secondSwap);
   }
   var secondSwap = function(){
-    mod.setTransform(Matrix.translate(window.innerWidth/2, 0, -60), {duration: 150});
-    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 500}, thirdSwap)
+    mod.setTransform(Matrix.translate(window.innerWidth/2, 0, -60), {duration: 550});
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 550}, thirdSwap)
    };
   var thirdSwap = function(){
-    mod.setTransform(Matrix.translate(-window.innerWidth/1000, 0, -100), {duration: 150});
+    mod.setTransform(Matrix.translate(-window.innerWidth/1000, 0, -100), {duration: 550});
   };
   window.swapBack = function(){
-    mod.setTransform(Matrix.translate(-500, 0, 20), {duration: 250});
-    mod2.setTransform(Matrix.translate(500, 0, -20), {duration: 250}, secondSwapBack);
+    mod.setTransform(Matrix.translate(500, 0, 20), {duration: 550});
+    mod2.setTransform(Matrix.translate(-1200, 0, -20), {duration: 550}, secondSwapBack);
   };
   var secondSwapBack = function(){
-    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 500})
-    mod2.setTransform(Matrix.translate(window.innerWidth/2, 0, -60), {duration: 150}, thirdSwapBack);
+    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 550})
+    mod2.setTransform(Matrix.translate(-window.innerWidth/2, 0, -60), {duration: 550}, thirdSwapBack);
   };
   var thirdSwapBack = function(){
-    mod2.setTransform(Matrix.translate(-window.innerWidth/1000, 0, -100), {duration: 150});
+    mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 550});
   };
   displays.push(new Surface({
       content: '<img src="./js/app/splashSection/san-francisco-morning-fog.jpg"/>',
