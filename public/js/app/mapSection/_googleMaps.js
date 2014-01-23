@@ -76,8 +76,8 @@ define(function(require, exports, module){
           dropMarkers();
           addAndRemoveCards();
         },
-        error: function(){
-          alert('error');
+        error: function(err){
+          console.log('something weird happened: ' + err)
         }
       });
     }
