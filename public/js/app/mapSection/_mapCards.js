@@ -21,13 +21,12 @@ define(function(require, exports, module){
     zPosFaceCard = 200,                            // z position offset for the face card
     yPosFaceCard = -20,                            // y position offset for the face card
     // cardSpacing  = Math.floor(-cardSize[0] * 0.5);
-    cardSpacing = 0;
+    cardSpacing  = 0;
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
   //////////////////////////
 
-  // helper function to rotate positions from surfaces plus offsets
   var transformCard = function(rendernode, direction){
     var
       theta,
@@ -35,10 +34,10 @@ define(function(require, exports, module){
       z = 60;
 
     switch(direction){
-      case "left":
+      case 'left':
         theta = rotateYAngle;
         break;
-      case "center":
+      case 'center':
         theta = 0;
         y = yPosFaceCard;
         z = zPosFaceCard;
@@ -46,7 +45,7 @@ define(function(require, exports, module){
           boxShadow: '3px 3px 3px black'
         });
         break;
-      case "right":
+      case 'right':
         theta = -rotateYAngle;
         break;
     }
@@ -63,7 +62,10 @@ define(function(require, exports, module){
 
   module.exports = function(mapSection, Engine, eventHandler){
 
-    // create a surface to prevent the map from being clickable
+    /////////////
+    // BLOCKER //
+    /////////////
+
     var blockingSurface = new Surface({
       size: [window.innerWidth, cardSize[1]],
       classes: ['blocker']
@@ -75,21 +77,16 @@ define(function(require, exports, module){
 
     mapSection.add(blockingMod).link(blockingSurface);
 
-    var centerIndex = Math.floor((window.innerWidth / Math.abs(cardSpacing)) / 2)
+
+    ////////////////
+    // SCROLLVIEW //
+    ////////////////
 
     var
       cardSurfaces = [],
+      first        = true,
       currentFace,
       renderNode;
-
-    eventHandler.on('focusCard', function(id){
-      for(var i = 0; i < cardSurfaces.length; i++){
-        if(cardSurfaces[i].id === id){
-          scrollview.moveToIndex(i);
-          break;
-        }
-      }
-    });
 
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
@@ -106,31 +103,31 @@ define(function(require, exports, module){
 
     blockingSurface.pipe(scrollview);
 
-    currentFace = 0;
 
     var setFace = function(faceIndex){
-      faceIndex = faceIndex || Math.max(0, Math.min(cardSurfaces.length - 1, cardSurfaces.indexOf(scrollview.getCurrentNode().get())));
-      if(currentFace === faceIndex){
-        return;
-      }
-
+      faceIndex = faceIndex || scrollview.node.index;
+      if(currentFace === faceIndex){ return; }
+      
       cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
       cardSurfaces.forEach(function(rendernode, index){
-        if(index < faceIndex && rendernode.angle !== "left"){
-          transformCard(rendernode, "left");
+        if(index < faceIndex && rendernode.angle !== 'left'){
+          transformCard(rendernode, 'left');
         }
-        if(index === faceIndex && rendernode.angle !== "center"){
-          transformCard(rendernode, "center");
+        if(index === faceIndex && rendernode.angle !== 'center'){
+          transformCard(rendernode, 'center');
         }
-        if(index > faceIndex && rendernode.angle !== "right"){
-          transformCard(rendernode, "right");
+        if(index > faceIndex && rendernode.angle !== 'right'){
+          transformCard(rendernode, 'right');
         }
       })
       currentFace = faceIndex;
     };
 
-    var first = true;
+
+    ///////////////////////
+    // CARD MANIPULATION //
+    ///////////////////////
 
     var addCard = function(location){
       var cardSurface = new Surface({
@@ -145,7 +142,7 @@ define(function(require, exports, module){
       });
 
       var renderNode = new RenderNode({id: location.id});
-      renderNode.angle = "left";
+      renderNode.angle = 'left';
       var modifier = new Modifier({
         transform: Matrix.move(Matrix.rotateY(-2), [200,-100,100])
       });
@@ -159,13 +156,13 @@ define(function(require, exports, module){
 
       cardSurface.pipe(renderNode);
       renderNode.link(modifier).link(cardSurface);
-      cardSurfaces.push(renderNode);
       renderNode.pipe(scrollview);
 
       var endMatrix = (cardSurfaces.length) ? 
         Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 
         Matrix.translate(0, yPosFaceCard, zPosFaceCard);
 
+      cardSurfaces.push(renderNode);
       modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'})
     };
 
@@ -173,12 +170,11 @@ define(function(require, exports, module){
     var removeCard = function(id){
       for(var i = 0; i < cardSurfaces.length; i++){
         if(cardSurfaces[i].id === id){
-          // if the angle is "center", that means this card was the face card and we need to set a new face.
+          // if the angle is 'center', that means this card was the face card and we need to set a new face.
           if(cardSurfaces[i].angle === 'center'){
-
             eventHandler.emit('unfocus', id);
             setTimeout(function(){
-              setFace();
+              setFace(1);
               scrollview.sequenceFrom(cardSurfaces);
             }, 0)
           }
@@ -191,10 +187,26 @@ define(function(require, exports, module){
       }
     };
 
-    eventHandler.on('addCard', addCard);
-    eventHandler.on('removeCard', removeCard);
+    var focusCard = function(id){
+      for(var i = 0; i < cardSurfaces.length; i++){
+        if(cardSurfaces[i].id === id){
+          scrollview.moveToIndex(i);
+          break;
+        }
+      }
+    };
 
-    // Engine.pipe(scrollview);
+    /////////////////////
+    // EVENT LISTENERS //
+    /////////////////////
+
+    eventHandler.on('addCard',    addCard);
+    eventHandler.on('removeCard', removeCard);
+    eventHandler.on('focusCard',  focusCard);
+
+
+    /////////////////////////////////////////////
+
     mapSection
     .add(new Modifier({
       transform: Matrix.translate(0, 0, 20),
