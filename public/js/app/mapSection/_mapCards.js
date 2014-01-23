@@ -14,7 +14,7 @@ define(function(require, exports, module){
   //// OPTIONS ////
   /////////////////
   var
-    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5);
+    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/3);
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
@@ -221,7 +221,7 @@ define(function(require, exports, module){
           part.link(newNode);
 
           spring = new Spring({
-            anchor : [ 0, -300, 0],
+            anchor : [ 0, -(window.innerHeight / 2), 0],
             period : 300,
             dampingRatio : 0.5
           });
