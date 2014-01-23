@@ -63,7 +63,7 @@ define(function(require, exports, module){
     }
   }
 
-  module.exports = function(mapSection, Engine, eventHandler){
+  module.exports = function(mapNode, Engine, eventHandler){
 
     /////////////
     // BLOCKER //
@@ -78,7 +78,7 @@ define(function(require, exports, module){
       transform: Matrix.translate(0, window.innerHeight - cardSize[1], 40)
     });
 
-    mapSection.add(blockingMod).link(blockingSurface);
+    mapNode.add(blockingMod).link(blockingSurface);
 
 
     ////////////////
@@ -227,7 +227,7 @@ define(function(require, exports, module){
           });
           PhyEng.attach(spring, part);
           
-          mapSection.add(newNode).add(new Modifier({ origin : [0.5, 0.98], transform : node.modifiers[0].getTransform() } )).link(PhyEng);
+          mapNode.add(newNode).add(new Modifier({ origin : [0.5, 0.98], transform : node.modifiers[0].getTransform() } )).link(PhyEng);
 
           // Blur the map after transform has completed.
           // Otherwise there's performance issues on mobile.
@@ -258,7 +258,7 @@ define(function(require, exports, module){
             // Don't cut it out until its off screen.
             Time.setTimeout(function(){
               // FIXME: There's no guarantee the surface we want to remove is the last one.
-              mapSection.object.splice(mapSection.object.length - 1, 1);
+              mapNode.object.splice(mapNode.object.length - 1, 1);
             }, 500);
 
           });
@@ -314,12 +314,11 @@ define(function(require, exports, module){
 
     /////////////////////////////////////////////
 
-    mapSection
+    mapNode
     .add(new Modifier({
-      transform: Matrix.translate(0, 0, 20),
+      transform: Matrix.translate(0, 0, -50),
       origin: [0.5,1]
     }))
     .link(scrollview);
-
   };
 });
