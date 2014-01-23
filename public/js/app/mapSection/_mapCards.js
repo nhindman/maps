@@ -114,9 +114,7 @@ define(function(require, exports, module){
         return;
       }
 
-      if(cardSurfaces[faceIndex]){
-        eventHandler.emit('focus', cardSurfaces[faceIndex].id);
-      }
+      cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
       cardSurfaces.forEach(function(rendernode, index){
         if(index < faceIndex && rendernode.angle !== "left"){
@@ -145,19 +143,20 @@ define(function(require, exports, module){
         }
       });
 
+
       var renderNode = new RenderNode({id: location.id});
       renderNode.angle = "left";
       var modifier = new Modifier({
-        transform: Matrix.move(Matrix.rotateY(-2), [0,-500,0])
+        transform: Matrix.move(Matrix.rotateY(-2), [200,-100,100])
       });
 
       if(!cardSurfaces.length || first){
-        renderNode.angle = "center";
-        modifier = new Modifier({
-          transform: Matrix.translate([0, yPosFaceCard, zPosFaceCard])
-        });
+        // renderNode.angle = "center";
+        // modifier = new Modifier({
+        //   transform: Matrix.translate([0, yPosFaceCard, zPosFaceCard])
+        // });
         scrollview.sequenceFrom(cardSurfaces);
-        setFace(0);
+        eventHandler.emit('focus', location.id)
         first = false;
       }
 
@@ -165,7 +164,12 @@ define(function(require, exports, module){
       renderNode.link(modifier).link(cardSurface);
       cardSurfaces.push(renderNode);
       renderNode.pipe(scrollview);
-      modifier.setTransform(Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]), {duration: 300, curve: 'easeIn'})
+
+      var endMatrix = (cardSurfaces.length) ? 
+        Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 
+        Matrix.translate(0, yPosFaceCard, zPosFaceCard);
+
+      modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'})
     };
 
     // Engine.pipe(scrollview);
@@ -180,8 +184,9 @@ define(function(require, exports, module){
       for(var i = 0; i < cardSurfaces.length; i++){
         if(cardSurfaces[i].id === id){
           // if the angle is "center", that means this card was the face card and we need to set a new face.
-          if(cardSurfaces[i].angle === "center"){
+          if(cardSurfaces[i].angle === 'center'){
 
+            eventHandler.emit('unfocus', id);
             setTimeout(function(){
               setFace();
               scrollview.sequenceFrom(cardSurfaces);

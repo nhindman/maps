@@ -56,6 +56,12 @@ define(function(require, exports, module){
       highlightedID = id;
     });
 
+    eventHandler.on('unfocus', function(id){
+      allMarkers[id].marker.setOptions({
+        icon: 'img/blueMarker.png'
+      });
+    });
+
     var fetchData = function(){
       $.ajax({
         type: 'GET',
@@ -130,11 +136,11 @@ define(function(require, exports, module){
         marker = allMarkers[id];
         if(bounds.contains(marker.marker.getPosition())){
           if(!boundMarkers[id]){
-            cards.addCard(marker.data);
             boundMarkers[id] = {
               marker: marker.marker,
               data: marker.data
             };
+            cards.addCard(marker.data);
           }
         }
       }
