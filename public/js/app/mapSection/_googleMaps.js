@@ -227,6 +227,13 @@ define(function(require, exports, module){
         zoom: 15,
         disableDefaultUI: true,
         disableDoubleClickZoom: true,
+        panControl: false,
+        zoomControl: false,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        overviewMapControl: false,
+        center: new google.maps.LatLng(37.7833, -122.4167),
         styles: require('app/mapSection/_mapStyle')()
       };
 

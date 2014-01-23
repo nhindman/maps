@@ -82,7 +82,7 @@ define(function(require, exports, module){
         "featureType": "poi",
         "stylers": [
           {
-            "visibility": "off"
+            "visibility": "simplified"
           }
         ]
       },
@@ -91,7 +91,7 @@ define(function(require, exports, module){
         "elementType": "geometry.fill",
         "stylers": [
           {
-            "visibility": "on"
+            "visibility": "simplified"
           },
           {
             "color": "#b8cb93"
@@ -102,7 +102,7 @@ define(function(require, exports, module){
         "featureType": "poi.park",
         "stylers": [
           {
-            "visibility": "on"
+            "visibility": "simplified"
           }
         ]
       },
@@ -110,7 +110,7 @@ define(function(require, exports, module){
         "featureType": "poi.sports_complex",
         "stylers": [
           {
-            "visibility": "on"
+            "visibility": "simplified"
           }
         ]
       },
@@ -118,7 +118,7 @@ define(function(require, exports, module){
         "featureType": "poi.medical",
         "stylers": [
           {
-            "visibility": "on"
+            "visibility": "simplified"
           }
         ]
       },
