@@ -55,6 +55,6 @@ define(function(require, exports, module) {
       content: '<img src="./js/app/splashSection/san-francisco-morning-fog.jpg"/>',
       size: [window.innerWidth, window.innerHeight],
   });
-  mainDisplay.add(mod).link(placeholder);
-  mainDisplay.add(mod2).link(mapNode);
+  mainDisplay.add(mod).link(mapNode);
+  mainDisplay.add(mod2).link(placeholder);
 });
