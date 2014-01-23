@@ -93,7 +93,7 @@ define(function(require, exports, module){
       clipSize: window.innerWidth/5,
       // margin: 80,
       // paginated: true,
-      speedLimit: 1.3,
+      speedLimit: 10,
       drag: 0.004,
       // edgePeriod: 150
     // })
