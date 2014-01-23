@@ -1,369 +1,220 @@
-// dummy data
-var data = [
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  },
-    {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Golden Gate Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Golden_Gate_Bridge_20100906_04.JPG/80px-Golden_Gate_Bridge_20100906_04.JPG)'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bay Bridge',
-    image: 'url(http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg/80px-Rama_VIII_Bridge_spanning_the_Chao_Phraya_River_in_Bangkok.jpg)'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Splash'
-  },
-  {
-    name: 'Bros'
-  },
-  {
-    name: 'Steph Curry'
-  },
-  {
-    name: 'Klay Thompson'
-  }
-];
-
 define(function(require, exports, module){
   var
-    Surface      = require('./customSurface'),
-    Modifier     = require('famous/Modifier'),
-    Matrix       = require('famous/Matrix'),
-    ViewSequence = require('famous/ViewSequence'),
-    Scrollview = require('./customScrollView'),
-    RenderNode = require('./customRenderNode'),
-    App = require('../App');
+    Surface       = require('./customSurface'),
+    Modifier      = require('famous/Modifier'),
+    Matrix        = require('famous/Matrix'),
+    ViewSequence  = require('famous/ViewSequence'),
+    Scrollview    = require('./customScrollView'),
+    RenderNode    = require('./customRenderNode');
 
   /////////////////
   //// OPTIONS ////
   /////////////////
   var
-    cardSize     = [80, 120],   // [X, Y] pixels in dimension (cards also have a 10px border at the moment)
-    cardBottom   = 0.95,        // absolute percentage between the bottom of the cards and the bottom of the page
-    rotateYAngle = 1,         // rotational Y angle of skew
-    cardOffset   = 0.25,        // offset between skewed cards and the front facing card
-    curve        = 'easeInOut',    // transition curve type
-    easeDuration = 150,         // amount of time for cards to transition
-    zPosFaceCard = 400,         // z position offset for the face card
-    yPosFaceCard = -40,         // y position offset for the face card
-    cardSpacing  = -50;
+    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5);
+    cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
+    cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
+    rotateYAngle = 1,                              // rotational Y angle of skew
+    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card
+    curve        = 'easeInOut',                    // transition curve type
+    easeDuration = 150,                            // amount of time for cards to transition
+    zPosFaceCard = 200,                            // z position offset for the face card
+    yPosFaceCard = -20,                            // y position offset for the face card
+    // cardSpacing  = Math.floor(-cardSize[0] * 0.5);
+    cardSpacing  = 0;
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
   //////////////////////////
 
-  // helper function to handle rotation and position
-  var rotatePos = function(theta, x, y, yPos, zPos){
-    yPos = yPos || 0;
-    zPos = zPos || 50;
-    return new Modifier({
-      transform: Matrix.move(Matrix.rotateY(theta), [0, yPos, zPos]),
-      origin: [x, y]
-    });
-  };
-
-  // helper function to rotate positions from surfaces plus offsets
-  var transformCard = function(rendernode, Xoffset, direction){
+  var transformCard = function(rendernode, direction){
     var
       theta,
       y = 0,
-      z = 50;
+      z = 60;
 
     switch(direction){
-      case "left":
+      case 'left':
         theta = rotateYAngle;
         break;
-      case "center":
+      case 'center':
         theta = 0;
         y = yPosFaceCard;
         z = zPosFaceCard;
+        rendernode.object.setProperties({
+          boxShadow: '3px 3px 3px black'
+        });
         break;
-      case "right":
+      case 'right':
         theta = -rotateYAngle;
         break;
     }
     rendernode.angle = direction;
-    var mod = rendernode.object[0].modifiers[0];
+    var mod = rendernode.modifiers[0];
     if (mod) {
       mod.halt();
       mod.setTransform(Matrix.move(Matrix.rotateY(theta), [0,y,z]), {
         duration: easeDuration,
         curve: curve
       });
-      // mod.setOrigin([Xoffset, cardBottom], {
-      //   duration: easeDuration,
-      //   curve: curve
-      // });
     }
   }
 
-  module.exports = function(mapSection, Engine){
+  module.exports = function(mapSection, Engine, eventHandler){
 
-    // storage for our various surfaces and modifiers
-    var centerIndex = Math.floor((window.innerWidth / Math.abs(cardSpacing)) / 2)
+    /////////////
+    // BLOCKER //
+    /////////////
+
+    var blockingSurface = new Surface({
+      size: [window.innerWidth, cardSize[1]],
+      classes: ['blocker']
+    });
+
+    var blockingMod = new Modifier({
+      transform: Matrix.translate(0, window.innerHeight - cardSize[1], 40)
+    });
+
+    mapSection.add(blockingMod).link(blockingSurface);
+
+
+    ////////////////
+    // SCROLLVIEW //
+    ////////////////
 
     var
       cardSurfaces = [],
+      first        = true,
       currentFace,
-      scrollview = new Scrollview({
-        itemSpacing: cardSpacing,
-        clipSize: window.innerWidth/5,
-        speedLimit: 1.3
-        // edgePeriod: 150
-      }, function(pos){
-        var faceIndex = Math.min(data.length - 1, scrollview.getCurrentNode().get().index)
-        setFace(faceIndex);
-      }),
       renderNode;
 
-
-    // helper function to create cards and display them at proper skew
-    // "face" is the card that is not skewed
-    var createCards = function(faceIndex){
-
-      // this is the incremenet amount for X position for every card not including offset
-      var increment = 1 / (data.length - 1);
-
-      var i, cardSurface, Xoffset, modifier, options;
-
-      Xoffset = window.innerWidth/2;
-
-      for(i = 0; i < data.length; i++){
-        options = {
-          size: cardSize,
-          content: data[i].name,
-          properties: {},
-          classes: ['card']
-        };
-        if (i === 0 || i === data.length - 1) {
-          options.properties.visibility = 'hidden';
-        }
-        if (data[i].image) {
-          options.properties.backgroundImage = data[i].image;
-        } else {
-          options.properties.backgroundColor = 'steelblue';
-        }
-        cardSurface = new Surface(options);
-        rendernode = new RenderNode({index: i});
-        if(i < faceIndex){
-          // Xoffset = (increment * i * (1 - cardOffset));
-          Xoffset = 0;
-          // modifier = rotatePos(rotateYAngle, Xoffset, cardBottom);
-          modifier = new Modifier({
-            transform: Matrix.rotateY(rotateYAngle)
-          });
-          // cardSurface.angle = 'left';
-          rendernode.angle = 'left';
-        }
-
-        if(i === faceIndex){
-          // Xoffset = (increment * i);
-          Xoffset = 0;
-          modifier = new Modifier({
-            transform: Matrix.move(Matrix.rotateY(0), [0,yPosFaceCard,zPosFaceCard])
-          });
-          rendernode.angle = 'center';
-        }
-
-        if(i > faceIndex){
-          Xoffset = 0;
-          // Xoffset = (increment * i) * (1 - cardOffset) + cardOffset;
-          // modifier = rotatePos(-rotateYAngle, Xoffset, cardBottom);
-          modifier = new Modifier({
-            transform: Matrix.rotateY(-rotateYAngle)
-          })
-          rendernode.angle = 'right';
-        }
-        // cardSurface.modifier = modifier;
-        cardSurface.pipe(rendernode);
-        rendernode.add(modifier).link(cardSurface);
-        // rendernode.object[0].object.pipe(scrollview);
-        cardSurfaces.push(rendernode);
+    window.scrollview = new Scrollview({
+      itemSpacing: cardSpacing,
+      clipSize: window.innerWidth/5,
+      // margin: 80,
+      // paginated: true,
+      speedLimit: 10,
+      drag: 0.004,
+      // edgePeriod: 150
+    // })
+    }, function(pos){
+      if(scrollview.node){
+        setFace();
       }
-    };
-    createCards(1);
-    scrollview.sequenceFrom(cardSurfaces);
-    // Engine.pipe(scrollview);
-    mapSection
-    .add(new Modifier({
-      transform: Matrix.translate(window.innerWidth/2 - cardSize[0]/3, window.innerHeight*0.7, 0)
-    }))
-    .link(scrollview);
+    });
 
-    //////////////////////////////
-    //// ARRAY IMPLEMENTATION ////
-    //////////////////////////////
+    blockingSurface.pipe(scrollview);
+
 
     var setFace = function(faceIndex){
-      if(currentFace === faceIndex){
-        return;
-      }
-      var
-        increment = 1 / (data.length - 1),
-        Xoffset;
+      faceIndex = faceIndex || scrollview.node.index;
+      if(currentFace === faceIndex){ return; }
+
+      cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
       cardSurfaces.forEach(function(rendernode, index){
-        if(index < faceIndex && rendernode.angle !== "left"){
-          Xoffset = 0;
-          // Xoffset = (increment * index * (1 - cardOffset));
-          transformCard(rendernode, Xoffset, "left");
+        if(index < faceIndex && rendernode.angle !== 'left'){
+          transformCard(rendernode, 'left');
         }
-
-        if(index === faceIndex && rendernode.angle !== "center"){
-          Xoffset = 0;
-          // Xoffset = (increment * index);
-          transformCard(rendernode, Xoffset, "center");
+        if(index === faceIndex && rendernode.angle !== 'center'){
+          transformCard(rendernode, 'center');
         }
-
-        if(index > faceIndex && rendernode.angle !== "right"){
-          Xoffset = 0;
-          // Xoffset = (increment * index) * (1 - cardOffset) + cardOffset;
-          transformCard(rendernode, Xoffset, "right")
+        if(index > faceIndex && rendernode.angle !== 'right'){
+          transformCard(rendernode, 'right');
         }
       })
       currentFace = faceIndex;
     };
+
+
+    ///////////////////////
+    // CARD MANIPULATION //
+    ///////////////////////
+
+    var addCard = function(location){
+      var cardSurface = new Surface({
+        size: cardSize,
+        content: location.name,
+        classes: ['card'],
+        properties: {
+          backgroundColor: 'steelblue',
+          backgroundImage: 'url(' + location.photo + ')',
+          backgroundSize: 'auto ' + cardSize[1] + 'px'
+        }
+      });
+
+      var renderNode = new RenderNode({id: location.id});
+      renderNode.angle = 'left';
+      var modifier = new Modifier({
+        transform: Matrix.move(Matrix.rotateY(-2), [200,-100,100])
+      });
+
+      if(!cardSurfaces.length || first){
+        scrollview.sequenceFrom(cardSurfaces);
+        eventHandler.emit('focus', location.id);
+        renderNode.angle = 'center';
+        first = false;
+      }
+
+      cardSurface.pipe(renderNode);
+      renderNode.link(modifier).link(cardSurface);
+      renderNode.pipe(scrollview);
+
+      var endMatrix = (cardSurfaces.length) ? 
+        Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 
+        Matrix.translate(0, yPosFaceCard, zPosFaceCard);
+
+      cardSurfaces.push(renderNode);
+      modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'})
+    };
+
+    
+    var removeCard = function(id){
+      for(var i = 0; i < cardSurfaces.length; i++){
+        if(cardSurfaces[i].id === id){
+          // if the angle is 'center', that means this card was the face card and we need to set a new face.
+          if(cardSurfaces[i].angle === 'center'){
+            eventHandler.emit('unfocus', id);
+            setTimeout(function(){
+              setFace(1);
+              setFace(0);
+              scrollview.sequenceFrom(cardSurfaces);
+            }, 0)
+          }
+          var card = cardSurfaces[i];
+          // return cardSurfaces[i].modifiers[0].setTransform(Matrix.move(Matrix.rotateY(-2), [0,400, 0], {duration: 200, curve: 'easeIn'}), function(){
+          //   cardSufraces.splice(cardSurfaces.indexOf(card), 1);
+          // });
+          return cardSurfaces.splice(i, 1);
+        }
+      }
+    };
+
+    var focusCard = function(id){
+      for(var i = 0; i < cardSurfaces.length; i++){
+        if(cardSurfaces[i].id === id){
+          return scrollview.moveToIndex(i);
+        }
+      }
+    };
+
+    /////////////////////
+    // EVENT LISTENERS //
+    /////////////////////
+
+    eventHandler.on('addCard',    addCard);
+    eventHandler.on('removeCard', removeCard);
+    eventHandler.on('focusCard',  focusCard);
+
+
+    /////////////////////////////////////////////
+
+    mapSection
+    .add(new Modifier({
+      transform: Matrix.translate(0, 0, 20),
+      origin: [0.5,1]
+    }))
+    .link(scrollview);
+
   };
 });
