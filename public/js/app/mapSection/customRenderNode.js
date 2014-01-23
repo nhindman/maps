@@ -27,8 +27,8 @@ define(function(require, exports, module) {
             this.id = object.id;
         }
         this.modifiers = [];
-        this.object = undefined;
-        if(object) this.set(object);
+        // this.object = undefined;
+        // if(object) this.set(object);
 
         this._hasCached = false;
         this._resultCache = {};

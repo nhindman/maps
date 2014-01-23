@@ -1,6 +1,6 @@
 define(function(require, exports, module){
   var
-    Surface  = require('famous/Surface'),
+    Surface  = require('./customSurface'),
     Matrix   = require('famous/Matrix'),
     Modifier = require('famous/Modifier'),
     Timer    = require('famous/Timer'),
@@ -13,29 +13,6 @@ define(function(require, exports, module){
     var queryRadius = 1500 // meters
 
     var currentLatLng;
-    navigator.geolocation.getCurrentPosition(function(position){
-      currentLatLng = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      var currentPos = new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
-      map.setCenter(currentPos);
-      var marker = new google.maps.Marker({
-        position: currentPos,
-        draggable: false,
-        icon: '/img/currentPosition.png',
-        map: map
-      });
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker);
-      });
-
-      google.maps.event.addListener(map, 'bounds_changed', function() {
-        addAndRemoveCards();
-        reQuery();
-      });
-      fetchData();
-    });
 
     var data;
     var allMarkers = {};
@@ -47,7 +24,12 @@ define(function(require, exports, module){
       content: '<div id="map-canvas" />'
     //   size: [window.innerWidth, window.innerHeight*0.72]
     });
-    mapSection.add(mapSurface)
+
+    mapSurface.on('deploy', function(){
+      initialize();
+    });
+
+    mapSection.add(mapSurface);
 
     var reQuery = function(){
       var newCenter = {
@@ -162,17 +144,45 @@ define(function(require, exports, module){
       directionsDisplay = new google.maps.DirectionsRenderer();
 
       var mapOptions = {
-        zoom: 15,
+        zoom: 17,
         disableDefaultUI: true,
         disableDoubleClickZoom: true,
-        styles: require('app/mapSection/_mapStyle')()
+        styles: require('app/mapSection/_mapStyle'),
+        center: new google.maps.LatLng(37.7833, -122.4167)
       };
 
       map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
-      window.clearInterval(intervalID);
+      startQuery();
+      // window.clearInterval(intervalID);
     };
+
+    var startQuery = function(){
+      navigator.geolocation.getCurrentPosition(function(position){
+        currentLatLng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        var currentPos = new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
+        map.setCenter(currentPos);
+        var marker = new google.maps.Marker({
+          position: currentPos,
+          draggable: false,
+          icon: '/img/currentPosition.png',
+          map: map
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map, marker);
+        });
+
+        google.maps.event.addListener(map, 'bounds_changed', function() {
+          addAndRemoveCards();
+          reQuery();
+        });
+        fetchData();
+      });
+    }
 
     var calcRoute = function() {
       var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
@@ -193,7 +203,7 @@ define(function(require, exports, module){
         });
       });
     };
-    var intervalID = window.setInterval(initialize, 0);
+    // var intervalID = window.setInterval(initialize, 0);
 
   }
 });

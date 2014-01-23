@@ -301,13 +301,58 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.setPosition = function(pos) {
-        if(this._springAttached){
-            _detachAgents();
-        }
         this.particle.setPos([pos, 0, 0]);
-        if(this.movingCallback){
-            this.movingCallback(pos);
+        // if(this.movingCallback){
+        //     this.movingCallback(pos);
+        // }
+    }
+
+    Scrollview.prototype.moveToPos = function(index){
+        if(this._springAttached){
+            _detachAgents.call(this);
         }
+        if(this.getCurrentNode().index > index){
+            while(this.getCurrentNode().index > index){
+                this.getPrevious();
+            }
+        }
+        if(this.getCurrentNode().index < index){
+            while(this.getCurrentNode().index < index){
+                this.getNext();
+            }
+        }
+
+    }
+
+    Scrollview.prototype.moveToIndex = function(index){
+        if(this.getPosition()){
+            this.goToPos(0);
+        }
+        var offset = 100 + scrollview.options.itemSpacing;
+        var diff = index - this.getCurrentNode().index;
+        var self = this;
+        setTimeout(function(){
+            self.goToPos(offset * diff);
+        }, 0);
+    }
+
+    Scrollview.prototype.goToPos = function(pos){
+        // if the position is not 0, set position to 0
+        if(this._springAttached){
+            _detachAgents.call(this);
+        }
+        this.setPosition(pos);
+    }
+
+    Scrollview.prototype.getPrevious = function(){
+        // if the position is not 0, set position to 0
+        if(this._springAttached){
+            _detachAgents.call(this);
+        }
+        if(this.getPosition()){
+            this.setPosition(0);
+        }
+        this.setPosition(-46);
     }
 
     Scrollview.prototype.getVelocity = function() {
@@ -366,6 +411,7 @@ define(function(require, exports, module) {
     Scrollview.prototype.setOutputFunction = function(fn, masterFn) {
         if(!fn) {
             fn = (function(offset) {
+                this.movingCallback();
                 return (this.options.direction == Utility.Direction.X) ? Matrix.translate(offset, 0) : Matrix.translate(0, offset);
             }).bind(this);
             masterFn = fn;
