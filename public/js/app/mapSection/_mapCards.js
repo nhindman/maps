@@ -177,6 +177,7 @@ define(function(require, exports, module){
             eventHandler.emit('unfocus', id);
             setTimeout(function(){
               setFace(1);
+              setFace(0);
               scrollview.sequenceFrom(cardSurfaces);
             }, 0)
           }
