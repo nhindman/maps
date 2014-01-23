@@ -205,6 +205,9 @@ define(function(require, exports, module) {
                 _shiftOrigin.call(this, dimSize);
                 this._masterOffset -= dimSize;
                 this.node = prevNode;
+                if(this.movingCallback){
+                    this.movingCallback();
+                }
             }
             else atEdge = true;
         }
@@ -216,6 +219,9 @@ define(function(require, exports, module) {
                 _shiftOrigin.call(this, -dimSize);
                 this._masterOffset += dimSize;
                 this.node = nextNode;
+                if(this.movingCallback){
+                    this.movingCallback();
+                }
                 size = this.node.getSize ? this.node.getSize() : this.options.defaultItemSize;
             }
             else atEdge = true;
@@ -414,7 +420,9 @@ define(function(require, exports, module) {
     Scrollview.prototype.setOutputFunction = function(fn, masterFn) {
         if(!fn) {
             fn = (function(offset) {
-                this.movingCallback();
+                // if(this.movingCallback){
+                //     this.movingCallback();
+                // }
                 return (this.options.direction == Utility.Direction.X) ? Matrix.translate(offset, 0) : Matrix.translate(0, offset);
             }).bind(this);
             masterFn = fn;
@@ -542,6 +550,10 @@ define(function(require, exports, module) {
 
             if(this.options.paginated && (this._lastFrameNode !== this.node)) {
                 this.eventOutput.emit('pageChange');
+                // if(this.movingCallback){
+                //     // console.log('hi');
+                //     this.movingCallback();
+                // }
                 this._lastFrameNode = this.node;
             }
 

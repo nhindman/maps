@@ -92,9 +92,11 @@ define(function(require, exports, module){
       itemSpacing: cardSpacing,
       clipSize: window.innerWidth/5,
       // margin: 80,
+      // paginated: true,
       speedLimit: 1.3,
       drag: 0.004,
-      edgePeriod: 150
+      // edgePeriod: 150
+    // })
     }, function(pos){
       if(scrollview.node){
         setFace();
@@ -107,7 +109,7 @@ define(function(require, exports, module){
     var setFace = function(faceIndex){
       faceIndex = faceIndex || scrollview.node.index;
       if(currentFace === faceIndex){ return; }
-      
+
       cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
       cardSurfaces.forEach(function(rendernode, index){
@@ -190,8 +192,7 @@ define(function(require, exports, module){
     var focusCard = function(id){
       for(var i = 0; i < cardSurfaces.length; i++){
         if(cardSurfaces[i].id === id){
-          scrollview.moveToIndex(i);
-          break;
+          return scrollview.moveToIndex(i);
         }
       }
     };
