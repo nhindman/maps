@@ -14,8 +14,8 @@ define(function(require, exports, module){
     var eventHandler = new EventHandler();
 
     // add the various components and logic for this section
-    var cardCallback = require('app/mapSection/_mapCards')(mapSection, FamousEngine, eventHandler);
-    require('app/mapSection/_googleMaps')(mapSection, cardCallback, eventHandler);
+    require('app/mapSection/_mapCards')(mapSection, FamousEngine, eventHandler);
+    require('app/mapSection/_googleMaps')(mapSection, eventHandler);
 
   }
 });

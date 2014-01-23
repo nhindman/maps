@@ -11,15 +11,15 @@ define(function(require, exports, module){
   //// OPTIONS ////
   /////////////////
   var
-    cardWidth   = Math.min(window.innerWidth/3, window.innerHeight/5);
+    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5);
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
-    cardBottom   = 1,        // absolute percentage between the bottom of the cards and the bottom of the page
-    rotateYAngle = 1,         // rotational Y angle of skew
-    cardOffset   = 0.25,        // offset between skewed cards and the front facing card
-    curve        = 'easeInOut',    // transition curve type
-    easeDuration = 150,         // amount of time for cards to transition
-    zPosFaceCard = 200,         // z position offset for the face card
-    yPosFaceCard = -20,         // y position offset for the face card
+    cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
+    rotateYAngle = 1,                              // rotational Y angle of skew
+    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card
+    curve        = 'easeInOut',                    // transition curve type
+    easeDuration = 150,                            // amount of time for cards to transition
+    zPosFaceCard = 200,                            // z position offset for the face card
+    yPosFaceCard = -20,                            // y position offset for the face card
     // cardSpacing  = Math.floor(-cardSize[0] * 0.5);
     cardSpacing = 0;
 
@@ -99,7 +99,7 @@ define(function(require, exports, module){
       drag: 0.004,
       edgePeriod: 150
     }, function(pos){
-      if(scrollview.getCurrentNode()){
+      if(scrollview.node){
         setFace();
       }
     });
@@ -109,7 +109,7 @@ define(function(require, exports, module){
     currentFace = 0;
 
     var setFace = function(faceIndex){
-      faceIndex = faceIndex || Math.min(cardSurfaces.length - 1, cardSurfaces.indexOf(scrollview.getCurrentNode().get()));
+      faceIndex = faceIndex || Math.max(0, Math.min(cardSurfaces.length - 1, cardSurfaces.indexOf(scrollview.getCurrentNode().get())));
       if(currentFace === faceIndex){
         return;
       }
@@ -124,25 +124,25 @@ define(function(require, exports, module){
           transformCard(rendernode, "center");
         }
         if(index > faceIndex && rendernode.angle !== "right"){
-          transformCard(rendernode, "right")
+          transformCard(rendernode, "right");
         }
       })
       currentFace = faceIndex;
     };
 
     var first = true;
+
     var addCard = function(location){
       var cardSurface = new Surface({
         size: cardSize,
         content: location.name,
         classes: ['card'],
         properties: {
-          backgroundColor: "steelblue",
-          backgroundImage: "url(" + location.photo + ")",
-          backgroundSize: "auto " + cardSize[1] + "px"
+          backgroundColor: 'steelblue',
+          backgroundImage: 'url(' + location.photo + ')',
+          backgroundSize: 'auto ' + cardSize[1] + 'px'
         }
       });
-
 
       var renderNode = new RenderNode({id: location.id});
       renderNode.angle = "left";
@@ -151,12 +151,9 @@ define(function(require, exports, module){
       });
 
       if(!cardSurfaces.length || first){
-        // renderNode.angle = "center";
-        // modifier = new Modifier({
-        //   transform: Matrix.translate([0, yPosFaceCard, zPosFaceCard])
-        // });
         scrollview.sequenceFrom(cardSurfaces);
-        eventHandler.emit('focus', location.id)
+        eventHandler.emit('focus', location.id);
+        renderNode.angle = 'center';
         first = false;
       }
 
@@ -172,14 +169,7 @@ define(function(require, exports, module){
       modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'})
     };
 
-    // Engine.pipe(scrollview);
-    mapSection
-    .add(new Modifier({
-      transform: Matrix.translate(0, 0, 20),
-      origin: [0.5,1]
-    }))
-    .link(scrollview);
-
+    
     var removeCard = function(id){
       for(var i = 0; i < cardSurfaces.length; i++){
         if(cardSurfaces[i].id === id){
@@ -201,9 +191,16 @@ define(function(require, exports, module){
       }
     };
 
-    return {
-      addCard: addCard,
-      removeCard: removeCard
-    };
+    eventHandler.on('addCard', addCard);
+    eventHandler.on('removeCard', removeCard);
+
+    // Engine.pipe(scrollview);
+    mapSection
+    .add(new Modifier({
+      transform: Matrix.translate(0, 0, 20),
+      origin: [0.5,1]
+    }))
+    .link(scrollview);
+
   };
 });

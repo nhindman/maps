@@ -8,7 +8,7 @@ define(function(require, exports, module){
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
-  module.exports = function(mapSection, cards, eventHandler){
+  module.exports = function(mapSection, eventHandler){
 
     var queryRadius = 1500 // meters
 
@@ -128,7 +128,8 @@ define(function(require, exports, module){
       for(id in boundMarkers){
         marker = boundMarkers[id];
         if(!bounds.contains(marker.marker.getPosition())){
-          cards.removeCard(id);
+          eventHandler.emit('removeCard', id);
+          // cards.removeCard(id);
           delete boundMarkers[id];
         }
       }
@@ -140,7 +141,8 @@ define(function(require, exports, module){
               marker: marker.marker,
               data: marker.data
             };
-            cards.addCard(marker.data);
+            eventHandler.emit('addCard', marker.data);
+            // cards.addCard(marker.data);
           }
         }
       }
