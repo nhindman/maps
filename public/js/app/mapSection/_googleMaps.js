@@ -1,10 +1,12 @@
 define(function(require, exports, module){
   var
-    Surface  = require('famous/Surface'),
+    Surface  = require('./customSurface'),
     Matrix   = require('famous/Matrix'),
     Modifier = require('famous/Modifier'),
     Timer    = require('famous/Timer'),
     async    = require('../../../lib/requirejs-plugins/src/async'),
+    RenderNode = require('famous/RenderNode'),
+    FamousEngine = require('famous/Engine'),
 
     // Include physics for map torque
     PhysicsEngine = require('famous-physics/PhysicsEngine'),
@@ -15,7 +17,17 @@ define(function(require, exports, module){
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
-  module.exports = function(mapSection, cards, eventHandler){
+  module.exports = function(mainDisplay, eventHandler){
+
+    var queryRadius = 1500 // meters
+
+    var currentLatLng;
+
+    var data;
+    var allMarkers = {};
+    var boundMarkers = {};
+    var highlightedID;
+
     var pushStrength            = 0, 
         torqueStrength          = .009,
         torqueSpringDamping     = 20,
@@ -65,48 +77,24 @@ define(function(require, exports, module){
 
     PE.attach([spring]);
 
-    var queryRadius = 1500 // meters
-
-    var currentLatLng;
-    navigator.geolocation.getCurrentPosition(function(position){
-      currentLatLng = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      var currentPos = new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
-      map.setCenter(currentPos);
-      var marker = new google.maps.Marker({
-        position: currentPos,
-        draggable: false,
-        icon: '/img/currentPosition.png',
-        map: map
-      });
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker);
-      });
-
-      google.maps.event.addListener(map, 'bounds_changed', function() {
-        addAndRemoveCards();
-        reQuery();
-      });
-      fetchData();
+    mapSurface.on('deploy', function(){
+      initialize();
     });
 
-    var data;
-    var allMarkers = {};
-    var boundMarkers = {};
-    var highlightedID;
-
-    mapSurface.on('click', function(e){
-      applyTorque(e, 1)
+    mapSurface.on('click', function(e) {
+      applyTorque(e, 1);
     });
 
     body.add(new Modifier(Matrix.translate(0,0,.1))).link(mapSurface);
-    // mapSection.add(new Modifier({origin : [.5,.5]})).link(PE);
-    mapSection.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
+
+    var mapNode = new RenderNode();
+    mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
+    require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler);
+
+    // mainDisplay.add(mapSurface);
 
     function attachTorqueSpring(){
-      mapSection.attachedSpring = PE.attach(torqueSpring);
+      mapNode.attachedSpring = PE.attach(torqueSpring);
     }
 
     attachTorqueSpring();
@@ -123,7 +111,6 @@ define(function(require, exports, module){
       }
     };
 
-
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
         boundMarkers[highlightedID].marker.setOptions({
@@ -134,6 +121,12 @@ define(function(require, exports, module){
         icon: 'img/blueMarkerHighlight.png'
       });
       highlightedID = id;
+    });
+
+    eventHandler.on('unfocus', function(id){
+      allMarkers[id].marker.setOptions({
+        icon: 'img/blueMarker.png'
+      });
     });
 
     var fetchData = function(){
@@ -150,8 +143,8 @@ define(function(require, exports, module){
           dropMarkers();
           addAndRemoveCards();
         },
-        error: function(){
-          alert('error');
+        error: function(err){
+          console.log('something weird happened: ' + err)
         }
       });
     }
@@ -202,7 +195,8 @@ define(function(require, exports, module){
       for(id in boundMarkers){
         marker = boundMarkers[id];
         if(!bounds.contains(marker.marker.getPosition())){
-          cards.removeCard(id);
+          eventHandler.emit('removeCard', id);
+          // cards.removeCard(id);
           delete boundMarkers[id];
         }
       }
@@ -210,15 +204,17 @@ define(function(require, exports, module){
         marker = allMarkers[id];
         if(bounds.contains(marker.marker.getPosition())){
           if(!boundMarkers[id]){
-            cards.addCard(marker.data);
             boundMarkers[id] = {
               marker: marker.marker,
               data: marker.data
             };
+            eventHandler.emit('addCard', marker.data);
+            // cards.addCard(marker.data);
           }
         }
       }
     }
+
 
     var initialize = function() {
       directionsDisplay = new google.maps.DirectionsRenderer();
@@ -240,8 +236,35 @@ define(function(require, exports, module){
       map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
-      window.clearInterval(intervalID);
+      startQuery();
+      // window.clearInterval(intervalID);
     };
+
+    var startQuery = function(){
+      navigator.geolocation.getCurrentPosition(function(position){
+        currentLatLng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        var currentPos = new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
+        map.setCenter(currentPos);
+        var marker = new google.maps.Marker({
+          position: currentPos,
+          draggable: false,
+          icon: '/img/currentPosition.png',
+          map: map
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map, marker);
+        });
+
+        google.maps.event.addListener(map, 'bounds_changed', function() {
+          addAndRemoveCards();
+          reQuery();
+        });
+        fetchData();
+      });
+    }
 
     var calcRoute = function() {
       var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
@@ -262,7 +285,7 @@ define(function(require, exports, module){
         });
       });
     };
-    var intervalID = window.setInterval(initialize, 0);
-
+    // var intervalID = window.setInterval(initialize, 0);
+    return mapNode;
   }
 });

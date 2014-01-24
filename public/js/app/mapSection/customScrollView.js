@@ -205,6 +205,9 @@ define(function(require, exports, module) {
                 _shiftOrigin.call(this, dimSize);
                 this._masterOffset -= dimSize;
                 this.node = prevNode;
+                if(this.movingCallback){
+                    this.movingCallback();
+                }
             }
             else atEdge = true;
         }
@@ -216,6 +219,9 @@ define(function(require, exports, module) {
                 _shiftOrigin.call(this, -dimSize);
                 this._masterOffset += dimSize;
                 this.node = nextNode;
+                if(this.movingCallback){
+                    this.movingCallback();
+                }
                 size = this.node.getSize ? this.node.getSize() : this.options.defaultItemSize;
             }
             else atEdge = true;
@@ -301,13 +307,61 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.setPosition = function(pos) {
-        if(this._springAttached){
-            _detachAgents();
-        }
         this.particle.setPos([pos, 0, 0]);
-        if(this.movingCallback){
-            this.movingCallback(pos);
+        // if(this.movingCallback){
+        //     this.movingCallback(pos);
+        // }
+    }
+
+    Scrollview.prototype.moveToPos = function(index){
+        if(this._springAttached){
+            _detachAgents.call(this);
         }
+        if(this.getCurrentNode().index > index){
+            while(this.getCurrentNode().index > index){
+                this.getPrevious();
+            }
+        }
+        if(this.getCurrentNode().index < index){
+            while(this.getCurrentNode().index < index){
+                this.getNext();
+            }
+        }
+
+    }
+
+    Scrollview.prototype.moveToIndex = function(index){
+        if(this.getPosition()){
+            this.goToPos(0);
+        }
+        var diff = index - this.getCurrentNode().index;
+        var self = this;
+        setTimeout(function(){
+            self.goToPos((100 + self.options.itemSpacing) * diff);
+        }, 0);
+    }
+
+    Scrollview.prototype.goToPos = function(pos){
+        // if the position is not 0, set position to 0
+        if(this._springAttached){
+            _detachAgents.call(this);
+        }
+        this.setPosition(pos);
+    }
+
+    Scrollview.prototype.getPrevious = function(){
+        // if the position is not 0, set position to 0
+        if(this.getPosition()){
+            this.setPosition(0);
+        }
+        this.goToPos((100 - this.options.itemSpacing) * -1);
+    }
+
+    Scrollview.prototype.getNext = function(){
+        if(this.getPosition()){
+            this.setPosition(0);
+        }
+        this.goToPos(100 - this.options.itemSpacing);
     }
 
     Scrollview.prototype.getVelocity = function() {
@@ -366,6 +420,9 @@ define(function(require, exports, module) {
     Scrollview.prototype.setOutputFunction = function(fn, masterFn) {
         if(!fn) {
             fn = (function(offset) {
+                // if(this.movingCallback){
+                //     this.movingCallback();
+                // }
                 return (this.options.direction == Utility.Direction.X) ? Matrix.translate(offset, 0) : Matrix.translate(0, offset);
             }).bind(this);
             masterFn = fn;
@@ -493,6 +550,10 @@ define(function(require, exports, module) {
 
             if(this.options.paginated && (this._lastFrameNode !== this.node)) {
                 this.eventOutput.emit('pageChange');
+                // if(this.movingCallback){
+                //     // console.log('hi');
+                //     this.movingCallback();
+                // }
                 this._lastFrameNode = this.node;
             }
 

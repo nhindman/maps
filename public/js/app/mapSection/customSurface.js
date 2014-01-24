@@ -537,6 +537,7 @@ define(function(require, exports, module) {
             this.deploy(target);
             this._contentDirty = false;
         }
+        this.emit('deploy');
     };
 
     /**
