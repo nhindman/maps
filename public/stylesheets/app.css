@@ -88,25 +88,80 @@ body {
     /*text-transform: uppercase;*/
     padding: 5px;
     text-shadow: 0px 1px 0px rgba(0,0,0,0.7);
-    box-shadow: 0px 1px 3px rgba(0,0,0,0.7), 0px 1px 0px rgba(255,255,255,0.7) inset, 0px -1px 0px rgba(0,0,0,0.5) inset; 
+    /*box-shadow: 0px 1px 3px rgba(0,0,0,0.7), 0px 1px 0px rgba(255,255,255,0.7) inset, 0px -1px 0px rgba(0,0,0,0.5) inset; */
 }
 
 .bigCard {
-    line-height: 1.1em;
-    letter-spacing: -1px;
-    box-sizing: border-box;
-    background-color: steelblue;
-    background-size: cover;
-    border-radius: 3%;
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 10px;
-    text-shadow: 0px 1px 0px rgba(0,0,0,0.7);
-    /*box-shadow: 0px 1px 3px rgba(0,0,0,0.7), 0px 1px 0px rgba(255,255,255,0.7) inset, 0px -1px 0px rgba(0,0,0,0.5) inset; */
-    /*background-image:   -webkit-gradient(linear, left top, left bottom, from(rgba(41, 41, 41, 0.00)), to(rgba(43, 43, 44, 1.00))).
-                        -webkit-linear-gradient(top, rgba(41, 41, 41, 0.00), rgba(43, 43, 44, 1.00));
-*/
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  width: 85%;
+  margin: 30px auto;
+  background-color: #dfddd1;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+  border-radius: 5px;
+  color: rgba(52,34,3,1);
+  /*position: relative;*/
 }
+
+.bigCard .photo {
+  box-sizing: border-box;
+  min-height: 150px;
+  /*background-image: url('https://irs2.4sqi.net/img/general/400x400/713202_jNDoqS8QAXWtSHOVCRVjFDASsmqLdUSx1Yy5dPuFPQQ.jpg');*/
+  background-color: steelblue;
+  background-size: cover;
+  background-position: 50% 50%;
+  border-radius: 5px 5px 0px 0px;
+  text-align: center;
+}
+
+.bigCard .icon {
+  box-sizing: border-box;
+  display: block;
+  width: 18%;
+  margin: -9% auto -10% auto;
+}
+
+.bigCard .info {
+  box-sizing: border-box;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.2em;
+  height: 300px;
+  overflow: scroll;
+}
+
+.bigCard .rating {
+  display: inline-block;
+  font-size: 0.9em;
+  color: rgba(255,255,255,1);
+  background-color: #71a241;
+  padding: 2px 5px;
+  margin-bottom: 1em;
+  border-radius: 3px;
+}
+
+.bigCard h1 {
+  margin: 0;
+  font-family: 'amertype_md_btmedium', serif;
+  font-size: 1.8em;
+  margin-bottom: 0.2em;
+  line-height: 1em;
+  /*margin-bottom: 0.3em;*/
+}
+
+.bigCard h5 {
+  margin: 0;
+  color: #096797;
+  line-height: 1em;
+  font-size: 0.9em;
+  margin-bottom: 1.5em;
+}
+
+.bigCard p {
+  line-height: 1.2em;
+}
+
+
 
 .hide {
     visibility: hidden;

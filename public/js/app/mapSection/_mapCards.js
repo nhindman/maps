@@ -45,7 +45,7 @@ define(function(require, exports, module){
         y = yPosFaceCard;
         z = zPosFaceCard;
         rendernode.object.setProperties({
-          boxShadow: '3px 3px 3px black'
+          // boxShadow: '3px 3px 3px black'
         });
         break;
       case 'right':
@@ -205,11 +205,22 @@ define(function(require, exports, module){
           // New surface for larger card.
           var prop = nodeSurface.getProperties();
           newNode = new Surface({
-            size: [window.innerWidth - 80, window.innerWidth - 80],
-            classes: ['card'],
-            content: nodeSurface.getContent(),
+            size: [window.innerWidth - 80, window.innerHeight - 200],
+            classes: ['bigCard'],
+            // content: nodeSurface.getContent(),
+            content:  '<div class="photo" style="background-image: ' + prop.backgroundImage + '"></div>' +
+              '<img class="icon" src="/img/walkingIcon.png">' +
+              '<div class="info">' +
+              '<div class="rating">9.6/10</div>' +
+                '<h1>' + nodeSurface.getContent() + '</h1>' +
+                '<h5>US Rte 101 / State Rte 1 (between Alexander Ave &amp; Lincoln Blvd.</h5>' +
+                '<p>The Golden Gate Bridge was the longest suspension bridge span in the world when it was completed in 1937, &amp; has become an internationally recognized symbol of San Francisco and CA.</p>' +
+                // '<p>The Golden Gate Bridge was the longest suspension bridge span in the world when it was completed in 1937, &amp; has become an internationally recognized symbol of San Francisco and CA.</p>' +
+                // '<p>The Golden Gate Bridge was the longest suspension bridge span in the world when it was completed in 1937, &amp; has become an internationally recognized symbol of San Francisco and CA.</p>' +
+              '</div>',
             properties: {
-              backgroundImage: prop.backgroundImage
+              // backgroundImage: prop.backgroundImage
+
             }
           });
 
