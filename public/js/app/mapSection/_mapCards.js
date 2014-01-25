@@ -193,15 +193,13 @@ define(function(require, exports, module){
           // Modify the node to larger size
           nodeSurface = node.object;
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
-          console.log(allMarkers[node.id]);
 
           // New surface for larger card.
           var prop = nodeSurface.getProperties();
           newNode = new Surface({
             size: [window.innerWidth - 80, window.innerHeight - 200],
             classes: ['bigCard'],
-            // content: nodeSurface.getContent(),
-            content:  '<div class="photo" style="background-image: ' + prop.backgroundImage + '"></div>' +
+            content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
               '<img class="icon" src="/img/walkingIcon.png">' +
               '<div class="info">' +
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
