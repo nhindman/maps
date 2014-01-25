@@ -152,6 +152,10 @@ define(function(require, exports, module){
       cardSurface.pipe(renderNode);
       renderNode.link(modifier).link(cardSurface);
       renderNode.pipe(scrollview);
+      var testFunc = function(e, node){
+        eventHandler.emit('nodeTouch', e, node);
+      };
+      renderNode.on('touchend', testFunc);
 
       var endMatrix = (cardSurfaces.length) ? 
         Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 

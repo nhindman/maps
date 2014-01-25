@@ -266,8 +266,10 @@ define(function(require, exports, module){
       });
     }
 
-    var calcRoute = function() {
-      var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
+    var calcRoute = function(lat, lng) {
+      //Arbitrary location hard-coded into calcRoute
+      var newLocation = new google.maps.LatLng(lat, lng);
+      // var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
       navigator.geolocation.getCurrentPosition(function(position) {
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
@@ -285,6 +287,18 @@ define(function(require, exports, module){
         });
       });
     };
+
+//Walking Directions//
+
+    var showRoute = function(e, node){
+      var obj = allMarkers[node.id];
+      var lat = obj.data.lat;
+      var lng = obj.data.long;
+      // var lat = allMarkers[node.id.data.lat];
+      // var lng = allMarkers[node.id.data.long];
+      calcRoute(lat, lng);
+    };
+    eventHandler.on('nodeTouch', showRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }
