@@ -10,13 +10,10 @@ define(function(require, exports, module) {
     EventHandler = require('famous/EventHandler'),
     eventHandler = new EventHandler();
 
-  // create the App from the template
-  var app = new App();
 
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
   mainDisplay.setPerspective(2000);
-  FamousEngine.pipe(app);
 
   var
     splashSurface,
@@ -32,6 +29,7 @@ define(function(require, exports, module) {
     transform: Matrix.translate(window.innerWidth/1000, 0, -100)
   });
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
+  var splashNode = require('app/splashSection/splashSection')(eventHandler);
   window.swap = function(){
     mod.setTransform(Matrix.move(Matrix.rotateY(-0.05),[500, 0, -50]), {duration: 800, curve: 'easeOut'});
     mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [-1200, 0, 50]), {duration: 800, curve: 'easeOut'}, secondSwap);
@@ -51,10 +49,8 @@ define(function(require, exports, module) {
   var thirdSwapBack = function(){
     mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 800});
   };
-  var placeholder = new Surface({
-      content: '<img src="./js/app/splashSection/san-francisco-morning-fog.jpg"/>',
-      size: [window.innerWidth, window.innerHeight],
-  });
-  mainDisplay.add(mod).link(mapNode);
-  mainDisplay.add(mod2).link(placeholder);
+
+  mainDisplay.add(mod).link(splashNode);
+  mainDisplay.add(mod2).link(mapNode);
+
 });
