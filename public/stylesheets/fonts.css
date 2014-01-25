@@ -61,3 +61,36 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'amertype_md_btmedium';
+    src: url('./fonts/american_typewriter_medium_bt-webfont.eot');
+    src: url('./fonts/american_typewriter_medium_bt-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/american_typewriter_medium_bt-webfont.woff') format('woff'),
+         url('./fonts/american_typewriter_medium_bt-webfont.ttf') format('truetype'),
+         url('./fonts/american_typewriter_medium_bt-webfont.svg#amertype_md_btmedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ubuntubold';
+    src: url('./fonts/ubuntu-b-webfont.eot');
+    src: url('./fonts/ubuntu-b-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/ubuntu-b-webfont.woff') format('woff'),
+         url('./fonts/ubuntu-b-webfont.ttf') format('truetype'),
+         url('./fonts/ubuntu-b-webfont.svg#ubuntubold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ubuntumedium';
+    src: url('./fonts/ubuntu-m-webfont.eot');
+    src: url('./fonts/ubuntu-m-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/ubuntu-m-webfont.woff') format('woff'),
+         url('./fonts/ubuntu-m-webfont.ttf') format('truetype'),
+         url('./fonts/ubuntu-m-webfont.svg#ubuntumedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
