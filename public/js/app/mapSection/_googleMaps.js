@@ -28,13 +28,13 @@ define(function(require, exports, module){
     var boundMarkers = {};
     var highlightedID;
 
-    var pushStrength        = 0, 
-        torqueStrength      = .009,
-        torqueSpringDamping = 20,
-        torqueSpringPeriod  = 4,
-        forceSpringDamping  = .95,
-        forceSpringPeriod   = 2100,
-        dragStrength        = .01;
+    var pushStrength            = 0, 
+        torqueStrength          = .003,
+        torqueSpringDamping     = 20,
+        torqueSpringPeriod      = 2,
+        forceSpringDamping      = .95,
+        forceSpringPeriod       = 2100,
+        dragStrength            = .01;
 
     var map;
     var mapSurface = new Surface({
@@ -173,7 +173,6 @@ define(function(require, exports, module){
           position: new google.maps.LatLng(location.lat, location.long),
           map: map,
           draggable: false,
-          title: 'enter data name here',
           animation: google.maps.Animation.DROP,
           icon: 'img/blueMarker.png'
         });
