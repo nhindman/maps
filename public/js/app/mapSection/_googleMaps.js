@@ -79,6 +79,7 @@ define(function(require, exports, module){
 
     mapSurface.on('deploy', function(){
       initialize();
+      eventHandler.emit('maploaded');
     });
 
     mapSurface.on('click', function(e) {

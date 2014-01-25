@@ -297,7 +297,7 @@ define(function(require, exports, module) {
     }
 
     Scrollview.prototype.getPosition = function(node) {
-        var pos = this.particle.getPos()[0];
+        var pos = Math.round(this.particle.getPos()[0]*2)*0.5;
         if( node === undefined ) return pos;
         else {
             var offset = this._offsets[node];
@@ -308,9 +308,6 @@ define(function(require, exports, module) {
 
     Scrollview.prototype.setPosition = function(pos) {
         this.particle.setPos([pos, 0, 0]);
-        // if(this.movingCallback){
-        //     this.movingCallback(pos);
-        // }
     }
 
     Scrollview.prototype.moveToPos = function(index){
@@ -550,10 +547,6 @@ define(function(require, exports, module) {
 
             if(this.options.paginated && (this._lastFrameNode !== this.node)) {
                 this.eventOutput.emit('pageChange');
-                // if(this.movingCallback){
-                //     // console.log('hi');
-                //     this.movingCallback();
-                // }
                 this._lastFrameNode = this.node;
             }
 

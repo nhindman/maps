@@ -93,11 +93,11 @@ define(function(require, exports, module){
 
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
-      clipSize: window.innerWidth/9,
-      // margin: 80,
-      // paginated: true,
-      speedLimit: 10,
-      drag: 0.004,
+      clipSize: cardSize[0]*0 + 0.0001,
+      margin: window.innerWidth,
+      paginated: true,
+      speedLimit: 10
+      // drag: 0.004,
       // edgePeriod: 150
     // })
     }, function(pos){
