@@ -63,7 +63,7 @@ define(function(require, exports, module){
     }
   }
 
-  module.exports = function(mapNode, Engine, eventHandler){
+  module.exports = function(mapNode, Engine, eventHandler, allMarkers){
 
     /////////////
     // BLOCKER //
@@ -127,6 +127,7 @@ define(function(require, exports, module){
     ///////////////////////
 
     var addCard = function(location){
+
       var cardSurface = new Surface({
         size: cardSize,
         content: location.name,
@@ -192,6 +193,7 @@ define(function(require, exports, module){
           // Modify the node to larger size
           nodeSurface = node.object;
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
+          console.log(allMarkers[node.id]);
 
           // New surface for larger card.
           var prop = nodeSurface.getProperties();
@@ -202,16 +204,12 @@ define(function(require, exports, module){
             content:  '<div class="photo" style="background-image: ' + prop.backgroundImage + '"></div>' +
               '<img class="icon" src="/img/walkingIcon.png">' +
               '<div class="info">' +
-              '<div class="rating">9.6/10</div>' +
-                '<h1>' + nodeSurface.getContent() + '</h1>' +
-                '<h5>US Rte 101 / State Rte 1 (between Alexander Ave &amp; Lincoln Blvd.</h5>' +
-                '<p>The Golden Gate Bridge was the longest suspension bridge span in the world when it was completed in 1937, &amp; has become an internationally recognized symbol of San Francisco and CA.</p>' +
-                // '<p>The Golden Gate Bridge was the longest suspension bridge span in the world when it was completed in 1937, &amp; has become an internationally recognized symbol of San Francisco and CA.</p>' +
-                // '<p>The Golden Gate Bridge was the longest suspension bridge span in the world when it was completed in 1937, &amp; has become an internationally recognized symbol of San Francisco and CA.</p>' +
+                ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
+                '<h1>' + allMarkers[node.id].data.name + '</h1>' +
+                '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
               '</div>',
             properties: {
               // backgroundImage: prop.backgroundImage
-
             }
           });
 

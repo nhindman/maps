@@ -45,6 +45,7 @@ app.get('/points', function(req, res) {
       venue.address     = venues[i].venue.location.address;
       venue.city        = venues[i].venue.location.city;
       venue.state       = venues[i].venue.location.state;
+      venue.rating      = venues[i].venue.rating;
 
       venue.photo       = null;
       if(venues[i].venue.photos.groups[0]) {

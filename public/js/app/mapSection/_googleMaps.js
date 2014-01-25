@@ -89,7 +89,7 @@ define(function(require, exports, module){
 
     var mapNode = new RenderNode();
     mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
-    require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler);
+    require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers);
 
     // mainDisplay.add(mapSurface);
 
