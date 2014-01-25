@@ -2,21 +2,18 @@ define(function(require, exports, module) {
   var
     FamousEngine = require('famous/Engine'),
     App          = require('app/App'),
-    Scrollview = require('famous-views/ScrollView'),
-    Surface = require('famous/Surface'),
-    RenderNode = require('app/mapSection/customRenderNode'),
-    Modifier = require('famous/Modifier'),
-    Matrix = require('famous/Matrix'),
+    Scrollview   = require('famous-views/ScrollView'),
+    Surface      = require('famous/Surface'),
+    RenderNode   = require('app/mapSection/customRenderNode'),
+    Modifier     = require('famous/Modifier'),
+    Matrix       = require('famous/Matrix'),
     EventHandler = require('famous/EventHandler'),
     eventHandler = new EventHandler();
 
-  // create the App from the template
-  var app = new App();
 
   // create a display context and hook in the App
   var mainDisplay = FamousEngine.createContext();
   mainDisplay.setPerspective(2000);
-  FamousEngine.pipe(app);
 
   var
     splashSurface,
@@ -32,6 +29,7 @@ define(function(require, exports, module) {
     transform: Matrix.translate(window.innerWidth/1000, 0, -100)
   });
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
+  var splashNode = require('app/splashSection/splashSection')(eventHandler);
   window.swap = function(){
     mod.setTransform(Matrix.move(Matrix.rotateY(-0.05),[250, 0, -50]), {duration: 400, curve: 'easeOut'});
     mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [-950, 0, 50]), {duration: 400, curve: 'easeOut'}, secondSwap);
@@ -54,13 +52,9 @@ define(function(require, exports, module) {
   // var thirdSwapBack = function(){
   //   mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 400});
   // };
-  var placeholder = new Surface({
-      content: '<img src="./js/app/splashSection/splash.png" height=' + height + ' width=' + width + ' />',
-      size: [window.innerWidth, window.innerHeight],
-  });
-  mainDisplay.add(mod).link(placeholder);
+
+  mainDisplay.add(mod).link(splashNode);
   mainDisplay.add(mod2).link(mapNode);
   scrollmod = mapNode.object[2].modifiers[0];
-  placeholder.on('touchend', swap);
 
 });

@@ -45,12 +45,13 @@ app.get('/points', function(req, res) {
       venue.address     = venues[i].venue.location.address;
       venue.city        = venues[i].venue.location.city;
       venue.state       = venues[i].venue.location.state;
-      // venue.crossStreet = venues[i].venue.location.crossStreet;
 
       venue.photo       = null;
       if(venues[i].venue.photos.groups[0]) {
-        var photo       = venues[i].venue.photos.groups[0].items[0];
-        venue.photo     = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
+        var photo         = venues[i].venue.photos.groups[0].items[0];
+        venue.photo       = photo.prefix + 200 + 'x' + 300 + photo.suffix;
+        venue.photoSuffix = photo.suffix;
+        venue.photoPrefix = photo.prefix;
       }
 
       results.push(venue);

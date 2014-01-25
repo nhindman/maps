@@ -1,19 +1,19 @@
 define(function(require, exports, module){
   var
-    Surface  = require('./customSurface'),
-    Matrix   = require('famous/Matrix'),
-    Modifier = require('famous/Modifier'),
-    Timer    = require('famous/Timer'),
-    async    = require('../../../lib/requirejs-plugins/src/async'),
-    RenderNode = require('famous/RenderNode'),
-    FamousEngine = require('famous/Engine'),
+    Surface       = require('./customSurface'),
+    Matrix        = require('famous/Matrix'),
+    Modifier      = require('famous/Modifier'),
+    Timer         = require('famous/Timer'),
+    async         = require('../../../lib/requirejs-plugins/src/async'),
+    RenderNode    = require('famous/RenderNode'),
+    FamousEngine  = require('famous/Engine'),
 
     // Include physics for map torque
     PhysicsEngine = require('famous-physics/PhysicsEngine'),
-    Vector = require('famous-physics/math/Vector'),
-    Quaternion = require('famous-physics/math/Vector'),
-    TorqueSpring = require('famous-physics/forces/TorqueSpring'),
-    Spring = require('famous-physics/forces/Spring');
+    Vector        = require('famous-physics/math/Vector'),
+    Quaternion    = require('famous-physics/math/Vector'),
+    TorqueSpring  = require('famous-physics/forces/TorqueSpring'),
+    Spring        = require('famous-physics/forces/Spring');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
@@ -28,13 +28,13 @@ define(function(require, exports, module){
     var boundMarkers = {};
     var highlightedID;
 
-    var pushStrength            = 0, 
-        torqueStrength          = .009,
-        torqueSpringDamping     = 20,
-        torqueSpringPeriod      = 4,
-        forceSpringDamping      = .95,
-        forceSpringPeriod       = 2100,
-        dragStrength            = .01;
+    var pushStrength        = 0, 
+        torqueStrength      = .009,
+        torqueSpringDamping = 20,
+        torqueSpringPeriod  = 4,
+        forceSpringDamping  = .95,
+        forceSpringPeriod   = 2100,
+        dragStrength        = .01;
 
     var map;
     var mapSurface = new Surface({
@@ -42,7 +42,7 @@ define(function(require, exports, module){
       size: [window.innerWidth, window.innerHeight]
     });
 
-    var PE = new PhysicsEngine();
+    var PE     = new PhysicsEngine();
     var force  = new Vector(0,0,-pushStrength);
     var torque = new Vector(0,0,-torqueStrength);
 

@@ -49,3 +49,4 @@ public/lib/requirejs-plugins/
 # DESIGN FILES #
 ################
 .sass-cache/
+design/

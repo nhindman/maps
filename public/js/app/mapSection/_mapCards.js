@@ -14,7 +14,7 @@ define(function(require, exports, module){
   //// OPTIONS ////
   /////////////////
   var
-    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/3);
+    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5),
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
@@ -93,7 +93,7 @@ define(function(require, exports, module){
 
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
-      clipSize: window.innerWidth/5,
+      clipSize: window.innerWidth/9,
       // margin: 80,
       // paginated: true,
       speedLimit: 10,
@@ -115,17 +115,9 @@ define(function(require, exports, module){
 
       cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
-      cardSurfaces.forEach(function(rendernode, index){
-        if(index < faceIndex && rendernode.angle !== 'left'){
-          transformCard(rendernode, 'left');
-        }
-        if(index === faceIndex && rendernode.angle !== 'center'){
-          transformCard(rendernode, 'center');
-        }
-        if(index > faceIndex && rendernode.angle !== 'right'){
-          transformCard(rendernode, 'right');
-        }
-      })
+      cardSurfaces[currentFace] && transformCard(cardSurfaces[currentFace], 'left');
+      transformCard(cardSurfaces[faceIndex], 'center');
+      
       currentFace = faceIndex;
     };
 
@@ -193,7 +185,6 @@ define(function(require, exports, module){
 
         // Only pop-up if center item and card swiped up.
         if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40) {
-          
           // FIXME: look into using a get() here.
           node = scrollview.node.array[index];
           // console.log(node);
@@ -327,7 +318,7 @@ define(function(require, exports, module){
 
     mapNode
     .add(new Modifier({
-      transform: Matrix.translate(0, -window.innerHeight, 10),
+      transform: Matrix.translate(0, -window.innerHeight, 200),
       origin: [0.5,1]
     }))
     .link(scrollview);

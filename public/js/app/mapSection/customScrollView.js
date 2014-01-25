@@ -63,7 +63,7 @@ define(function(require, exports, module) {
             clipSize: undefined,
             margin: undefined,
             drag: 0.002,
-            edgeGrip: 0.001,
+            edgeGrip: 0.5,
             edgePeriod: 300,
             edgeDamp: 1,
             paginated: false,
