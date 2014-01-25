@@ -115,17 +115,9 @@ define(function(require, exports, module){
 
       cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
-      cardSurfaces.forEach(function(rendernode, index){
-        if(index < faceIndex && rendernode.angle !== 'left'){
-          transformCard(rendernode, 'left');
-        }
-        if(index === faceIndex && rendernode.angle !== 'center'){
-          transformCard(rendernode, 'center');
-        }
-        if(index > faceIndex && rendernode.angle !== 'right'){
-          transformCard(rendernode, 'right');
-        }
-      })
+      cardSurfaces[currentFace] && transformCard(cardSurfaces[currentFace], 'left');
+      transformCard(cardSurfaces[faceIndex], 'center');
+      
       currentFace = faceIndex;
     };
 
