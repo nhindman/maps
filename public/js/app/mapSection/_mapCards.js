@@ -193,7 +193,6 @@ define(function(require, exports, module){
 
         // Only pop-up if center item and card swiped up.
         if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40) {
-          
           // FIXME: look into using a get() here.
           node = scrollview.node.array[index];
           // console.log(node);

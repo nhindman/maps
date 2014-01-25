@@ -29,7 +29,7 @@ define(function(require, exports, module){
     var highlightedID;
 
     var pushStrength            = 0, 
-        torqueStrength          = .009,
+        torqueStrength          = .003,
         torqueSpringDamping     = 20,
         torqueSpringPeriod      = 4,
         forceSpringDamping      = .95,
