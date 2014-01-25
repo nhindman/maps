@@ -111,12 +111,17 @@ define(function(require, exports, module){
 
     var setFace = function(faceIndex){
       faceIndex = faceIndex || scrollview.node.index;
+
       if(currentFace === faceIndex){ return; }
 
-      cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
+      if(cardSurfaces[faceIndex]){
+        eventHandler.emit('focus', cardSurfaces[faceIndex].id);
+        transformCard(cardSurfaces[faceIndex], 'center');
+      }
 
-      cardSurfaces[currentFace] && transformCard(cardSurfaces[currentFace], 'left');
-      transformCard(cardSurfaces[faceIndex], 'center');
+      if(cardSurfaces[currentFace]){
+        transformCard(cardSurfaces[currentFace], 'left');
+      }
       
       currentFace = faceIndex;
     };
