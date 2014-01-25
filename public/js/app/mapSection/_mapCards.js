@@ -195,9 +195,9 @@ define(function(require, exports, module){
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
 
           // New surface for larger card.
-          var prop = nodeSurface.getProperties();
+          var bigSize = (window.innerWidth - 80 > 400) ? [400, 450] : [window.innerWidth - 80, window.innerHeight - 200];
           newNode = new Surface({
-            size: [window.innerWidth - 80, window.innerHeight - 200],
+            size: bigSize,
             classes: ['bigCard'],
             content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
               '<img class="icon" src="/img/walkingIcon.png">' +
@@ -215,7 +215,7 @@ define(function(require, exports, module){
           PhyEng = new PhysicsEngine();
           part = PhyEng.createBody({
             shape : PhyEng.BODIES.RECTANGLE,
-            size : [window.innerWidth - 80, window.innerWidth - 80]
+            size : bigSize
           });
           part.link(newNode);
 
