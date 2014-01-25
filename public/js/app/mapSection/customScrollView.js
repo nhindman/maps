@@ -298,6 +298,7 @@ define(function(require, exports, module) {
 
     Scrollview.prototype.getPosition = function(node) {
         var pos = Math.round(this.particle.getPos()[0]*2)*0.5;
+        // var pos = this.particle.getPos()[0];
         if( node === undefined ) return pos;
         else {
             var offset = this._offsets[node];
@@ -417,9 +418,6 @@ define(function(require, exports, module) {
     Scrollview.prototype.setOutputFunction = function(fn, masterFn) {
         if(!fn) {
             fn = (function(offset) {
-                // if(this.movingCallback){
-                //     this.movingCallback();
-                // }
                 return (this.options.direction == Utility.Direction.X) ? Matrix.translate(offset, 0) : Matrix.translate(0, offset);
             }).bind(this);
             masterFn = fn;
