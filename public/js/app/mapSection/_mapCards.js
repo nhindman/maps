@@ -210,7 +210,7 @@ define(function(require, exports, module){
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
                 '<h1>' + allMarkers[node.id].data.name + '</h1>' +
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
-                '<p>' + '"' + allMarkers[node.id].data.tip + '"</p>' +
+                '<p>' + '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' +
                 '<p>' + '- ' + allMarkers[node.id].data.tipUser + '</p>' +
               '</div>',
             properties: {
