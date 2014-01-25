@@ -45,7 +45,7 @@ define(function(require, exports, module){
         y = yPosFaceCard;
         z = zPosFaceCard;
         rendernode.object.setProperties({
-          boxShadow: '3px 3px 3px black'
+          // boxShadow: '3px 3px 3px black'
         });
         break;
       case 'right':
@@ -63,7 +63,7 @@ define(function(require, exports, module){
     }
   }
 
-  module.exports = function(mapNode, Engine, eventHandler){
+  module.exports = function(mapNode, Engine, eventHandler, allMarkers){
 
     /////////////
     // BLOCKER //
@@ -115,17 +115,9 @@ define(function(require, exports, module){
 
       cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
 
-      cardSurfaces.forEach(function(rendernode, index){
-        if(index < faceIndex && rendernode.angle !== 'left'){
-          transformCard(rendernode, 'left');
-        }
-        if(index === faceIndex && rendernode.angle !== 'center'){
-          transformCard(rendernode, 'center');
-        }
-        if(index > faceIndex && rendernode.angle !== 'right'){
-          transformCard(rendernode, 'right');
-        }
-      })
+      cardSurfaces[currentFace] && transformCard(cardSurfaces[currentFace], 'left');
+      transformCard(cardSurfaces[faceIndex], 'center');
+      
       currentFace = faceIndex;
     };
 
@@ -135,6 +127,7 @@ define(function(require, exports, module){
     ///////////////////////
 
     var addCard = function(location){
+
       var cardSurface = new Surface({
         size: cardSize,
         content: location.name,
@@ -204,11 +197,18 @@ define(function(require, exports, module){
           // New surface for larger card.
           var prop = nodeSurface.getProperties();
           newNode = new Surface({
-            size: [window.innerWidth - 80, window.innerWidth - 80],
-            classes: ['card'],
-            content: nodeSurface.getContent(),
+            size: [window.innerWidth - 80, window.innerHeight - 200],
+            classes: ['bigCard'],
+            content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
+              '<img class="icon" src="/img/walkingIcon.png">' +
+              '<div class="info">' +
+                ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
+                '<h1>' + allMarkers[node.id].data.name + '</h1>' +
+                '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
+                '<p>' + allMarkers[node.id].data.tip + '</p>' +
+              '</div>',
             properties: {
-              backgroundImage: prop.backgroundImage
+              // backgroundImage: prop.backgroundImage
             }
           });
 
