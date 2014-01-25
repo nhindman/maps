@@ -55,6 +55,11 @@ app.get('/points', function(req, res) {
         venue.photoPrefix = photo.prefix;
       }
 
+      venue.tip         = null;
+      if(venues[i].tips.length > 0) {
+        venue.tip = venues[i].tips[0].text;
+      }
+
       results.push(venue);
     }
 
