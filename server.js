@@ -45,13 +45,23 @@ app.get('/points', function(req, res) {
       venue.address     = venues[i].venue.location.address;
       venue.city        = venues[i].venue.location.city;
       venue.state       = venues[i].venue.location.state;
+      venue.rating      = venues[i].venue.rating;
 
       venue.photo       = null;
-      if(venues[i].venue.photos.groups[0]) {
+      if(venues[i].venue.photos && venues[i].venue.photos.groups[0]) {
         var photo         = venues[i].venue.photos.groups[0].items[0];
         venue.photo       = photo.prefix + 200 + 'x' + 300 + photo.suffix;
         venue.photoSuffix = photo.suffix;
         venue.photoPrefix = photo.prefix;
+      } else {
+        venue.photo       = '/img/splashSmall.jpg';
+        venue.photoSuffix = '/img/splashMed.jpg';
+        venue.photoPrefix = null;
+      }
+
+      venue.tip = null;
+      if(venues[i].tips) {
+        venue.tip = venues[i].tips[0].text;
       }
 
       results.push(venue);
