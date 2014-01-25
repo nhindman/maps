@@ -237,9 +237,9 @@ define(function(require, exports, module){
           // Otherwise there's performance issues on mobile.
           // Don't fuck with the DOM!
           map = document.getElementById("map-canvas");
-          Time.setTimeout(function(){
-            map.className = "blur";
-          }, 400);
+          // Time.setTimeout(function(){
+          //   map.className = "blur";
+          // }, 400);
 
           newNode.on('touchend', function(event) {
 

@@ -79,7 +79,6 @@ define(function(require, exports, module){
 
     mapSurface.on('deploy', function(){
       initialize();
-      eventHandler.emit('maploaded');
     });
 
     mapSurface.on('click', function(e) {
@@ -236,7 +235,9 @@ define(function(require, exports, module){
       map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
-      startQuery();
+
+      eventHandler.emit('maploaded')
+      // startQuery();
       // window.clearInterval(intervalID);
     };
 
@@ -263,8 +264,12 @@ define(function(require, exports, module){
           reQuery();
         });
         fetchData();
+
+        eventHandler.emit('maploaded');
       });
     }
+
+    eventHandler.on('startQuery', startQuery)
 
     var calcRoute = function() {
       var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);

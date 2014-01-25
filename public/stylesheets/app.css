@@ -127,7 +127,6 @@ body {
   font-size: 14px;
   line-height: 1.2em;
   height: 300px;
-  overflow: scroll;
 }
 
 .bigCard .rating {

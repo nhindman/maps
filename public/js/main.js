@@ -37,7 +37,7 @@ define(function(require, exports, module) {
   }
   var secondSwap = function(){
     mod.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 400, curve: 'easeIn'});    
-    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'})
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'}, emitQuery)
    };
 
   window.swapBack = function(){
@@ -54,6 +54,10 @@ define(function(require, exports, module) {
   // };
 
   mainDisplay.add(mod).link(splashNode);
+
+  var emitQuery = function(){
+    eventHandler.emit('startQuery');
+  }
 
 
   eventHandler.on('loadmap', function(){

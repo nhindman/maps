@@ -58,10 +58,6 @@ define(function(require, exports, module){
       // content: 'GO'
     });
 
-    buttonSurface.on('click', function(){
-      PE.detach(wallID);
-      eventHandler.emit('swap');
-    });
 
     // comment out this next line and uncomment everything under physics options to enable physics effects
     // splashNode.add(new Modifier({origin: [0.5, 0.78]})).link(buttonSurface);
@@ -109,12 +105,30 @@ define(function(require, exports, module){
           reduceRestitution(restitution*0.95 - 0.005);
         }, 40)
       } else {
-        console.log('loadmap');
-        buttonSurface.addClass('buttonBall-active');
-        buttonSurface.setContent('GO');
+        // Load map after ball stops bouncing
         eventHandler.emit('loadmap');
       }
     }
+
+    // after location has been gathered and cards have been added
+    eventHandler.on('maploaded', function(){
+
+      // make ball light up
+      buttonSurface.addClass('buttonBall-active');
+      buttonSurface.setContent('GO');
+
+      // add listener to make clickable
+      buttonSurface.on('click', function(){
+        PE.detach(wallID);
+        setTimeout(function(){
+          eventHandler.emit('swap');
+        }, 1000)
+      });
+
+    })
+
+
+
 
     var wallID = PE.attach([walls, gravity])[0];
 
