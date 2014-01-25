@@ -31,7 +31,7 @@ define(function(require, exports, module){
     var pushStrength            = 0, 
         torqueStrength          = .003,
         torqueSpringDamping     = 20,
-        torqueSpringPeriod      = 4,
+        torqueSpringPeriod      = 2,
         forceSpringDamping      = .95,
         forceSpringPeriod       = 2100,
         dragStrength            = .01;
@@ -85,7 +85,7 @@ define(function(require, exports, module){
       applyTorque(e, 1);
     });
 
-    body.add(new Modifier(Matrix.translate(0,0,.1))).link(mapSurface);
+    body.link(mapSurface);
 
     var mapNode = new RenderNode();
     mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
@@ -172,7 +172,6 @@ define(function(require, exports, module){
           position: new google.maps.LatLng(location.lat, location.long),
           map: map,
           draggable: false,
-          title: 'enter data name here',
           animation: google.maps.Animation.DROP,
           icon: 'img/blueMarker.png'
         });
