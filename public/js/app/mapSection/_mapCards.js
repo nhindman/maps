@@ -1,27 +1,30 @@
 define(function(require, exports, module){
   var
-    Surface       = require('./customSurface'),
-    Modifier      = require('famous/Modifier'),
-    Matrix        = require('famous/Matrix'),
-    ViewSequence  = require('famous/ViewSequence'),
-    Scrollview    = require('./customScrollView'),
-    RenderNode    = require('./customRenderNode');
+    Surface        = require('./customSurface'),
+    Modifier       = require('famous/Modifier'),
+    Matrix         = require('famous/Matrix'),
+    ViewSequence   = require('famous/ViewSequence'),
+    Scrollview     = require('./customScrollView'),
+    PhysicsEngine  = require('famous-physics/PhysicsEngine'),
+    Spring         = require('famous-physics/forces/Spring'),
+    Time           = require('famous-utils/Time'),
+    RenderNode     = require('./customRenderNode');
 
   /////////////////
   //// OPTIONS ////
   /////////////////
   var
-    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5);
+    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/3);
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
-    rotateYAngle = 1,                              // rotational Y angle of skew
+    rotateYAngle = 0,                              // rotational Y angle of skew
     cardOffset   = 0.25,                           // offset between skewed cards and the front facing card
     curve        = 'easeInOut',                    // transition curve type
     easeDuration = 150,                            // amount of time for cards to transition
-    zPosFaceCard = 130,                            // z position offset for the face card
-    yPosFaceCard = -20,                            // y position offset for the face card
+    zPosFaceCard = 200,                            // z position offset for the face card
+    yPosFaceCard = -40,                            // y position offset for the face card
     // cardSpacing  = Math.floor(-cardSize[0] * 0.5);
-    cardSpacing  = 0;
+    cardSpacing  = 30;
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
@@ -90,7 +93,7 @@ define(function(require, exports, module){
 
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
-      clipSize: window.innerWidth/5,
+      clipSize: window.innerWidth/9,
       // margin: 80,
       // paginated: true,
       speedLimit: 10,
@@ -137,9 +140,7 @@ define(function(require, exports, module){
         content: location.name,
         classes: ['card'],
         properties: {
-          backgroundColor: 'steelblue',
-          backgroundImage: 'url(' + location.photo + ')',
-          backgroundSize: 'auto ' + cardSize[1] + 'px'
+          backgroundImage: 'url(' + location.photo + ')'
         }
       });
 
@@ -165,7 +166,111 @@ define(function(require, exports, module){
         Matrix.translate(0, yPosFaceCard, zPosFaceCard);
 
       cardSurfaces.push(renderNode);
-      modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'})
+      modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'});
+
+
+      /**********************************************************/
+      /**************** Card Pop / Swipe Out*********************/
+      /**********************************************************/
+
+      // Create vars to be captured in closure
+      var index, node, nodeSurface, newNode, part, PhyEng, spring, draggable, map;
+
+      var startX, startY;
+      cardSurface.on('touchstart', function(event) {
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+      });
+
+      cardSurface.on('touchend', function(touchEvent){
+        
+        // Find the scrollview item that matches our clicked surface
+        for(var i = 0; i < scrollview.node.array.length; i++) {
+          if(touchEvent.origin.id === scrollview.node.array[i].object.id) {
+            index = i;
+          }
+        }
+
+        // Only pop-up if center item and card swiped up.
+        if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40) {
+          
+          // FIXME: look into using a get() here.
+          node = scrollview.node.array[index];
+          // console.log(node);
+
+          // Modify the node to larger size
+          nodeSurface = node.object;
+          nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
+
+          // New surface for larger card.
+          var prop = nodeSurface.getProperties();
+          newNode = new Surface({
+            size: [window.innerWidth - 80, window.innerWidth - 80],
+            classes: ['card'],
+            content: nodeSurface.getContent(),
+            properties: {
+              backgroundImage: prop.backgroundImage
+            }
+          });
+
+          PhyEng = new PhysicsEngine();
+          part = PhyEng.createBody({
+            shape : PhyEng.BODIES.RECTANGLE,
+            size : [window.innerWidth - 80, window.innerWidth - 80]
+          });
+          part.link(newNode);
+
+          spring = new Spring({
+            anchor : [ 0, -(window.innerHeight / 2), 0],
+            period : 300,
+            dampingRatio : 0.5
+          });
+          PhyEng.attach(spring, part);
+          
+          mapNode.add(newNode).add(new Modifier({ origin : [0.5, 0.98], transform : node.modifiers[0].getTransform() } )).link(PhyEng);
+
+          // Blur the map after transform has completed.
+          // Otherwise there's performance issues on mobile.
+          // Don't fuck with the DOM!
+          map = document.getElementById("map-canvas");
+          Time.setTimeout(function(){
+            map.className = "blur";
+          }, 400);
+
+          newNode.on('touchend', function(event) {
+
+            var mod = node.modifiers[0].getTransform();
+            node.modifiers[0].setTransform( Matrix.translate(0, window.innerHeight, 100), {
+              duration: 300,
+              curve: curve
+            },function(){
+              nodeSurface.setOptions({ properties : { 'visibility' : 'visible' }});
+              node.modifiers[0].setTransform(mod, {});
+            });
+
+            // Change the anchor point for it springs off screen
+            spring.setOpts({ anchor : [ 0, 200, 0] });
+            newNode.size = cardSize;
+
+            // Unblur the map
+            map.className = "";
+
+            // Don't cut it out until its off screen.
+            Time.setTimeout(function(){
+              // FIXME: There's no guarantee the surface we want to remove is the last one.
+              mapNode.object.splice(mapNode.object.length - 1, 1);
+            }, 500);
+
+          });
+
+        }
+
+      });
+
+      /**********************************************************/
+      /**********************************************************/
+
+
     };
 
     
@@ -211,7 +316,7 @@ define(function(require, exports, module){
 
     mapNode
     .add(new Modifier({
-      transform: Matrix.translate(0, 0, -50),
+      transform: Matrix.translate(0, -window.innerHeight, 10),
       origin: [0.5,1]
     }))
     .link(scrollview);

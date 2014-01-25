@@ -2,11 +2,11 @@ define(function(require, exports, module) {
   var
     FamousEngine = require('famous/Engine'),
     App          = require('app/App'),
-    Scrollview = require('famous-views/ScrollView'),
-    Surface = require('famous/Surface'),
-    RenderNode = require('app/mapSection/customRenderNode'),
-    Modifier = require('famous/Modifier'),
-    Matrix = require('famous/Matrix'),
+    Scrollview   = require('famous-views/ScrollView'),
+    Surface      = require('famous/Surface'),
+    RenderNode   = require('app/mapSection/customRenderNode'),
+    Modifier     = require('famous/Modifier'),
+    Matrix       = require('famous/Matrix'),
     EventHandler = require('famous/EventHandler'),
     eventHandler = new EventHandler();
 
@@ -31,27 +31,30 @@ define(function(require, exports, module) {
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
   var splashNode = require('app/splashSection/splashSection')(eventHandler);
   window.swap = function(){
-    mod.setTransform(Matrix.move(Matrix.rotateY(-0.05),[500, 0, -50]), {duration: 800, curve: 'easeOut'});
-    mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [-1200, 0, 50]), {duration: 800, curve: 'easeOut'}, secondSwap);
+    mod.setTransform(Matrix.move(Matrix.rotateY(-0.05),[250, 0, -50]), {duration: 400, curve: 'easeOut'});
+    mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [-950, 0, 50]), {duration: 400, curve: 'easeOut'}, secondSwap);
+    scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 400});
   }
   var secondSwap = function(){
-    mod.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 800, curve: 'easeIn'});    
-    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 800, curve: 'easeIn'})
+    mod.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 400, curve: 'easeIn'});    
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'})
    };
+
   window.swapBack = function(){
-    mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [500, 0, 50]), {duration: 800, curve: 'easeOut'});
-    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-1200, 0, -50]), {duration: 800, curve: 'easeOut'}, secondSwapBack);
+    mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [250, 0, 50]), {duration: 400, curve: 'easeOut'});
+    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-950, 0, -50]), {duration: 400, curve: 'easeOut'}, secondSwapBack);
+    scrollmod.setTransform(Matrix.translate(0, -height, 0), {duration: 400});
   };
   var secondSwapBack = function(){
-    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 800, curve: 'easeIn'})
-    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-window.innerWidth/2, 0, -75]), {duration: 800, curve: 'easeIn'}, thirdSwapBack);
+    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'})
+    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 400, curve: 'easeIn'});
   };
-  var thirdSwapBack = function(){
-    mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 800});
-  };
+  // var thirdSwapBack = function(){
+  //   mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 400});
+  // };
 
   mainDisplay.add(mod).link(splashNode);
   mainDisplay.add(mod2).link(mapNode);
-
+  scrollmod = mapNode.object[2].modifiers[0];
 
 });

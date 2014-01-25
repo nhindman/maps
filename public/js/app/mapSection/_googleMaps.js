@@ -6,7 +6,14 @@ define(function(require, exports, module){
     Timer    = require('famous/Timer'),
     async    = require('../../../lib/requirejs-plugins/src/async'),
     RenderNode = require('famous/RenderNode'),
-    FamousEngine = require('famous/Engine');
+    FamousEngine = require('famous/Engine'),
+
+    // Include physics for map torque
+    PhysicsEngine = require('famous-physics/PhysicsEngine'),
+    Vector = require('famous-physics/math/Vector'),
+    Quaternion = require('famous-physics/math/Vector'),
+    TorqueSpring = require('famous-physics/forces/TorqueSpring'),
+    Spring = require('famous-physics/forces/Spring');
 
   require('../../../lib/requirejs-plugins/src/async!https://maps.googleapis.com/maps/api/js?key=AIzaSyCUK_sH0MT-pkWbyBGJe-XoJ_kldSde81o&sensor=true');
 
@@ -21,20 +28,76 @@ define(function(require, exports, module){
     var boundMarkers = {};
     var highlightedID;
 
+    var pushStrength            = 0, 
+        torqueStrength          = .009,
+        torqueSpringDamping     = 20,
+        torqueSpringPeriod      = 4,
+        forceSpringDamping      = .95,
+        forceSpringPeriod       = 2100,
+        dragStrength            = .01;
+
     var map;
     var mapSurface = new Surface({
-      content: '<div id="map-canvas" />'
-    //   size: [window.innerWidth, window.innerHeight*0.72]
+      content: '<div id="map-canvas" />',
+      size: [window.innerWidth, window.innerHeight]
     });
+
+    var PE = new PhysicsEngine();
+    var force  = new Vector(0,0,-pushStrength);
+    var torque = new Vector(0,0,-torqueStrength);
+
+    function applyTorque(e, side){
+      var location = new Vector(
+        (e.offsetX - body.size[0]/2)*side,
+       -(e.offsetY - body.size[1]/2)*side,
+        0
+      );
+
+      body.applyForce(force);
+      body.applyTorque(location.cross(torque));
+    };
+
+
+    var body = PE.createBody({
+        shape : PE.BODIES.RECTANGLE,
+        size : [window.innerWidth, window.innerHeight]
+    });
+    
+    var torqueSpring = new TorqueSpring({
+      anchor : new Quaternion(0,0,0,0),
+      period : torqueSpringPeriod,
+      dampingRatio : torqueSpringDamping
+    });
+
+    var spring = new Spring({
+      anchor : [0,0,0],
+      period : forceSpringPeriod,
+      dampingRatio : forceSpringDamping
+    });
+
+    PE.attach([spring]);
 
     mapSurface.on('deploy', function(){
       initialize();
     });
+
+    mapSurface.on('click', function(e) {
+      applyTorque(e, 1);
+    });
+
+    body.add(new Modifier(Matrix.translate(0,0,.1))).link(mapSurface);
+
     var mapNode = new RenderNode();
-    mapNode.add(mapSurface);
+    mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
     require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler);
 
     // mainDisplay.add(mapSurface);
+
+    function attachTorqueSpring(){
+      mapNode.attachedSpring = PE.attach(torqueSpring);
+    }
+
+    attachTorqueSpring();
 
     var reQuery = function(){
       var newCenter = {
@@ -47,7 +110,6 @@ define(function(require, exports, module){
         dropMarkers();
       }
     };
-
 
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
@@ -158,11 +220,17 @@ define(function(require, exports, module){
       directionsDisplay = new google.maps.DirectionsRenderer();
 
       var mapOptions = {
-        zoom: 17,
+        zoom: 15,
         disableDefaultUI: true,
         disableDoubleClickZoom: true,
-        styles: require('app/mapSection/_mapStyle'),
-        center: new google.maps.LatLng(37.7833, -122.4167)
+        panControl: false,
+        zoomControl: false,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        overviewMapControl: false,
+        center: new google.maps.LatLng(37.7833, -122.4167),
+        styles: require('app/mapSection/_mapStyle')()
       };
 
       map = new google.maps.Map(document.getElementById('map-canvas'),
