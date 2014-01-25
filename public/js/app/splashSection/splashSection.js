@@ -54,8 +54,8 @@ define(function(require, exports, module){
       properties: {
         lineHeight: ballSize + 'px',
         // textAlign: 'center',
-      },
-      content: 'GO'
+      }
+      // content: 'GO'
     });
 
     buttonSurface.on('click', function(){
@@ -103,12 +103,17 @@ define(function(require, exports, module){
       strength: gravityStrength
     });
     var reduceRestitution = function(restitution){
-        walls.setOpts({restitution: restitution});
-        if(restitution > -0.01){
-            setTimeout(function(){
-                reduceRestitution(restitution - 0.005);
-            }, 40)
-        }
+      walls.setOpts({restitution: restitution});
+      if(restitution >= 0){
+        setTimeout(function(){
+          reduceRestitution(restitution*0.95 - 0.005);
+        }, 40)
+      } else {
+        console.log('loadmap');
+        buttonSurface.addClass('buttonBall-active');
+        buttonSurface.setContent('GO');
+        eventHandler.emit('loadmap');
+      }
     }
 
     var wallID = PE.attach([walls, gravity])[0];

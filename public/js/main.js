@@ -55,12 +55,17 @@ define(function(require, exports, module) {
 
   mainDisplay.add(mod).link(splashNode);
 
+
+  eventHandler.on('loadmap', function(){
+    mainDisplay.add(mod2).link(mapNode);
+  });
+
   eventHandler.on('swap', function(){
     setTimeout(function(){
-      mainDisplay.add(mod2).link(mapNode);
       swap();
     }, 1000)
   })
+
   scrollmod = mapNode.object[2].modifiers[0];
 
 });

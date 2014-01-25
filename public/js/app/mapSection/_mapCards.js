@@ -18,7 +18,7 @@ define(function(require, exports, module){
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
-    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card
+    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card (DEPRECATED)
     curve        = 'easeInOut',                    // transition curve type
     easeDuration = 150,                            // amount of time for cards to transition
     zPosFaceCard = 200,                            // z position offset for the face card
@@ -61,7 +61,7 @@ define(function(require, exports, module){
         curve: curve
       });
     }
-  }
+  };
 
   module.exports = function(mapNode, Engine, eventHandler){
 
