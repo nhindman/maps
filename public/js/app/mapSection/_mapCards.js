@@ -14,7 +14,7 @@ define(function(require, exports, module){
   //// OPTIONS ////
   /////////////////
   var
-    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/3);
+    cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5),
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
@@ -93,7 +93,7 @@ define(function(require, exports, module){
 
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
-      clipSize: window.innerWidth/5,
+      clipSize: window.innerWidth/9,
       // margin: 80,
       // paginated: true,
       speedLimit: 10,
@@ -316,7 +316,7 @@ define(function(require, exports, module){
 
     mapNode
     .add(new Modifier({
-      transform: Matrix.translate(0, -window.innerHeight, 10),
+      transform: Matrix.translate(0, -window.innerHeight, 200),
       origin: [0.5,1]
     }))
     .link(scrollview);
