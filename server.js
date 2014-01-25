@@ -62,6 +62,11 @@ app.get('/points', function(req, res) {
       venue.tip = null;
       if(venues[i].tips) {
         venue.tip = venues[i].tips[0].text;
+        if(venues[i].tips[0].user.lastName) {
+          venue.tipUser = venues[i].tips[0].user.firstName + " " + venues[i].tips[0].user.lastName;
+        } else {
+          venue.tipUser = venues[i].tips[0].user.firstName;
+        }
       }
 
       results.push(venue);
