@@ -290,14 +290,11 @@ define(function(require, exports, module){
 //Walking Directions//
 
     var showRoute = function(e, node){
-      var obj = allMarkers[node.id];
-      var lat = obj.data.lat;
-      var lng = obj.data.long;
-      // var lat = allMarkers[node.id.data.lat];
-      // var lng = allMarkers[node.id.data.long];
+      var lat = allMarkers[e.id].data.lat;
+      var lng = allMarkers[e.id].data.long;
       calcRoute(lat, lng);
     };
-    eventHandler.on('nodeTouch', showRoute);
+    eventHandler.on('walking-dir', showRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }
