@@ -171,7 +171,7 @@ define(function(require, exports, module){
       /**********************************************************/
 
       // Create vars to be captured in closure
-      var index, node, nodeSurface, newNode, part, PhyEng, spring, draggable, map;
+      var index, node, nodeSurface, newNode, part, PhyEng, spring, draggable, map, emitInfo, setWalkDirListener;
 
       var startX, startY;
       cardSurface.on('touchstart', function(event) {
@@ -204,7 +204,7 @@ define(function(require, exports, module){
             size: bigSize,
             classes: ['bigCard'],
             content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
-              '<img class="icon" src="/img/walkingIcon.png">' +
+              '<img class="icon walking-dir" src="/img/walkingIcon.png">' +
               '<div class="info">' +
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
                 '<h1>' + allMarkers[node.id].data.name + '</h1>' +
@@ -216,6 +216,15 @@ define(function(require, exports, module){
               // backgroundImage: prop.backgroundImage
             }
           });
+
+          //When walking icon is clicked, event and rendernode is emitted          
+          setWalkDirListener = function(){
+            $('.icon').on('click', emitInfo);
+          };
+          newNode.on('deploy', setWalkDirListener);
+          emitInfo = function(){
+            eventHandler.emit('walking-dir', scrollview.node.array[index]);
+          };
 
           PhyEng = new PhysicsEngine();
           part = PhyEng.createBody({
@@ -242,7 +251,6 @@ define(function(require, exports, module){
           // }, 400);
 
           newNode.on('touchend', function(event) {
-
             var mod = node.modifiers[0].getTransform();
             node.modifiers[0].setTransform( Matrix.translate(0, window.innerHeight, 100), {
               duration: 300,
