@@ -211,7 +211,7 @@ define(function(require, exports, module){
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
                 '<p>' + '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' +
                 '<p>' + '- ' + allMarkers[node.id].data.tipUser + '</p>' +
-                '<p>' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + ' meters away</p>' +
+                '<p>' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + ' miles away</p>' +
               '</div>',
             properties: {
               // backgroundImage: prop.backgroundImage
@@ -283,12 +283,18 @@ define(function(require, exports, module){
         return x * Math.PI / 180;
       };
 
+      var convertMeterToMiles = function(meters) {
+        return meters*0.000621371;
+      }
+
       var a =
         Math.pow(Math.sin(toRad(coord2.lat - coord1.lat)/2), 2) +
         Math.pow(Math.sin(toRad(coord2.lng - coord1.lng)/2), 2) *
         Math.cos(toRad(coord1.lat)) * Math.cos(toRad(coord2.lat));
 
-      return 6378100 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var distanceInMeters = 6378100 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+      return Math.round((convertMeterToMiles(distanceInMeters)*100))/100; 
     };
     
     var removeCard = function(id){
