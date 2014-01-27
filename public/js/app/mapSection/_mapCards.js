@@ -321,7 +321,7 @@ define(function(require, exports, module){
 
     mapNode
     .add(new Modifier({
-      transform: Matrix.translate(0, -window.innerHeight, 200),
+      transform: Matrix.translate(0, window.innerHeight, 200),
       origin: [0.5,1]
     }))
     .link(scrollview);
