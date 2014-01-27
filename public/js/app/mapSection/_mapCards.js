@@ -150,8 +150,7 @@ define(function(require, exports, module){
 
       if(!cardSurfaces.length || first){
         scrollview.sequenceFrom(cardSurfaces);
-        eventHandler.emit('focus', location.id);
-        renderNode.angle = 'center';
+        setFace()
         first = false;
       }
 
