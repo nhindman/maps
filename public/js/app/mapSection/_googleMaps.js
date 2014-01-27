@@ -294,8 +294,12 @@ define(function(require, exports, module){
     };
 
 //Walking Directions//
+    var showRoute,
+    exitRoute,
+    exitRouteModifier,
+    exitRouteSurface;
 
-    var showRoute = function(e){
+    showRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
       calcRoute(lat, lng);
@@ -303,15 +307,40 @@ define(function(require, exports, module){
       boundMarkers = {};
       allMarkers = {};
       initialize();
+      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
     };
+
     eventHandler.on('walking-dir', showRoute);
-    window.exitRoute = function(){
+
+    exitRoute = function(){
       scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       startQuery();
       initialize();
       addAndRemoveCards();
       dropMarkers();
+      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 1200});
     };
+
+
+//Exit route surface
+    exitRouteModifier = new Modifier({
+      transform: Matrix.translate(window.innerWidth/10, -window.innerHeight, 1)
+    });
+
+    exitRouteSurface = new Surface({
+      content: '<div class="exitRoute">^</div>',
+      size: [window.innerHeight/5, window.innerWidth/5],
+      properties: {
+        'font-size': '5rem',
+        color: 'black',
+        opacity: '0.5'
+        // backgroundColor: 'red'
+      }
+    });
+
+    mapNode.add(exitRouteModifier).link(exitRouteSurface);
+    
+    exitRouteSurface.on('click', exitRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }
