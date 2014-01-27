@@ -124,16 +124,6 @@ define(function(require, exports, module){
       }
       
       currentFace = faceIndex;
-
-      setBigCardListener = function(){
-        console.log('focus')
-        // console.log(cardSurfaces[faceIndex])
-        eventHandler.emit('bigCard', cardSurfaces[faceIndex]) 
-      }()
-      // newNode.on('deploy', setBigCardListener);
-      // emitInfo = function(){
-      //   eventHandler.emit('walking-dir', scrollview.node.array[index]);
-      // };
     };
 
 
@@ -229,14 +219,13 @@ define(function(require, exports, module){
           });
 
           //When walking icon is clicked, event and rendernode is emitted          
-          emitInfo = function(e){
-            eventHandler.emit('showRoute', e, scrollview.node.array[index].id);
-          }
           setWalkDirListener = function(){
             $('.icon').on('click', emitInfo);
           };
           newNode.on('deploy', setWalkDirListener);
-
+          emitInfo = function(){
+            eventHandler.emit('walking-dir', scrollview.node.array[index]);
+          };
 
           PhyEng = new PhysicsEngine();
           part = PhyEng.createBody({

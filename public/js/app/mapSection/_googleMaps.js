@@ -272,7 +272,7 @@ define(function(require, exports, module){
 
     eventHandler.on('startQuery', startQuery)
 
-    var calcRoute = function(lat, lng, id) {
+    var calcRoute = function(lat, lng) {
       var newLocation = new google.maps.LatLng(lat, lng);
       eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -287,9 +287,7 @@ define(function(require, exports, module){
         }
         directionsService.route(request, function(result, status) {
           if (status == google.maps.DirectionsStatus.OK) {
-            allMarkers[id].result = result;
-            // allMarkers[id].duration = result.routes[0].legs[0].duration.text;
-            //directionsDisplay.setDirections(result);
+            directionsDisplay.setDirections(result);
           }
         });
       });
@@ -297,22 +295,16 @@ define(function(require, exports, module){
 
 //Walking Directions//
 
-    var getRoute = function(e){
+    var showRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
-      calcRoute(lat, lng, e.id);
-    };
-    var showRoute = function(e, id){
-      directionsDisplay.setDirections(allMarkers[id].result);
+      calcRoute(lat, lng);
       scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 800});
       boundMarkers = {};
       allMarkers = {};
       initialize();
-    }
-
-    eventHandler.on('bigCard', getRoute);
-    eventHandler.on('showRoute', showRoute)
-    // eventHandler.on('walking-dir', showRoute);
+    };
+    eventHandler.on('walking-dir', showRoute);
     window.exitRoute = function(){
       scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       startQuery();
