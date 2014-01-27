@@ -229,7 +229,7 @@ define(function(require, exports, module){
         scaleControl: false,
         streetViewControl: false,
         overviewMapControl: false,
-        center: new google.maps.LatLng(37.7833, -122.4167),
+        // center: new google.maps.LatLng(37.7833, -122.4167),
         styles: require('app/mapSection/_mapStyle')()
       };
 
@@ -240,6 +240,16 @@ define(function(require, exports, module){
       eventHandler.emit('maploaded')
       // startQuery();
       // window.clearInterval(intervalID);
+    };
+
+    var getCurrentPosition = function(){
+      navigator.geolocation.getCurrentPosition(function(position){
+        currentLatLng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
+      return new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
     };
 
     var startQuery = function(){
@@ -297,15 +307,21 @@ define(function(require, exports, module){
     var showRoute,
     exitRoute,
     exitRouteModifier,
-    exitRouteSurface;
+    exitRouteSurface,
+    toggleMarkers;
+
+    toggleMarkers = function(input){
+      for (marker in allMarkers) {
+        allMarkers[marker].marker.setMap(input);
+      }
+    };
 
     showRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
+      toggleMarkers(null);
       calcRoute(lat, lng);
       scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 800});
-      boundMarkers = {};
-      allMarkers = {};
       initialize();
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
     };
@@ -313,11 +329,13 @@ define(function(require, exports, module){
     eventHandler.on('walking-dir', showRoute);
 
     exitRoute = function(){
+      toggleMarkers(map);
+      dropMarkers();
       scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       startQuery();
-      initialize();
-      addAndRemoveCards();
-      dropMarkers();
+      map.setZoom(15);
+      map.setCenter(getCurrentPosition());
+      directionsDisplay.setMap(null);
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 1200});
     };
 
@@ -334,7 +352,6 @@ define(function(require, exports, module){
         'font-size': '5rem',
         color: 'black',
         opacity: '0.5'
-        // backgroundColor: 'red'
       }
     });
 
