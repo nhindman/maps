@@ -27,6 +27,7 @@ define(function(require, exports, module){
     var allMarkers = {};
     var boundMarkers = {};
     var highlightedID;
+    var first = true; // we want to emit an event to swap once all markers have been dropped, but this event should only be emitted once
 
     var pushStrength            = 0, 
         torqueStrength          = .003,
@@ -164,6 +165,10 @@ define(function(require, exports, module){
     };
 
     var dropMarkers = function(){
+      // var location;
+      // for(var i = 0; i < data.length; i++){
+      //   location = data[i];
+
       data.forEach(function(location){
         if(allMarkers[location.id]){
           return;
@@ -172,7 +177,7 @@ define(function(require, exports, module){
           position: new google.maps.LatLng(location.lat, location.long),
           map: map,
           draggable: false,
-          animation: google.maps.Animation.DROP,
+          animation: !first && google.maps.Animation.DROP,
           icon: 'img/blueMarker.png'
         });
 
@@ -185,6 +190,10 @@ define(function(require, exports, module){
           data: location
         };
       });
+      if(first){
+        eventHandler.emit('swap');
+        first = false;
+      }
     }
 
 
@@ -234,11 +243,11 @@ define(function(require, exports, module){
 
       map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+
       directionsDisplay.setMap(map);
 
-      eventHandler.emit('maploaded')
-      // startQuery();
-      // window.clearInterval(intervalID);
+      // eventHandler.emit('maploaded')
+      startQuery();
     };
 
     var startQuery = function(){
@@ -265,11 +274,10 @@ define(function(require, exports, module){
         });
         fetchData();
 
-        eventHandler.emit('maploaded');
       });
     }
 
-    eventHandler.on('startQuery', startQuery)
+    // eventHandler.on('startQuery', startQuery)
 
     var calcRoute = function() {
       var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
