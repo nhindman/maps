@@ -90,7 +90,7 @@ define(function(require, exports, module){
 
     var mapNode = new RenderNode();
     mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
-    require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers);
+    // require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
 
     // mainDisplay.add(mapSurface);
 
@@ -274,6 +274,10 @@ define(function(require, exports, module){
         });
         fetchData();
 
+        console.log(mapNode);
+        console.log(currentLatLng);
+
+        require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
       });
     }
 
