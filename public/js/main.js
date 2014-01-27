@@ -37,7 +37,7 @@ define(function(require, exports, module) {
   }
   var secondSwap = function(){
     mod.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 400, curve: 'easeIn'});    
-    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'})
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeIn'}, emitQuery)
    };
 
   window.swapBack = function(){
@@ -54,7 +54,22 @@ define(function(require, exports, module) {
   // };
 
   mainDisplay.add(mod).link(splashNode);
-  mainDisplay.add(mod2).link(mapNode);
+
+  var emitQuery = function(){
+    eventHandler.emit('startQuery');
+  }
+
+
+  eventHandler.on('loadmap', function(){
+    mainDisplay.add(mod2).link(mapNode);
+  });
+
+  eventHandler.on('swap', function(){
+    setTimeout(function(){
+      swap();
+    }, 1000)
+  })
+
   scrollmod = mapNode.object[2].modifiers[0];
 
 });

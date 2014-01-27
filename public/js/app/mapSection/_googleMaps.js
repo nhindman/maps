@@ -27,6 +27,7 @@ define(function(require, exports, module){
     var allMarkers = {};
     var boundMarkers = {};
     var highlightedID;
+    var boundMarkersStorage;
 
     var pushStrength            = 0, 
         torqueStrength          = .003,
@@ -235,7 +236,9 @@ define(function(require, exports, module){
       map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
       directionsDisplay.setMap(map);
-      startQuery();
+
+      eventHandler.emit('maploaded')
+      // startQuery();
       // window.clearInterval(intervalID);
     };
 
@@ -262,13 +265,16 @@ define(function(require, exports, module){
           reQuery();
         });
         fetchData();
+
+        eventHandler.emit('maploaded');
       });
     }
 
-    var calcRoute = function(lat, lng) {
-      //Arbitrary location hard-coded into calcRoute
+    eventHandler.on('startQuery', startQuery)
+
+    var calcRoute = function(lat, lng, id) {
       var newLocation = new google.maps.LatLng(lat, lng);
-      // var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
+      eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
@@ -281,7 +287,9 @@ define(function(require, exports, module){
         }
         directionsService.route(request, function(result, status) {
           if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(result);
+            allMarkers[id].result = result;
+            // allMarkers[id].duration = result.routes[0].legs[0].duration.text;
+            //directionsDisplay.setDirections(result);
           }
         });
       });
@@ -289,12 +297,29 @@ define(function(require, exports, module){
 
 //Walking Directions//
 
-    var showRoute = function(e, node){
+    var getRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
-      calcRoute(lat, lng);
+      calcRoute(lat, lng, e.id);
     };
-    eventHandler.on('walking-dir', showRoute);
+    var showRoute = function(e, id){
+      directionsDisplay.setDirections(allMarkers[id].result);
+      scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 800});
+      boundMarkers = {};
+      allMarkers = {};
+      initialize();
+    }
+
+    eventHandler.on('bigCard', getRoute);
+    eventHandler.on('showRoute', showRoute)
+    // eventHandler.on('walking-dir', showRoute);
+    window.exitRoute = function(){
+      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
+      startQuery();
+      initialize();
+      addAndRemoveCards();
+      dropMarkers();
+    };
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }

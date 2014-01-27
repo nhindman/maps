@@ -127,7 +127,6 @@ body {
   font-size: 14px;
   line-height: 1.2em;
   height: 300px;
-  overflow: scroll;
 }
 
 .bigCard .rating {
@@ -192,10 +191,20 @@ body {
 
 .buttonBall {
     border-radius: 50%;
-    background-color: #00a8ff;
+    background-color: #205976;
     color: white;
     text-align: center;
     font-size: 2em;
+}
+
+@media only screen and (min-width: 1024px){
+    .buttonBall {
+        webkit-transition:background-color 0.5s
+    }
+}
+
+.buttonBall-active {
+    background-color: #00a8ff;
 }
 
 .slogan {

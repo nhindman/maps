@@ -18,7 +18,7 @@ define(function(require, exports, module){
     cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
-    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card
+    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card (DEPRECATED)
     curve        = 'easeInOut',                    // transition curve type
     easeDuration = 150,                            // amount of time for cards to transition
     zPosFaceCard = 200,                            // z position offset for the face card
@@ -61,7 +61,7 @@ define(function(require, exports, module){
         curve: curve
       });
     }
-  }
+  };
 
   module.exports = function(mapNode, Engine, eventHandler, allMarkers){
 
@@ -93,11 +93,11 @@ define(function(require, exports, module){
 
     window.scrollview = new Scrollview({
       itemSpacing: cardSpacing,
-      clipSize: window.innerWidth/9,
-      // margin: 80,
-      // paginated: true,
-      speedLimit: 10,
-      drag: 0.004,
+      clipSize: cardSize[0]*0 + 0.0001,
+      margin: window.innerWidth,
+      paginated: true,
+      speedLimit: 10
+      // drag: 0.004,
       // edgePeriod: 150
     // })
     }, function(pos){
@@ -111,14 +111,29 @@ define(function(require, exports, module){
 
     var setFace = function(faceIndex){
       faceIndex = faceIndex || scrollview.node.index;
+
       if(currentFace === faceIndex){ return; }
 
-      cardSurfaces[faceIndex] && eventHandler.emit('focus', cardSurfaces[faceIndex].id);
+      if(cardSurfaces[faceIndex]){
+        eventHandler.emit('focus', cardSurfaces[faceIndex].id);
+        transformCard(cardSurfaces[faceIndex], 'center');
+      }
 
-      cardSurfaces[currentFace] && transformCard(cardSurfaces[currentFace], 'left');
-      transformCard(cardSurfaces[faceIndex], 'center');
+      if(cardSurfaces[currentFace]){
+        transformCard(cardSurfaces[currentFace], 'left');
+      }
       
       currentFace = faceIndex;
+
+      setBigCardListener = function(){
+        console.log('focus')
+        // console.log(cardSurfaces[faceIndex])
+        eventHandler.emit('bigCard', cardSurfaces[faceIndex]) 
+      }()
+      // newNode.on('deploy', setBigCardListener);
+      // emitInfo = function(){
+      //   eventHandler.emit('walking-dir', scrollview.node.array[index]);
+      // };
     };
 
 
@@ -153,10 +168,6 @@ define(function(require, exports, module){
       cardSurface.pipe(renderNode);
       renderNode.link(modifier).link(cardSurface);
       renderNode.pipe(scrollview);
-      var testFunc = function(e, node){
-        eventHandler.emit('nodeTouch', e, node);
-      };
-      renderNode.on('touchend', testFunc);
 
       var endMatrix = (cardSurfaces.length) ? 
         Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 
@@ -171,7 +182,7 @@ define(function(require, exports, module){
       /**********************************************************/
 
       // Create vars to be captured in closure
-      var index, node, nodeSurface, newNode, part, PhyEng, spring, draggable, map;
+      var index, node, nodeSurface, newNode, part, PhyEng, spring, draggable, map, emitInfo, setWalkDirListener;
 
       var startX, startY;
       cardSurface.on('touchstart', function(event) {
@@ -209,18 +220,23 @@ define(function(require, exports, module){
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
                 '<h1>' + allMarkers[node.id].data.name + '</h1>' +
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
-                '<p>' + '"' + allMarkers[node.id].data.tip + '"</p>' +
+                '<p>' + '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' +
                 '<p>' + '- ' + allMarkers[node.id].data.tipUser + '</p>' +
               '</div>',
             properties: {
               // backgroundImage: prop.backgroundImage
             }
           });
-          //When walking icon is clicked, event and rendernode is emitted
-          var emitInfo = function(){
-            eventHandler.emit('walking-dir', scrollview.node.array[index]);
+
+          //When walking icon is clicked, event and rendernode is emitted          
+          emitInfo = function(e){
+            eventHandler.emit('showRoute', e, scrollview.node.array[index].id);
+          }
+          setWalkDirListener = function(){
+            $('.icon').on('click', emitInfo);
           };
-          $('div').on('click', emitInfo);
+          newNode.on('deploy', setWalkDirListener);
+
 
           PhyEng = new PhysicsEngine();
           part = PhyEng.createBody({
@@ -242,9 +258,9 @@ define(function(require, exports, module){
           // Otherwise there's performance issues on mobile.
           // Don't fuck with the DOM!
           map = document.getElementById("map-canvas");
-          Time.setTimeout(function(){
-            map.className = "blur";
-          }, 400);
+          // Time.setTimeout(function(){
+          //   map.className = "blur";
+          // }, 400);
 
           newNode.on('touchend', function(event) {
             var mod = node.modifiers[0].getTransform();
