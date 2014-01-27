@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 
   var
     splashSurface,
-    spashNode,
+    splashNode,
     height = window.innerHeight,
     width = window.innerWidth,
     mod,
