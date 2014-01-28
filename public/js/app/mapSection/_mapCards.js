@@ -222,13 +222,13 @@ define(function(require, exports, module){
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
 
           // New surface for larger card.
-          var bigSize = (window.innerWidth - 80 > 400) ? [350, 450] : [window.innerWidth - 80, window.innerHeight - 100];
+          var bigSize = (window.innerWidth * 0.8 > 400) ? [350, 450] : [window.innerWidth * 0.8, window.innerHeight * 0.8];
           newNode = new Surface({
             size: bigSize,
             classes: ['bigCard'],
-            content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
+            content:  '<div class="photo" style="height: ' + bigSize[1] * 0.33 + 'px; background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
               '<div class="icon walking-dir"><i class="icon-pitch"></i></div>' +
-              '<div class="info">' +
+              '<div class="info" style="height: ' + bigSize[1] * 0.63 + 'px;">' +
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
                 '<h1>' + allMarkers[node.id].data.name + '</h1>' +
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
