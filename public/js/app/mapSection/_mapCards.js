@@ -16,13 +16,13 @@ define(function(require, exports, module){
   var
     cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5),
     cardSize     = [cardWidth, cardWidth],   // [X, Y] pixels in dimension
-    cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
+    cardBottom   = 0,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
-    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card (DEPRECATED)
+    cardOffset   = 0,                           // offset between skewed cards and the front facing card (DEPRECATED)
     curve        = 'easeInOut',                    // transition curve type
     easeDuration = 150,                            // amount of time for cards to transition
-    zPosFaceCard = 200,                            // z position offset for the face card
-    yPosFaceCard = -40,                            // y position offset for the face card
+    zPosFaceCard = cardWidth * 1.5,                            // z position offset for the face card
+    yPosFaceCard = -cardWidth * 0.3,                            // y position offset for the face card
 
     // For smaller screen, apply less card spacing
     cardSpacing  = (window.innerWidth < 768) ? Math.floor(cardSize[0] * 0.25) : Math.floor(cardSize[0] * 0.65); 

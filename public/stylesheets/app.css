@@ -144,8 +144,9 @@ body {
   padding: 20px;
   font-size: 14px;
   line-height: 1.2em;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: none;
+  /*overflow-y: scroll;*/
+  /*overflow-x: hidden;*/
 }
 
 .bigCard .rating {
