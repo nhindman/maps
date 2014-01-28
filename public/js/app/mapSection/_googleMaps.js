@@ -76,7 +76,7 @@ define(function(require, exports, module){
       dampingRatio : forceSpringDamping
     });
 
-    PE.attach([spring]);
+    PE.attach(spring);
 
     mapSurface.on('deploy', function(){
       initialize();
@@ -86,11 +86,11 @@ define(function(require, exports, module){
       applyTorque(e, 1);
     });
 
-    body.add(new Modifier(Matrix.translate(0,0,.1))).link(mapSurface);
+    body.add(mapSurface);
 
     var mapNode = new RenderNode();
     mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
-    require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers);
+    require('app/mapSection/_mapCards')(mapNode, eventHandler, allMarkers);
 
     // mainDisplay.add(mapSurface);
 
@@ -318,7 +318,6 @@ define(function(require, exports, module){
     // eventHandler.on('startQuery', startQuery)
 
     var calcRoute = function(lat, lng) {
-      directionsDisplay.setMap(map);
       var newLocation = new google.maps.LatLng(lat, lng);
       eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -332,9 +331,12 @@ define(function(require, exports, module){
           travelMode: google.maps.TravelMode.WALKING
         }
         directionsService.route(request, function(result, status) {
+          directionsDisplay.setMap(map);
           if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(result);
+            toggleMarkers(null);
             removeScroll();
+            eventHandler.emit('hideCards');
           }
         });
       });
@@ -350,7 +352,7 @@ define(function(require, exports, module){
     replaceScroll;
 
     toggleMarkers = function(input){
-      for (marker in allMarkers) {
+      for (var marker in allMarkers) {
         allMarkers[marker].marker.setMap(input);
       }
     };
@@ -358,11 +360,10 @@ define(function(require, exports, module){
     showRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
-      toggleMarkers(null);
       calcRoute(lat, lng);
     };
     removeScroll = function(){
-      scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
+      // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
     };
 
@@ -374,7 +375,8 @@ define(function(require, exports, module){
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
-      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
+      // scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
+      eventHandler.emit('showCards');
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 800});
     };
 
@@ -402,6 +404,7 @@ define(function(require, exports, module){
     mapNode.add(exitRouteModifier).link(exitRouteSurface);
     
     exitRouteSurface.on('touchstart', exitRoute);
+    exitRouteSurface.on('click', exitRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }
