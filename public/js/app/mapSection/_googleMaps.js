@@ -263,7 +263,7 @@ define(function(require, exports, module){
           city: 'San Francisco',
           state: 'CA',
           tip: 'The motherland of DJ Fredness and some hobo musician brothers. One of them keeps trying to tell me about something called prototype chains.',
-          tipUser: 'Yong Soo',
+          tipUser: 'Neko the dog',
           name: 'Hack Reactor',
           lat: 37.783594,
           lng: -122.408904,
