@@ -144,7 +144,6 @@ body {
   padding: 20px;
   font-size: 14px;
   line-height: 1.2em;
-  /*height: 48vmax;*/
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -165,7 +164,6 @@ body {
   font-size: 1.8em;
   margin-bottom: 0.2em;
   line-height: 1em;
-  /*margin-bottom: 0.3em;*/
 }
 
 .bigCard h5 {
