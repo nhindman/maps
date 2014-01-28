@@ -161,6 +161,7 @@ body {
 
 .bigCard h1 {
   margin: 0;
+  font-weight: normal;
   font-family: 'amertype_md_btmedium', serif;
   font-size: 1.8em;
   margin-bottom: 0.2em;
@@ -206,7 +207,7 @@ body {
 
 .logo {
     font-family: 'ubuntumedium' sans-serif;
-    font-weight: 700;
+    font-weight: normal;
     color: white;
     font-size: 26vmin;
     text-align: center;
