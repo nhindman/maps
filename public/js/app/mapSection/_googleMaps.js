@@ -266,7 +266,7 @@ define(function(require, exports, module){
           tipUser: 'Neko the dog',
           name: 'Hack Reactor',
           lat: 37.783594,
-          lng: -122.408904,
+          long: -122.408904,
           id: 'hackreactor',
           photo: '/img/hackreactor.jpg'
         }
@@ -363,8 +363,12 @@ define(function(require, exports, module){
 
     showDirections = function(directions, name){
       // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
-      // console.log(directions.steps);
-      $('.walking-title').html('Directions to <span class="name">' + name + '</span><br /><span class="duration">' + directions.duration.text + '</span>');
+      $('.walking-title').html('Directions to <span class="name">' + name + '</span>' + 
+        '<br />' + 
+        '<span class="duration">' + directions.duration.text + '</span>' + 
+        '<br />' + 
+        '<span class="address">' + directions.end_address.split(',').splice(0,2).join(', ') + '</span>'
+      );
       exitRouteModifier.setTransform(Matrix.translate(0,0,50), {duration: 500, curve: 'easeOutBounce'});
     };
 
@@ -405,7 +409,7 @@ define(function(require, exports, module){
           '<div class="walking-directions"></div>' + 
         '</div>',
       classes: ['exitRoute'],
-      size: [window.innerWidth, Math.min(window.innerWidth/3, window.innerHeight/5)*1.5]
+      size: [window.innerWidth, Math.min(window.innerWidth/3, window.innerHeight/5) + 40]
     });
 
     exitRouteSurface.on('deploy', function(){

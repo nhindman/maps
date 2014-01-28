@@ -243,37 +243,6 @@ body {
   background-color: #000;
 }
 
-.exitRoute button {
-  display: inline-block;
-  background-color: transparent;
-  border: none;
-  width: 30%;
-  height: 100%;
-  color: white;
-  font-size: 3em;
-}
-
-.exitRoute button:focus {
-  outline: none;
-  color: #86afca;
-}
-
-.walking {
-  display: inline-block;
-  vertical-align: top;
-  width: 60%;
-  height: 100%;
-  padding: 3% 10% 0 0;
-}
-
-.walking-title .name {
-  font-weight: 700;
-}
-
-.walking-title .duration {
-  font-size: 0.8em;
-}
-
 .animate-spin {
   -moz-animation: spin 2s infinite linear;
   -o-animation: spin 2s infinite linear;

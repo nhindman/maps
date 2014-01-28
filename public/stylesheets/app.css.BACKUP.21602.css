@@ -201,8 +201,12 @@ body {
 }
 
 .blocker {
+<<<<<<< HEAD
+    background-color: black;
+=======
   background-color: rgba(10,10,11,0.7);
   border: 3px solid rgba(255,255,255,0.2);
+>>>>>>> dev
 }
 
 .logo {
@@ -247,21 +251,21 @@ body {
   display: inline-block;
   background-color: transparent;
   border: none;
-  width: 30%;
+  width: 35%;
   height: 100%;
   color: white;
-  font-size: 3em;
+  font-size: 3.5em;
 }
 
 .exitRoute button:focus {
   outline: none;
-  color: #86afca;
+  color: #ffe7af;
 }
 
 .walking {
   display: inline-block;
   vertical-align: top;
-  width: 60%;
+  width: 55%;
   height: 100%;
   padding: 3% 10% 0 0;
 }

@@ -74,31 +74,17 @@ body {
 }
 
 .card {
-  box-sizing: border-box;
-  font-size: 14px;
-  font-family: 'amertype_md_btmedium', serif;
-  color: rgba(255,255,255, 0.8);
-  text-align: center;
-  line-height: 1.1em;
-  letter-spacing: -1px;
-  border-radius: 3px;
-  background-size: cover;
-  padding: 10px 5px 5px 5px;
-  box-shadow: 0px 1px 0px rgba(0,0,0,0.2) inset, 0px 1px 0px rgba(255,255,255,0.2); 
-}
-
-.cardFocus {
-  box-sizing: border-box;
-  font-size: 14px;
-  font-family: 'amertype_md_btmedium', serif;
-  text-align: center;
-  line-height: 1.1em;
-  letter-spacing: -1px;
-  border-radius: 3px;
-  background-size: cover;
-  padding: 10px 5px 5px 5px;
-  text-shadow: 0px 1px 0px rgba(0,0,0,0.7);
-  box-shadow: 0px 1px 3px rgba(0,0,0,0.7); 
+    line-height: 1.1em;
+    letter-spacing: -1px;
+    box-sizing: border-box;
+    border-radius: 3%;
+    font-weight: 700;
+    background-size: cover;
+    /*background-color: steelblue;*/
+    /*text-transform: uppercase;*/
+    padding: 5px;
+    text-shadow: 0px 1px 0px rgba(0,0,0,0.7);
+    /*box-shadow: 0px 1px 3px rgba(0,0,0,0.7), 0px 1px 0px rgba(255,255,255,0.7) inset, 0px -1px 0px rgba(0,0,0,0.5) inset; */
 }
 
 .bigCard {
@@ -115,7 +101,7 @@ body {
 
 .bigCard .photo {
   box-sizing: border-box;
-  /*min-height: 150px;*/
+  min-height: 150px;
   /*background-image: url('https://irs2.4sqi.net/img/general/400x400/713202_jNDoqS8QAXWtSHOVCRVjFDASsmqLdUSx1Yy5dPuFPQQ.jpg');*/
   /*background-color: steelblue;*/
   background-size: cover;
@@ -136,7 +122,6 @@ body {
   line-height: 3em;
   font-size: 1.3em;
   border: 2px solid #163477;
-  z-index: 1000;
 }
 
 .bigCard .info {
@@ -144,9 +129,7 @@ body {
   padding: 20px;
   font-size: 14px;
   line-height: 1.2em;
-  overflow: none;
-  /*overflow-y: scroll;*/
-  /*overflow-x: hidden;*/
+  height: 300px;
 }
 
 .bigCard .rating {
@@ -161,11 +144,11 @@ body {
 
 .bigCard h1 {
   margin: 0;
-  font-weight: normal;
   font-family: 'amertype_md_btmedium', serif;
   font-size: 1.8em;
   margin-bottom: 0.2em;
   line-height: 1em;
+  /*margin-bottom: 0.3em;*/
 }
 
 .bigCard h5 {
@@ -201,13 +184,18 @@ body {
 }
 
 .blocker {
-  background-color: rgba(10,10,11,0.7);
-  border: 3px solid rgba(255,255,255,0.2);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
 }
 
 .logo {
     font-family: 'ubuntumedium' sans-serif;
-    font-weight: normal;
+    font-weight: 700;
     color: white;
     font-size: 26vmin;
     text-align: center;
@@ -241,37 +229,6 @@ body {
 
 .splash-back {
   background-color: #000;
-}
-
-.exitRoute button {
-  display: inline-block;
-  background-color: transparent;
-  border: none;
-  width: 30%;
-  height: 100%;
-  color: white;
-  font-size: 3em;
-}
-
-.exitRoute button:focus {
-  outline: none;
-  color: #86afca;
-}
-
-.walking {
-  display: inline-block;
-  vertical-align: top;
-  width: 60%;
-  height: 100%;
-  padding: 3% 10% 0 0;
-}
-
-.walking-title .name {
-  font-weight: 700;
-}
-
-.walking-title .duration {
-  font-size: 0.8em;
 }
 
 .animate-spin {

@@ -48,7 +48,7 @@ define(function(require, exports, module) {
     // mod.setTransform(Matrix.move(Matrix.rotateY(0), [-window.innerWidth, 0, 400]), {duration: 700, curve: 'easeOut'});    
     // mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeOutBounce'}, emitQuery)
     scrollmod = mapNode.object[3].modifiers[0];
-    scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 400, method: 'stiffSpring'});
+    scrollmod.setTransform(Matrix.translate(0, -30, 0), {duration: 400, method: 'stiffSpring'});
    };
 
   window.swapBack = function(){

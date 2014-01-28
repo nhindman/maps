@@ -15,16 +15,17 @@ define(function(require, exports, module){
   /////////////////
   var
     cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5),
-    cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
-    cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
+    cardSize     = [cardWidth, cardWidth],   // [X, Y] pixels in dimension
+    cardBottom   = 0,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
-    cardOffset   = 0.25,                           // offset between skewed cards and the front facing card (DEPRECATED)
+    cardOffset   = 0,                           // offset between skewed cards and the front facing card (DEPRECATED)
     curve        = 'easeInOut',                    // transition curve type
     easeDuration = 150,                            // amount of time for cards to transition
-    zPosFaceCard = 200,                            // z position offset for the face card
-    yPosFaceCard = -40,                            // y position offset for the face card
-    // cardSpacing  = Math.floor(-cardSize[0] * 0.5);
-    cardSpacing  = 30;
+    zPosFaceCard = cardWidth * 1.5,                            // z position offset for the face card
+    yPosFaceCard = -cardWidth * 0.3,                            // y position offset for the face card
+
+    // For smaller screen, apply less card spacing
+    cardSpacing  = (window.innerWidth < 768) ? Math.floor(cardSize[0] * 0.25) : Math.floor(cardSize[0] * 0.65); 
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
@@ -70,12 +71,8 @@ define(function(require, exports, module){
     /////////////
 
     var blockingSurface = new Surface({
-      size: [window.innerWidth, cardSize[1]],
-      classes: ['blocker'],
-      properties: {
-        backgroundColor: 'black',
-        opacity: 0.8
-      }
+      size: [window.innerWidth, cardSize[1] + 40],
+      classes: ['blocker']
     });
 
     var blockingMod = new Modifier({
@@ -124,10 +121,20 @@ define(function(require, exports, module){
       if(cardSurfaces[faceIndex]){
         eventHandler.emit('focus', cardSurfaces[faceIndex].id);
         transformCard(cardSurfaces[faceIndex], 'center');
+        cardSurfaces[faceIndex].object.setOptions({ classes : ['cardFocus'] });
+        cardSurfaces[faceIndex].object.setProperties({
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.4)), to(rgba(11,27,46,0))),' +
+            ' url(' + cardSurfaces[faceIndex].object.bgImage + ')'
+        });
       }
 
       if(cardSurfaces[currentFace]){
         transformCard(cardSurfaces[currentFace], 'left');
+        cardSurfaces[currentFace].object.setOptions({ classes : ['card'] });
+        cardSurfaces[currentFace].object.setProperties({
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.5)),' +
+            ' to(rgba(11,27,46,0.5))), url(' + cardSurfaces[currentFace].object.bgImage + ')'
+        });
       }
       
       currentFace = faceIndex;
@@ -147,9 +154,11 @@ define(function(require, exports, module){
         content: location.name,
         classes: ['card'],
         properties: {
-          backgroundImage: 'url(' + location.photo + ')'
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.5)), to(rgba(11,27,46,0.5))),' +
+            ' url(' + location.photo + ')'
         }
       });
+      cardSurface.bgImage = location.photo;
 
       var renderNode = new RenderNode({id: location.id});
       renderNode.angle = 'left';
@@ -161,6 +170,13 @@ define(function(require, exports, module){
         scrollview.sequenceFrom(cardSurfaces);
         setFace();
         first = false;
+
+        // For first render - first card in scrollview
+        cardSurface.setOptions({ classes : ['cardFocus'] });
+        cardSurface.setProperties({
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.4)),' +
+            ' to(rgba(11,27,46,0))), url(' + cardSurface.bgImage + ')'
+        });
       }
 
       cardSurface.pipe(renderNode);
@@ -207,13 +223,13 @@ define(function(require, exports, module){
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
 
           // New surface for larger card.
-          var bigSize = (window.innerWidth - 80 > 400) ? [400, 450] : [window.innerWidth - 80, window.innerHeight - 200];
+          var bigSize = (window.innerWidth * 0.8 > 400) ? [350, 450] : [window.innerWidth * 0.8, window.innerHeight * 0.8];
           newNode = new Surface({
             size: bigSize,
             classes: ['bigCard'],
-            content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
+            content:  '<div class="photo" style="height: ' + bigSize[1] * 0.33 + 'px; background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
               '<div class="icon walking-dir"><i class="icon-pitch"></i></div>' +
-              '<div class="info">' +
+              '<div class="info" style="height: ' + bigSize[1] * 0.63 + 'px;">' +
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
                 '<h1>' + allMarkers[node.id].data.name + '</h1>' +
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
