@@ -8,7 +8,14 @@ define(function(require, exports, module) {
     Modifier     = require('famous/Modifier'),
     Matrix       = require('famous/Matrix'),
     EventHandler = require('famous/EventHandler'),
+    Transitionable = require('famous/Transitionable'),
+    StiffSpringTransition = require('famous-physics/utils/StiffSpringTransition'),
+    WallTransition = require('famous-physics/utils/WallTransition'),
     eventHandler = new EventHandler();
+
+
+  Transitionable.registerMethod('stiffSpring', StiffSpringTransition);
+  // Transitionable.registerMethod('wall', WallTransition);
 
 
   // create a display context and hook in the App
@@ -31,21 +38,21 @@ define(function(require, exports, module) {
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
   var splashNode = require('app/splashSection/splashSection')(eventHandler);
   window.swap = function(){
-    mod.setTransform(Matrix.move(Matrix.rotateY(0),[-window.innerWidth, 0, 200]), {duration: 500, curve: 'easeOutBounce'});
+    mod.setTransform(Matrix.translate(-window.innerWidth, 0, 200), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7});
     // mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [window.innerWidth*0.7, 0, -500]), {duration: 500, curve: 'easeOut'}, secondSwap);
-    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 500, curve: 'easeOutBounce'}, secondSwap)
+    mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7}, secondSwap)
   }
   var secondSwap = function(){
     // mod.setTransform(Matrix.move(Matrix.rotateY(0), [-window.innerWidth, 0, 400]), {duration: 700, curve: 'easeOut'});    
     // mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeOutBounce'}, emitQuery)
-    scrollmod = mapNode.object[2].modifiers[0];
-    scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 400, curve: 'easeOutBounce'});
+    scrollmod = mapNode.object[3].modifiers[0];
+    scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 400, method: 'stiffSpring'});
    };
 
   window.swapBack = function(){
     mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [250, 0, 50]), {duration: 700, curve: 'easeOut'});
     mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-950, 0, -50]), {duration: 700, curve: 'easeOut'}, secondSwapBack);
-    scrollmod.setTransform(Matrix.translate(0, -height, 0), {duration: 700});
+    scrollmod.setTransform(Matrix.translate(0, -height, 60), {duration: 700});
   };
   var secondSwapBack = function(){
     mod.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeIn'})
