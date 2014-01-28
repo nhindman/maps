@@ -263,10 +263,10 @@ define(function(require, exports, module){
           city: 'San Francisco',
           state: 'CA',
           tip: 'The motherland of DJ Fredness and some hobo musician brothers. One of them keeps trying to tell me about something called prototype chains.',
-          tipUser: 'Yong Soo',
+          tipUser: 'Neko the dog',
           name: 'Hack Reactor',
           lat: 37.783594,
-          lng: -122.408904,
+          long: -122.408904,
           id: 'hackreactor',
           photo: '/img/hackreactor.jpg'
         }
@@ -297,14 +297,15 @@ define(function(require, exports, module){
           icon: '/img/currentPosition.png',
           map: map
         });
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map, marker);
-        });
+        // google.maps.event.addListener(marker, 'click', function() {
+        //   infowindow.open(map, marker);
+        // });
 
         google.maps.event.addListener(map, 'bounds_changed', function() {
           addAndRemoveCards();
           reQuery();
         });
+
         fetchData();
 
         require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
@@ -315,7 +316,7 @@ define(function(require, exports, module){
 
     var calcRoute = function(lat, lng) {
       var newLocation = new google.maps.LatLng(lat, lng);
-      eventHandler.on('startQuery', startQuery)
+      // eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
@@ -357,6 +358,7 @@ define(function(require, exports, module){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
       calcRoute(lat, lng);
+      google.maps.event.clearInstanceListeners(map);
     };
     removeScroll = function(){
       // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
@@ -374,6 +376,10 @@ define(function(require, exports, module){
       // scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       eventHandler.emit('showCards');
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 800});
+      google.maps.event.addListener(map, 'bounds_changed', function() {
+        addAndRemoveCards();
+        reQuery();
+      });
     };
 
     // replaceScroll = function(){
