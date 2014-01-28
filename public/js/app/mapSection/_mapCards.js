@@ -343,7 +343,7 @@ define(function(require, exports, module){
 
     var showCards = function(){
       blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
-      scrollviewMod.setTransform(Matrix.translate(0,0,0), {duration: 400, curve: 'easeOutBounce'});
+      scrollviewMod.setTransform(Matrix.translate(0,-30,0), {duration: 400, curve: 'easeOutBounce'});
     };
 
     

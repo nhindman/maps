@@ -145,6 +145,7 @@ body {
   font-size: 14px;
   line-height: 1.2em;
   overflow: none;
+  /*z-index: 100000;*/
   /*overflow-y: scroll;*/
   /*overflow-x: hidden;*/
 }
