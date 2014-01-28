@@ -145,6 +145,7 @@ body {
   font-size: 14px;
   line-height: 1.2em;
   overflow: none;
+  /*z-index: 100000;*/
   /*overflow-y: scroll;*/
   /*overflow-x: hidden;*/
 }
@@ -201,7 +202,7 @@ body {
 }
 
 .blocker {
-  background-color: rgba(10,10,11,0.7);
+  background-color: rgba(10,10,11,0.85);
   border: 3px solid rgba(255,255,255,0.2);
 }
 
