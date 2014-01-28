@@ -241,13 +241,42 @@ define(function(require, exports, module){
         styles: require('app/mapSection/_mapStyle')()
       };
 
-      map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
+      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
       directionsDisplay.setMap(map);
 
       // eventHandler.emit('maploaded')
       startQuery();
+
+      // create Hack Reactor marker easter egg
+      var hackReactorMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(37.783594, -122.408904),
+        draggable: false,
+        icon: '/img/blueMarker.png',
+        map: map
+      });
+
+      google.maps.event.addListener(hackReactorMarker, 'click', function(){
+        eventHandler.emit('focusCard', 'hackreactor');
+      });
+
+      allMarkers['hackreactor'] = {
+        marker: hackReactorMarker,
+        data: {
+          photoSuffix: '/img/hackreactor.jpg',
+          rating: 10.52,
+          address: '944 Market St',
+          city: 'San Francisco',
+          state: 'CA',
+          tip: 'The motherland of DJ Fredness and some hobo musician brothers. One of them keeps trying to tell me about something called prototype chains.',
+          tipUser: 'Yong Soo',
+          name: 'Hack Reactor',
+          lat: 37.783594,
+          lng: -122.408904,
+          id: 'hackreactor',
+          photo: '/img/hackreactor.jpg'
+        }
+      }
     };
 
     var getCurrentPosition = function(){

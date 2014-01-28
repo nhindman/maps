@@ -219,8 +219,8 @@ define(function(require, exports, module){
 
           //When walking icon is clicked, event and rendernode is emitted          
           setWalkDirListener = function(){
-            $('.icon').on('click', emitInfo);
-          };
+            $('.icon').on({'tap': emitInfo, 'click': emitInfo});
+          }
           newNode.on('deploy', setWalkDirListener);
           emitInfo = function(){
             eventHandler.emit('walking-dir', scrollview.node.array[index]);

@@ -1,17 +1,19 @@
 define(function(require, exports, module) {
   var
-    FamousEngine = require('famous/Engine'),
-    App          = require('app/App'),
-    Scrollview   = require('famous-views/ScrollView'),
-    Surface      = require('famous/Surface'),
-    RenderNode   = require('app/mapSection/customRenderNode'),
-    Modifier     = require('famous/Modifier'),
-    Matrix       = require('famous/Matrix'),
-    EventHandler = require('famous/EventHandler'),
-    Transitionable = require('famous/Transitionable'),
-    StiffSpringTransition = require('famous-physics/utils/StiffSpringTransition'),
-    WallTransition = require('famous-physics/utils/WallTransition'),
-    eventHandler = new EventHandler();
+    FamousEngine          = require('famous/Engine'),
+    App                   = require('app/App'),
+    Scrollview            = require('famous-views/ScrollView'),
+    Surface               = require('famous/Surface'),
+    RenderNode            = require('app/mapSection/customRenderNode'),
+    Modifier              = require('famous/Modifier'),
+    Matrix                = require('famous/Matrix'),
+    EventHandler          = require('famous/EventHandler'),
+    Transitionable        = require('famous/Transitionable'),
+    StiffSpringTransition = require('famous-physics/utils/StiffSpringTransition');
+
+
+
+  var eventHandler = new EventHandler();
 
 
   Transitionable.registerMethod('stiffSpring', StiffSpringTransition);
