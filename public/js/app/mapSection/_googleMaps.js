@@ -363,7 +363,7 @@ define(function(require, exports, module){
 
     showDirections = function(directions, name){
       // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
-      $('.walking-title').html('Directions to <span class="name">' + name + '</span>' + 
+      $('.walking-title').html('Walking directions to <span class="name">' + name + '</span>' + 
         '<br />' + 
         '<span class="duration">' + directions.duration.text + '</span>' + 
         '<br />' + 
