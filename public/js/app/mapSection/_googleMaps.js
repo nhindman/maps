@@ -237,7 +237,6 @@ define(function(require, exports, module){
         scaleControl: false,
         streetViewControl: false,
         overviewMapControl: false,
-        // center: new google.maps.LatLng(37.7833, -122.4167),
         styles: require('app/mapSection/_mapStyle')()
       };
 
@@ -290,6 +289,7 @@ define(function(require, exports, module){
     // eventHandler.on('startQuery', startQuery)
 
     var calcRoute = function(lat, lng) {
+      directionsDisplay.setMap(map);
       var newLocation = new google.maps.LatLng(lat, lng);
       eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -328,8 +328,7 @@ define(function(require, exports, module){
       var lng = allMarkers[e.id].data.long;
       toggleMarkers(null);
       calcRoute(lat, lng);
-      scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 800});
-      initialize();
+      scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
     };
 
@@ -338,8 +337,7 @@ define(function(require, exports, module){
     exitRoute = function(){
       toggleMarkers(map);
       dropMarkers();
-      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
-      startQuery();
+      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 1200});
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
