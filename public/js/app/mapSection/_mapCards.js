@@ -203,7 +203,7 @@ define(function(require, exports, module){
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
 
           // New surface for larger card.
-          var bigSize = (window.innerWidth - 80 > 400) ? [400, 450] : [window.innerWidth - 80, window.innerHeight - 200];
+          var bigSize = (window.innerWidth - 80 > 400) ? [350, 450] : [window.innerWidth - 80, window.innerHeight - 80];
           newNode = new Surface({
             size: bigSize,
             classes: ['bigCard'],
