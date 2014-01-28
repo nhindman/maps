@@ -263,7 +263,7 @@ define(function(require, exports, module){
           city: 'San Francisco',
           state: 'CA',
           tip: 'The motherland of DJ Fredness and some hobo musician brothers. One of them keeps trying to tell me about something called prototype chains.',
-          tipUser: 'Yong Soo',
+          tipUser: 'Neko the dog',
           name: 'Hack Reactor',
           lat: 37.783594,
           lng: -122.408904,
@@ -297,14 +297,15 @@ define(function(require, exports, module){
           icon: '/img/currentPosition.png',
           map: map
         });
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map, marker);
-        });
+        // google.maps.event.addListener(marker, 'click', function() {
+        //   infowindow.open(map, marker);
+        // });
 
         google.maps.event.addListener(map, 'bounds_changed', function() {
           addAndRemoveCards();
           reQuery();
         });
+
         fetchData();
 
         require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
@@ -357,12 +358,13 @@ define(function(require, exports, module){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
       calcRoute(lat, lng, allMarkers[e.id].data.name);
+      google.maps.event.clearInstanceListeners(map);
     };
 
     showDirections = function(directions, name){
       // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
       $('.walking-title').html('Directions to <span class="name">' + name + '</span><br /><span class="duration">' + directions.duration.text + '</span>');
-      exitRouteModifier.setTransform(Matrix.translate(0,0,50), {duration: 1200});
+      exitRouteModifier.setTransform(Matrix.translate(0,0,50), {duration: 500, curve: 'easeOutBounce'});
     };
 
     eventHandler.on('walking-dir', showRoute);
@@ -376,6 +378,10 @@ define(function(require, exports, module){
       // scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       eventHandler.emit('showCards');
       exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800});
+      google.maps.event.addListener(map, 'bounds_changed', function() {
+        addAndRemoveCards();
+        reQuery();
+      });
     };
 
     // replaceScroll = function(){
