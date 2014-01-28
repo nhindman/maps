@@ -274,9 +274,6 @@ define(function(require, exports, module){
         });
         fetchData();
 
-        console.log(mapNode);
-        console.log(currentLatLng);
-
         require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
       });
     }

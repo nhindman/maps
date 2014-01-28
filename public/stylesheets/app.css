@@ -156,7 +156,16 @@ body {
   line-height: 1.2em;
 }
 
+.bigCard .distance {
+  color: #096797;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: open_sansregular, sans-serif;
+}
 
+.bigCard .distanceAwayNum {
+  font-weight: bold;
+}
 
 .hide {
     visibility: hidden;
