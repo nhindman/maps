@@ -23,8 +23,9 @@ define(function(require, exports, module){
     easeDuration = 150,                            // amount of time for cards to transition
     zPosFaceCard = 200,                            // z position offset for the face card
     yPosFaceCard = -40,                            // y position offset for the face card
-    // cardSpacing  = Math.floor(window.innerWidth/3 * 0.4);
-    cardSpacing  = Math.floor(cardSize[0] * 0.6);
+
+    // For smaller screen, apply less card spacing
+    cardSpacing  = (window.innerWidth < 768) ? Math.floor(cardSize[0] * 0.25) : Math.floor(cardSize[0] * 0.65); 
 
   //////////////////////////
   //// HELPER FUNCTIONS ////
