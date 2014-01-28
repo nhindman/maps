@@ -266,7 +266,7 @@ define(function(require, exports, module){
           tipUser: 'Neko the dog',
           name: 'Hack Reactor',
           lat: 37.783594,
-          lng: -122.408904,
+          long: -122.408904,
           id: 'hackreactor',
           photo: '/img/hackreactor.jpg'
         }
