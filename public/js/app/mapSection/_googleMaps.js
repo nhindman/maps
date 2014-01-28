@@ -313,9 +313,9 @@ define(function(require, exports, module){
 
     // eventHandler.on('startQuery', startQuery)
 
-    var calcRoute = function(lat, lng) {
+    var calcRoute = function(lat, lng, name) {
       var newLocation = new google.maps.LatLng(lat, lng);
-      eventHandler.on('startQuery', startQuery)
+      // eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
@@ -331,7 +331,7 @@ define(function(require, exports, module){
           if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(result);
             toggleMarkers(null);
-            removeScroll();
+            showDirections(result.routes[0].legs[0], name);
             eventHandler.emit('hideCards');
           }
         });
@@ -356,11 +356,13 @@ define(function(require, exports, module){
     showRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
-      calcRoute(lat, lng);
+      calcRoute(lat, lng, allMarkers[e.id].data.name);
     };
-    removeScroll = function(){
+
+    showDirections = function(directions, name){
       // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
-      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
+      $('.walking-title').html('Directions to <span class="name">' + name + '</span><br /><span class="duration">' + directions.duration.text + '</span>');
+      exitRouteModifier.setTransform(Matrix.translate(0,0,50), {duration: 1200});
     };
 
     eventHandler.on('walking-dir', showRoute);
@@ -373,7 +375,7 @@ define(function(require, exports, module){
       directionsDisplay.setMap(null);
       // scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       eventHandler.emit('showCards');
-      exitRouteModifier.setTransform(Matrix.identity(), {duration: 800});
+      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800});
     };
 
     // replaceScroll = function(){
@@ -390,18 +392,26 @@ define(function(require, exports, module){
 
     exitRouteSurface = new Surface({
       content:
-        '<div class="exitRoute">' + 
-          '<i class="back-button icon-left-circle"></i>' + 
-          '<div class="walking-direcitons">' + 
-          '</div>' + 
+        '<i class="back-button icon-left-circle"></i>' + 
+        '<div class="walking">' +
+          '<div class="walking-title"></div>' + 
+          '<div class="walking-directions"></div>' + 
         '</div>',
+      classes: ['exitRoute'],
       size: [window.innerWidth, Math.min(window.innerWidth/3, window.innerHeight/5)*1.5]
+    });
+
+    exitRouteSurface.on('deploy', function(){
+      $('.back-button').on({
+        'tap': exitRoute,
+        'click': exitRoute
+      });
     });
 
     mapNode.add(exitRouteModifier).link(exitRouteSurface);
     
-    exitRouteSurface.on('touchstart', exitRoute);
-    exitRouteSurface.on('click', exitRoute);
+    // exitRouteSurface.on('touchstart', exitRoute);
+    // exitRouteSurface.on('click', exitRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }

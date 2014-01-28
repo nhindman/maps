@@ -231,6 +231,30 @@ body {
   background-color: #000;
 }
 
+.back-button {
+  display: inline-block;
+  width: 35%;
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-size: 3.5em;
+  padding-top: 12%;
+}
+
+.walking {
+  display: inline-block;
+  width: 65%;
+  height: 100%;
+}
+
+.walking-title .name {
+  font-weight: 700;
+}
+
+.walking-title .duration {
+  font-size: 0.8em;
+}
+
 .animate-spin {
   -moz-animation: spin 2s infinite linear;
   -o-animation: spin 2s infinite linear;
