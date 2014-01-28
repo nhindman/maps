@@ -215,7 +215,7 @@ define(function(require, exports, module){
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
                 '<p>' + ((allMarkers[node.id].data.tip) ? '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' : '</p>') +
                 '<p>' + ((allMarkers[node.id].data.tipUser) ? '- ' + allMarkers[node.id].data.tipUser + '</p>' : '</p>') +
-                '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</span> miles away</p>' +
+                ((findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long })) !== "NaN" ? '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</span> miles away</p>' : '') +
               '</div>'
           });
 
