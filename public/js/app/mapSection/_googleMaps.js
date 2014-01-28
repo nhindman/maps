@@ -389,10 +389,6 @@ define(function(require, exports, module){
       });
     };
 
-    // replaceScroll = function(){
-    // };
-
-
 
 
 //Exit route surface
@@ -420,10 +416,6 @@ define(function(require, exports, module){
     });
 
     mapNode.add(exitRouteModifier).link(exitRouteSurface);
-    
-    // exitRouteSurface.on('touchstart', exitRoute);
-    // exitRouteSurface.on('click', exitRoute);
-    // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }
 });
