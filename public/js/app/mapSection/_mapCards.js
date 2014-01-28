@@ -334,7 +334,7 @@ define(function(require, exports, module){
 
       var result = (3963.1676 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 
-      if (result < 1) {
+      if (result < 0.2) {
         return (5280 * result).toFixed(0) + '</span> feet away';
       } else {
         return result.toFixed(1) + '</span> miles away';
