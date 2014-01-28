@@ -172,6 +172,7 @@ define(function(require, exports, module){
         first = false;
 
         // For first render - first card in scrollview
+        renderNode.angle = 'center';
         cardSurface.setOptions({ classes : ['cardFocus'] });
         cardSurface.setProperties({
           'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.4)),' +
@@ -205,7 +206,6 @@ define(function(require, exports, module){
       });
 
       cardSurface.on('touchend', function(touchEvent){
-        
         // Find the scrollview item that matches our clicked surface
         for(var i = 0; i < scrollview.node.array.length; i++) {
           if(touchEvent.origin.id === scrollview.node.array[i].object.id) {
