@@ -90,15 +90,10 @@ define(function(require, exports, module){
 
     var mapNode = new RenderNode();
     mapNode.link(mapSurface).add(new Modifier({origin : [.5,.5]})).link(PE);
-    require('app/mapSection/_mapCards')(mapNode, eventHandler, allMarkers);
 
     // mainDisplay.add(mapSurface);
 
-    function attachTorqueSpring(){
-      mapNode.attachedSpring = PE.attach(torqueSpring);
-    }
-
-    attachTorqueSpring();
+    mapNode.attachedSpring = PE.attach(torqueSpring);
 
     var reQuery = function(){
       var newCenter = {
@@ -312,6 +307,7 @@ define(function(require, exports, module){
         });
         fetchData();
 
+        require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
       });
     }
 

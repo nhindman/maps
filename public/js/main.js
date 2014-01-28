@@ -46,7 +46,8 @@ define(function(require, exports, module) {
   }
   var secondSwap = function(){
     // mod.setTransform(Matrix.move(Matrix.rotateY(0), [-window.innerWidth, 0, 400]), {duration: 700, curve: 'easeOut'});    
-    // mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'stiffSpring'}, emitQuery)
+    // mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeOutBounce'}, emitQuery)
+    scrollmod = mapNode.object[3].modifiers[0];
     scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 400, method: 'stiffSpring'});
    };
 
@@ -80,6 +81,5 @@ define(function(require, exports, module) {
     }, 500)
   })
 
-  scrollmod = mapNode.object[2].modifiers[0];
 
 });
