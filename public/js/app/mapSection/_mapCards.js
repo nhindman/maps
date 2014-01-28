@@ -150,7 +150,7 @@ define(function(require, exports, module){
 
       if(!cardSurfaces.length || first){
         scrollview.sequenceFrom(cardSurfaces);
-        setFace()
+        setFace();
         first = false;
       }
 
