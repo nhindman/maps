@@ -255,8 +255,8 @@ define(function(require, exports, module){
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
+        return new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
       });
-      return new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
     };
 
     var startQuery = function(){
@@ -305,6 +305,7 @@ define(function(require, exports, module){
         directionsService.route(request, function(result, status) {
           if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(result);
+            removeScroll();
           }
         });
       });
@@ -315,7 +316,9 @@ define(function(require, exports, module){
     exitRoute,
     exitRouteModifier,
     exitRouteSurface,
-    toggleMarkers;
+    toggleMarkers,
+    removeScroll,
+    replaceScroll;
 
     toggleMarkers = function(input){
       for (marker in allMarkers) {
@@ -328,6 +331,8 @@ define(function(require, exports, module){
       var lng = allMarkers[e.id].data.long;
       toggleMarkers(null);
       calcRoute(lat, lng);
+    };
+    removeScroll = function(){
       scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
       exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
     };
@@ -337,12 +342,17 @@ define(function(require, exports, module){
     exitRoute = function(){
       toggleMarkers(map);
       dropMarkers();
-      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 1200});
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
-      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 1200});
+      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
+      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 800});
     };
+
+    // replaceScroll = function(){
+    // };
+
+
 
 
 //Exit route surface
@@ -362,7 +372,7 @@ define(function(require, exports, module){
 
     mapNode.add(exitRouteModifier).link(exitRouteSurface);
     
-    exitRouteSurface.on('click', exitRoute);
+    exitRouteSurface.on('touchstart', exitRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }

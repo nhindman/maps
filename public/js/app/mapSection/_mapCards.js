@@ -219,7 +219,7 @@ define(function(require, exports, module){
 
           //When walking icon is clicked, event and rendernode is emitted          
           setWalkDirListener = function(){
-            $('.icon').on('click', emitInfo);
+            $('.icon').on('touchstart', emitInfo);
           };
           newNode.on('deploy', setWalkDirListener);
           emitInfo = function(){
