@@ -184,13 +184,7 @@ body {
 }
 
 .blocker {
-    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+    background-color: black;
 }
 
 .logo {
@@ -231,20 +225,27 @@ body {
   background-color: #000;
 }
 
-.back-button {
+.exitRoute button {
   display: inline-block;
+  background-color: transparent;
+  border: none;
   width: 35%;
   height: 100%;
-  text-align: center;
   color: white;
   font-size: 3.5em;
-  padding-top: 12%;
+}
+
+.exitRoute button:focus {
+  outline: none;
+  color: #ffe7af;
 }
 
 .walking {
   display: inline-block;
-  width: 65%;
+  vertical-align: top;
+  width: 55%;
   height: 100%;
+  padding: 3% 10% 0 0;
 }
 
 .walking-title .name {

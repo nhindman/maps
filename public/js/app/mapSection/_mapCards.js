@@ -71,7 +71,11 @@ define(function(require, exports, module){
 
     var blockingSurface = new Surface({
       size: [window.innerWidth, cardSize[1]],
-      classes: ['blocker']
+      classes: ['blocker'],
+      properties: {
+        backgroundColor: 'black',
+        opacity: 0.8
+      }
     });
 
     var blockingMod = new Modifier({

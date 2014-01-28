@@ -363,6 +363,7 @@ define(function(require, exports, module){
 
     showDirections = function(directions, name){
       // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
+      // console.log(directions.steps);
       $('.walking-title').html('Directions to <span class="name">' + name + '</span><br /><span class="duration">' + directions.duration.text + '</span>');
       exitRouteModifier.setTransform(Matrix.translate(0,0,50), {duration: 500, curve: 'easeOutBounce'});
     };
@@ -398,7 +399,7 @@ define(function(require, exports, module){
 
     exitRouteSurface = new Surface({
       content:
-        '<i class="back-button icon-left-circle"></i>' + 
+        '<button><i class="back-button icon-left-circle"></i></button>' + 
         '<div class="walking">' +
           '<div class="walking-title"></div>' + 
           '<div class="walking-directions"></div>' + 
