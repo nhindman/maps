@@ -15,7 +15,7 @@ define(function(require, exports, module){
   /////////////////
   var
     cardWidth    = Math.min(window.innerWidth/3, window.innerHeight/5),
-    cardSize     = [cardWidth, cardWidth * 1.5],   // [X, Y] pixels in dimension
+    cardSize     = [cardWidth, cardWidth],   // [X, Y] pixels in dimension
     cardBottom   = 1,                              // absolute percentage between the bottom of the cards and the bottom of the page
     rotateYAngle = 0,                              // rotational Y angle of skew
     cardOffset   = 0.25,                           // offset between skewed cards and the front facing card (DEPRECATED)
@@ -70,7 +70,7 @@ define(function(require, exports, module){
     /////////////
 
     var blockingSurface = new Surface({
-      size: [window.innerWidth, cardSize[1]],
+      size: [window.innerWidth, cardSize[1] + 40],
       classes: ['blocker']
     });
 
@@ -120,10 +120,20 @@ define(function(require, exports, module){
       if(cardSurfaces[faceIndex]){
         eventHandler.emit('focus', cardSurfaces[faceIndex].id);
         transformCard(cardSurfaces[faceIndex], 'center');
+        cardSurfaces[faceIndex].object.setOptions({ classes : ['cardFocus'] });
+        cardSurfaces[faceIndex].object.setProperties({
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.4)), to(rgba(11,27,46,0))),' +
+            ' url(' + cardSurfaces[faceIndex].object.bgImage + ')'
+        });
       }
 
       if(cardSurfaces[currentFace]){
         transformCard(cardSurfaces[currentFace], 'left');
+        cardSurfaces[currentFace].object.setOptions({ classes : ['card'] });
+        cardSurfaces[currentFace].object.setProperties({
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.5)),' +
+            ' to(rgba(11,27,46,0.5))), url(' + cardSurfaces[currentFace].object.bgImage + ')'
+        });
       }
       
       currentFace = faceIndex;
@@ -143,9 +153,11 @@ define(function(require, exports, module){
         content: location.name,
         classes: ['card'],
         properties: {
-          backgroundImage: 'url(' + location.photo + ')'
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.5)), to(rgba(11,27,46,0.5))),' +
+            ' url(' + location.photo + ')'
         }
       });
+      cardSurface.bgImage = location.photo;
 
       var renderNode = new RenderNode({id: location.id});
       renderNode.angle = 'left';
@@ -157,6 +169,13 @@ define(function(require, exports, module){
         scrollview.sequenceFrom(cardSurfaces);
         setFace();
         first = false;
+
+        // For first render - first card in scrollview
+        cardSurface.setOptions({ classes : ['cardFocus'] });
+        cardSurface.setProperties({
+          'background-image': '-webkit-gradient(linear, 0 top, 0 bottom, from(rgba(11,27,46,0.4)),' +
+            ' to(rgba(11,27,46,0))), url(' + cardSurface.bgImage + ')'
+        });
       }
 
       cardSurface.pipe(renderNode);
@@ -203,7 +222,7 @@ define(function(require, exports, module){
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
 
           // New surface for larger card.
-          var bigSize = (window.innerWidth - 80 > 400) ? [350, 450] : [window.innerWidth - 80, window.innerHeight - 80];
+          var bigSize = (window.innerWidth - 80 > 400) ? [350, 450] : [window.innerWidth - 80, window.innerHeight - 100];
           newNode = new Surface({
             size: bigSize,
             classes: ['bigCard'],
