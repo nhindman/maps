@@ -237,7 +237,7 @@ define(function(require, exports, module){
         scaleControl: false,
         streetViewControl: false,
         overviewMapControl: false,
-        center: new google.maps.LatLng(37.7833, -122.4167),
+        // center: new google.maps.LatLng(37.7833, -122.4167),
         styles: require('app/mapSection/_mapStyle')()
       };
 
@@ -248,6 +248,16 @@ define(function(require, exports, module){
 
       // eventHandler.emit('maploaded')
       startQuery();
+    };
+
+    var getCurrentPosition = function(){
+      navigator.geolocation.getCurrentPosition(function(position){
+        currentLatLng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
+      return new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
     };
 
     var startQuery = function(){
@@ -279,8 +289,9 @@ define(function(require, exports, module){
 
     // eventHandler.on('startQuery', startQuery)
 
-    var calcRoute = function() {
-      var newLocation = new google.maps.LatLng(37.7877981, -122,4042715);
+    var calcRoute = function(lat, lng) {
+      var newLocation = new google.maps.LatLng(lat, lng);
+      eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
@@ -298,6 +309,62 @@ define(function(require, exports, module){
         });
       });
     };
+
+//Walking Directions//
+    var showRoute,
+    exitRoute,
+    exitRouteModifier,
+    exitRouteSurface,
+    toggleMarkers;
+
+    toggleMarkers = function(input){
+      for (marker in allMarkers) {
+        allMarkers[marker].marker.setMap(input);
+      }
+    };
+
+    showRoute = function(e){
+      var lat = allMarkers[e.id].data.lat;
+      var lng = allMarkers[e.id].data.long;
+      toggleMarkers(null);
+      calcRoute(lat, lng);
+      scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 800});
+      initialize();
+      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, 0, 1), {duration: 1200});
+    };
+
+    eventHandler.on('walking-dir', showRoute);
+
+    exitRoute = function(){
+      toggleMarkers(map);
+      dropMarkers();
+      scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
+      startQuery();
+      map.setZoom(15);
+      map.setCenter(getCurrentPosition());
+      directionsDisplay.setMap(null);
+      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 1200});
+    };
+
+
+//Exit route surface
+    exitRouteModifier = new Modifier({
+      transform: Matrix.translate(window.innerWidth/10, -window.innerHeight, 1)
+    });
+
+    exitRouteSurface = new Surface({
+      content: '<div class="exitRoute">^</div>',
+      size: [window.innerHeight/5, window.innerWidth/5],
+      properties: {
+        'font-size': '5rem',
+        color: 'black',
+        opacity: '0.5'
+      }
+    });
+
+    mapNode.add(exitRouteModifier).link(exitRouteSurface);
+    
+    exitRouteSurface.on('click', exitRoute);
     // var intervalID = window.setInterval(initialize, 0);
     return mapNode;
   }
