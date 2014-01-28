@@ -63,7 +63,7 @@ define(function(require, exports, module){
     }
   };
 
-  module.exports = function(mapNode, Engine, eventHandler, allMarkers, currentLoc){
+  module.exports = function(mapNode, Engine, eventHandler, allMarkers){
 
     /////////////
     // BLOCKER //
@@ -75,8 +75,7 @@ define(function(require, exports, module){
     });
 
     var blockingMod = new Modifier({
-      origin: [0,1],
-      transform: Matrix.translate(0,0,40)
+      transform: Matrix.translate(0, window.innerHeight - cardSize[1], 40)
     });
 
     mapNode.add(blockingMod).link(blockingSurface);
@@ -109,8 +108,6 @@ define(function(require, exports, module){
 
     blockingSurface.pipe(scrollview);
 
-    var modalExists = false;
-
 
     var setFace = function(faceIndex){
       faceIndex = faceIndex || scrollview.node.index;
@@ -133,8 +130,6 @@ define(function(require, exports, module){
     ///////////////////////
     // CARD MANIPULATION //
     ///////////////////////
-
-    var resetCard;
 
     var addCard = function(location){
 
@@ -197,6 +192,7 @@ define(function(require, exports, module){
         if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40) {
           // FIXME: look into using a get() here.
           node = scrollview.node.array[index];
+          // console.log(node);
 
           // Modify the node to larger size
           nodeSurface = node.object;
@@ -208,36 +204,25 @@ define(function(require, exports, module){
             size: bigSize,
             classes: ['bigCard'],
             content:  '<div class="photo" style="background-image: url(' + ((allMarkers[node.id].data.photoPrefix) ? allMarkers[node.id].data.photoPrefix + (window.innerWidth - 80) + 'x' + (window.innerWidth - 80) : '' ) + allMarkers[node.id].data.photoSuffix + ')"></div>' +
-              '<div class="icon walking-dir"><i class="icon-pitch"></i></div>' +
+              '<img class="icon walking-dir" src="/img/walkingIcon.png">' +
               '<div class="info">' +
                 ((allMarkers[node.id].data.rating) ? '<div class="rating">' + allMarkers[node.id].data.rating + '/10</div>' : '<div class="rating" style="visibility: hidden;"></div>' ) +
                 '<h1>' + allMarkers[node.id].data.name + '</h1>' +
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
                 '<p>' + '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' +
                 '<p>' + '- ' + allMarkers[node.id].data.tipUser + '</p>' +
-                '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</span> miles away</p>' +
-              '</div>'
+              '</div>',
+            properties: {
+              // backgroundImage: prop.backgroundImage
+            }
           });
 
           //When walking icon is clicked, event and rendernode is emitted          
           setWalkDirListener = function(){
-            // $('.icon').on({'tap': emitInfo, 'click': emitInfo});
-            $('.bigCard').on('tap', function(event){
-              if (event.target.className === "icon-pitch" || event.target.className === "icon walking-dir"){
-                emitInfo();
-                $('.bigCard').off('tap');
-              } else {
-                resetCard();
-                $('.bigCard').off('tap');
-              }
-            });
+            $('.icon').on('click', emitInfo);
           };
-
           newNode.on('deploy', setWalkDirListener);
           emitInfo = function(){
-            // hide cards
-
-            $('.walking-dir').html('<i class="icon-spin4 animate-spin"></i>')
             eventHandler.emit('walking-dir', scrollview.node.array[index]);
           };
 
@@ -255,7 +240,6 @@ define(function(require, exports, module){
           });
           PhyEng.attach(spring, part);
           
-          modalExists ? mapNode.object.pop() : modalExists = true;
           mapNode.add(newNode).add(new Modifier({ origin : [0.5, 0.98], transform : node.modifiers[0].getTransform() } )).link(PhyEng);
 
           // Blur the map after transform has completed.
@@ -266,10 +250,7 @@ define(function(require, exports, module){
           //   map.className = "blur";
           // }, 400);
 
-          // newNode.on('touchend', function(event) {
-
-          resetCard = function(){
-
+          newNode.on('touchend', function(event) {
             var mod = node.modifiers[0].getTransform();
             node.modifiers[0].setTransform( Matrix.translate(0, window.innerHeight, 100), {
               duration: 300,
@@ -283,14 +264,16 @@ define(function(require, exports, module){
             spring.setOpts({ anchor : [ 0, 200, 0] });
             newNode.size = cardSize;
 
-            // Don't cut it out until its off screen.
-            // Time.setTimeout(function(){
-            //   // FIXME: There's no guarantee the surface we want to remove is the last one.
-            //   mapNode.object.splice(mapNode.object.indexOf(newNode), 1);
-            // }, 500);
-          }
+            // Unblur the map
+            map.className = "";
 
-          // });
+            // Don't cut it out until its off screen.
+            Time.setTimeout(function(){
+              // FIXME: There's no guarantee the surface we want to remove is the last one.
+              mapNode.object.splice(mapNode.object.length - 1, 1);
+            }, 500);
+
+          });
 
         }
 
@@ -299,31 +282,7 @@ define(function(require, exports, module){
       /**********************************************************/
       /**********************************************************/
 
-    };
 
-    var findDistance = function(coord1, coord2) {
-
-      var toRad = function(x) {
-        return x * Math.PI / 180;
-      };
-
-      var a =
-        Math.pow(Math.sin(toRad(coord2.lat - coord1.lat)/2), 2) +
-        Math.pow(Math.sin(toRad(coord2.lng - coord1.lng)/2), 2) *
-        Math.cos(toRad(coord1.lat)) * Math.cos(toRad(coord2.lat));
-
-      return (3963.1676 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(2);
-    };
-
-    var hideCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
-      scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
-      resetCard();
-    }
-
-    var showCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
-      scrollviewMod.setTransform(Matrix.translate(0,0,0), {duration: 400, curve: 'easeOutBounce'});
     };
 
     
@@ -363,17 +322,15 @@ define(function(require, exports, module){
     eventHandler.on('addCard',    addCard);
     eventHandler.on('removeCard', removeCard);
     eventHandler.on('focusCard',  focusCard);
-    eventHandler.on('hideCards',  hideCards);
-    eventHandler.on('showCards',  showCards);
 
 
     /////////////////////////////////////////////
 
-    var scrollviewMod = new Modifier({
+    mapNode
+    .add(new Modifier({
       transform: Matrix.translate(0, window.innerHeight, 200),
-      origin: [0.5, 1]
-    });
-
-    mapNode.add(scrollviewMod).link(scrollview);
+      origin: [0.5,1]
+    }))
+    .link(scrollview);
   };
 });

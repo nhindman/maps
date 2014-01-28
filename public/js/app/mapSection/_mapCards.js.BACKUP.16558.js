@@ -63,7 +63,11 @@ define(function(require, exports, module){
     }
   };
 
+<<<<<<< HEAD
+  module.exports = function(mapNode, eventHandler, allMarkers){
+=======
   module.exports = function(mapNode, Engine, eventHandler, allMarkers, currentLoc){
+>>>>>>> 534a294221b380375432a42722c894a02f111df0
 
     /////////////
     // BLOCKER //
@@ -215,8 +219,15 @@ define(function(require, exports, module){
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
                 '<p>' + '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' +
                 '<p>' + '- ' + allMarkers[node.id].data.tipUser + '</p>' +
-                '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</span> miles away</p>' +
+<<<<<<< HEAD
               '</div>'
+=======
+                '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</span> miles away</p>' +
+              '</div>',
+            properties: {
+              // backgroundImage: prop.backgroundImage
+            }
+>>>>>>> 534a294221b380375432a42722c894a02f111df0
           });
 
           //When walking icon is clicked, event and rendernode is emitted          
@@ -301,6 +312,19 @@ define(function(require, exports, module){
 
     };
 
+<<<<<<< HEAD
+    var hideCards = function(){
+      blockingMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
+      scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
+      resetCard();
+    }
+
+    var showCards = function(){
+      blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
+      scrollviewMod.setTransform(Matrix.translate(0,0,0), {duration: 400, curve: 'easeOutBounce'});
+    };
+
+=======
     var findDistance = function(coord1, coord2) {
 
       var toRad = function(x) {
@@ -314,18 +338,7 @@ define(function(require, exports, module){
 
       return (3963.1676 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(2);
     };
-
-    var hideCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
-      scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
-      resetCard();
-    }
-
-    var showCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
-      scrollviewMod.setTransform(Matrix.translate(0,0,0), {duration: 400, curve: 'easeOutBounce'});
-    };
-
+>>>>>>> 534a294221b380375432a42722c894a02f111df0
     
     var removeCard = function(id){
       for(var i = 0; i < cardSurfaces.length; i++){

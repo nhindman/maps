@@ -63,7 +63,7 @@ define(function(require, exports, module){
     }
   };
 
-  module.exports = function(mapNode, Engine, eventHandler, allMarkers, currentLoc){
+  module.exports = function(mapNode, eventHandler, allMarkers){
 
     /////////////
     // BLOCKER //
@@ -197,6 +197,7 @@ define(function(require, exports, module){
         if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40) {
           // FIXME: look into using a get() here.
           node = scrollview.node.array[index];
+          // console.log(node);
 
           // Modify the node to larger size
           nodeSurface = node.object;
@@ -215,7 +216,6 @@ define(function(require, exports, module){
                 '<h5>' + ((allMarkers[node.id].data.address) ? allMarkers[node.id].data.address + ', ' : '') + allMarkers[node.id].data.city + ', ' + allMarkers[node.id].data.state + '</h5>' +
                 '<p>' + '&ldquo;' + allMarkers[node.id].data.tip + '&rdquo;</p>' +
                 '<p>' + '- ' + allMarkers[node.id].data.tipUser + '</p>' +
-                '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</span> miles away</p>' +
               '</div>'
           });
 
@@ -299,30 +299,17 @@ define(function(require, exports, module){
       /**********************************************************/
       /**********************************************************/
 
-    };
 
-    var findDistance = function(coord1, coord2) {
-
-      var toRad = function(x) {
-        return x * Math.PI / 180;
-      };
-
-      var a =
-        Math.pow(Math.sin(toRad(coord2.lat - coord1.lat)/2), 2) +
-        Math.pow(Math.sin(toRad(coord2.lng - coord1.lng)/2), 2) *
-        Math.cos(toRad(coord1.lat)) * Math.cos(toRad(coord2.lat));
-
-      return (3963.1676 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(2);
     };
 
     var hideCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
+      blockingMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
       scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
       resetCard();
     }
 
     var showCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
+      blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
       scrollviewMod.setTransform(Matrix.translate(0,0,0), {duration: 400, curve: 'easeOutBounce'});
     };
 

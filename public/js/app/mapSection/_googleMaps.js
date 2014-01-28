@@ -373,7 +373,7 @@ define(function(require, exports, module){
       directionsDisplay.setMap(null);
       // scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       eventHandler.emit('showCards');
-      exitRouteModifier.setTransform(Matrix.translate(window.innerWidth/10, -window.innerHeight, 1), {duration: 800});
+      exitRouteModifier.setTransform(Matrix.identity(), {duration: 800});
     };
 
     // replaceScroll = function(){
@@ -384,17 +384,18 @@ define(function(require, exports, module){
 
 //Exit route surface
     exitRouteModifier = new Modifier({
-      transform: Matrix.translate(window.innerWidth/10, -window.innerHeight, 1)
+      origin: [0,1],
+      transform: Matrix.translate(0, 400, 0)
     });
 
     exitRouteSurface = new Surface({
-      content: '<div class="exitRoute">^</div>',
-      size: [window.innerHeight/5, window.innerWidth/5],
-      properties: {
-        'font-size': '5rem',
-        color: 'black',
-        opacity: '0.5'
-      }
+      content:
+        '<div class="exitRoute">' + 
+          '<i class="back-button icon-left-circle"></i>' + 
+          '<div class="walking-direcitons">' + 
+          '</div>' + 
+        '</div>',
+      size: [window.innerWidth, Math.min(window.innerWidth/3, window.innerHeight/5)*1.5]
     });
 
     mapNode.add(exitRouteModifier).link(exitRouteSurface);
