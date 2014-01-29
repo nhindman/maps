@@ -103,7 +103,7 @@ body {
 
 .bigCard {
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'open_sansregular', sans-serif;
   width: 85%;
   margin: 30px auto;
   background-color: #dfddd1;
