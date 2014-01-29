@@ -110,18 +110,18 @@ define(function(require, exports, module){
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
         boundMarkers[highlightedID].marker.setOptions({
-          icon: 'img/blueMarker.png'
+          icon : 'img/blueMarker.svg'
         });
       }
       boundMarkers[id].marker.setOptions({
-        icon: 'img/blueMarkerHighlight.png'
+        icon: 'img/blueMarkerHighlight.svg'
       });
       highlightedID = id;
     });
 
     eventHandler.on('unfocus', function(id){
       allMarkers[id].marker.setOptions({
-        icon: 'img/blueMarker.png'
+        icon : 'img/blueMarker.svg'
       });
     });
 
@@ -173,7 +173,8 @@ define(function(require, exports, module){
           map: map,
           draggable: false,
           animation: !first && google.maps.Animation.DROP,
-          icon: 'img/blueMarker.png'
+          // icon: 'img/blueMarker.png'
+          icon: 'img/blueMarker.svg'
         });
 
         google.maps.event.addListener(marker, 'click', function(){
@@ -246,7 +247,7 @@ define(function(require, exports, module){
       var hackReactorMarker = new google.maps.Marker({
         position: new google.maps.LatLng(37.783594, -122.408904),
         draggable: false,
-        icon: '/img/blueMarker.png',
+        icon: '/img/blueMarker.svg',
         map: map
       });
 
