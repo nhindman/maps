@@ -274,16 +274,6 @@ define(function(require, exports, module){
       }
     };
 
-    var getCurrentPosition = function(){
-      navigator.geolocation.getCurrentPosition(function(position){
-        currentLatLng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-      });
-      return currentLatLng;
-    };
-
     var startQuery = function(){
       navigator.geolocation.getCurrentPosition(function(position){
         currentLatLng = {
@@ -338,10 +328,11 @@ define(function(require, exports, module){
             eventHandler.emit('hideCards');
           }
         });
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend(new google.maps.LatLng(lat,lng));
+        bounds.extend(new google.maps.LatLng(currentCoord.lat, currentCoord.lng));
       });
-      var bounds = new google.maps.LatLngBounds();
-      bounds.extend(new google.maps.LatLng(lat,lng));
-      bounds.extend(new google.maps.LatLng(currentCoord.lat, currentCoord.lng));
+      map.fitBounds(bounds);
     };
 
 //Walking Directions//
@@ -382,8 +373,13 @@ define(function(require, exports, module){
       toggleMarkers(map);
       dropMarkers();
       map.setZoom(15);
-      // var currentPos = getCurrentPosition();
-      // map.setCenter(new google.maps.LatLng(currentPos.lat, currentPos.lng));
+      // // var currentPos = getCurrentPosition();
+      // var currentCoord = getCurrentPosition();
+      // console.log(currentCoord)
+      // map.setCenter(new google.maps.LatLng(currentCoord.lat, currentCoord.lng));
+      navigator.geolocation.getCurrentPosition(function(position){
+        map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+      });
       directionsDisplay.setMap(null);
       exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800}, function(){
         eventHandler.emit('showCards');
