@@ -110,18 +110,18 @@ define(function(require, exports, module){
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
         boundMarkers[highlightedID].marker.setOptions({
-          icon : 'img/blueMarker.svg'
+          icon : 'img/blueMarker.png'
         });
       }
       boundMarkers[id].marker.setOptions({
-        icon: 'img/blueMarkerHighlight.svg'
+        icon: 'img/blueMarkerHighlight.png'
       });
       highlightedID = id;
     });
 
     eventHandler.on('unfocus', function(id){
       allMarkers[id].marker.setOptions({
-        icon : 'img/blueMarker.svg'
+        icon : 'img/blueMarker.png'
       });
     });
 
@@ -174,7 +174,7 @@ define(function(require, exports, module){
           draggable: false,
           animation: !first && google.maps.Animation.DROP,
           // icon: 'img/blueMarker.png'
-          icon: 'img/blueMarker.svg'
+          icon: 'img/blueMarker.png'
         });
 
         google.maps.event.addListener(marker, 'click', function(){
@@ -247,7 +247,7 @@ define(function(require, exports, module){
       var hackReactorMarker = new google.maps.Marker({
         position: new google.maps.LatLng(37.783594, -122.408904),
         draggable: false,
-        icon: '/img/blueMarker.svg',
+        icon: '/img/blueMarker.png',
         map: map
       });
 
@@ -379,8 +379,9 @@ define(function(require, exports, module){
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
-      eventHandler.emit('showCards');
-      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800});
+      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800}, function(){
+        eventHandler.emit('showCards');
+      });
       google.maps.event.addListener(map, 'bounds_changed', function() {
         addAndRemoveCards();
         reQuery();
