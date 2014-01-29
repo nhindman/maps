@@ -380,8 +380,9 @@ define(function(require, exports, module){
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
-      eventHandler.emit('showCards');
-      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800});
+      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800}, function(){
+        eventHandler.emit('showCards');
+      });
       google.maps.event.addListener(map, 'bounds_changed', function() {
         addAndRemoveCards();
         reQuery();
