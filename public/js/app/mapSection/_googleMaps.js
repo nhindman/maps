@@ -374,7 +374,6 @@ define(function(require, exports, module){
     eventHandler.on('walking-dir', showRoute);
 
     exitRoute = function(){
-      $('button').off('click');
       toggleMarkers(map);
       dropMarkers();
       map.setZoom(15);
