@@ -407,6 +407,8 @@ define(function(require, exports, module){
     });
 
     exitRouteSurface.on('deploy', function(){
+
+      // FIXME: "button" is way  too general of a selector. However, "back-button" isn't targeted on iOS devices
       $('button').on({
         'tap': exitRoute,
         'click': exitRoute
