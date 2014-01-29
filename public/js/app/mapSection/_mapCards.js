@@ -302,15 +302,8 @@ define(function(require, exports, module){
             // Change the anchor point for it springs off screen
             spring.setOpts({ anchor : [ 0, 200, 0] });
             newNode.size = cardSize;
-
-            // Don't cut it out until its off screen.
-            // Time.setTimeout(function(){
-            //   // FIXME: There's no guarantee the surface we want to remove is the last one.
-            //   mapNode.object.splice(mapNode.object.indexOf(newNode), 1);
-            // }, 500);
           }
 
-          // });
 
         }
 
@@ -342,13 +335,11 @@ define(function(require, exports, module){
     };
 
     var hideCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
       scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
       resetCard();
     }
 
     var showCards = function(){
-      // blockingMod.setTransform(Matrix.translate(0,0,40), {duration: 400, curve: 'easeOutBounce'});
       scrollviewMod.setTransform(Matrix.translate(0,-30,0), {duration: 400, curve: 'easeOutBounce'});
     };
 
@@ -366,9 +357,6 @@ define(function(require, exports, module){
             }, 0)
           }
           var card = cardSurfaces[i];
-          // return cardSurfaces[i].modifiers[0].setTransform(Matrix.move(Matrix.rotateY(-2), [0,400, 0], {duration: 200, curve: 'easeIn'}), function(){
-          //   cardSufraces.splice(cardSurfaces.indexOf(card), 1);
-          // });
           return cardSurfaces.splice(i, 1);
         }
       }
