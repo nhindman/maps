@@ -362,7 +362,6 @@ define(function(require, exports, module){
     };
 
     showDirections = function(directions, name){
-      // scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 0), {duration: 1200});
       $('.walking-title').html('Walking directions to <span class="name">' + name + '</span>' + 
         '<br />' + 
         '<span class="duration">' + directions.duration.text + '</span>' + 
@@ -375,12 +374,12 @@ define(function(require, exports, module){
     eventHandler.on('walking-dir', showRoute);
 
     exitRoute = function(){
+      $('button').off('click');
       toggleMarkers(map);
       dropMarkers();
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
-      // scrollmod.setTransform(Matrix.translate(0, 0, 0), {duration: 800});
       eventHandler.emit('showCards');
       exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800});
       google.maps.event.addListener(map, 'bounds_changed', function() {
@@ -409,7 +408,7 @@ define(function(require, exports, module){
     });
 
     exitRouteSurface.on('deploy', function(){
-      $('.back-button').on({
+      $('button').on({
         'tap': exitRoute,
         'click': exitRoute
       });

@@ -357,9 +357,6 @@ define(function(require, exports, module){
             }, 0)
           }
           var card = cardSurfaces[i];
-          // return cardSurfaces[i].modifiers[0].setTransform(Matrix.move(Matrix.rotateY(-2), [0,400, 0], {duration: 200, curve: 'easeIn'}), function(){
-          //   cardSufraces.splice(cardSurfaces.indexOf(card), 1);
-          // });
           return cardSurfaces.splice(i, 1);
         }
       }
