@@ -10,7 +10,7 @@ app.get('/points', function(req, res) {
   var query = url.parse(req.url, true).query;
 
   var options = {
-    ll : query.lat + ',' + query.long,
+    ll: query.lat + ',' + query.long,
     radius: query.radius || 15000,
     venuePhotos: 1,
     section: query.cat || 'sights', 

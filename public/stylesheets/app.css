@@ -228,8 +228,20 @@ body {
     }
 }
 
-.buttonBall-active {
+.buttonBall-sights {
     background-color: #00a8ff;
+}
+
+.buttonBall-food {
+    background-color: #d7c25f;
+}
+
+.buttonBall-arts {
+    background-color: #97c77f;
+}
+
+.buttonBall-shop {
+    background-color: #b56a41;
 }
 
 .slogan {
@@ -273,6 +285,49 @@ body {
 
 .walking-title .duration {
   font-size: 0.8em;
+}
+
+
+.splash-button i {
+  font-size: 8vmin;
+}
+
+.splash-button div {
+  color: white;
+  font-family: 'ubuntumedium';
+}
+
+.splash-button button {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.splash-button-active {
+  background-color: rgba(255,255,255,0.15);
+}
+
+.splash-button button:focus {
+  outline: none;
+}
+
+.splash-button-sights i {
+  color: #00a8ff;
+}
+
+.splash-button-food i {
+  color: #d7c25f;
+}
+
+.splash-button-arts i {
+  color: #97c77f;
+}
+
+.splash-button-shop i {
+  color: #b56a41;
 }
 
 .animate-spin {
@@ -390,5 +445,9 @@ body {
 }
  
 .icon-spin4:before { content: '\e800'; } /* '' */
+.icon-picture:before { content: '\e803'; } /* '' */
+.icon-food:before { content: '\e804'; } /* '' */
+.icon-art-gallery:before { content: '\e806'; } /* '' */
 .icon-pitch:before { content: '\e801'; } /* '' */
+.icon-shop:before { content: '\e805'; } /* '' */
 .icon-left-circle:before { content: '\e802'; } /* '' */

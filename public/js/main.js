@@ -39,7 +39,7 @@ define(function(require, exports, module) {
   });
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
   var splashNode = require('app/splashSection/splashSection')(eventHandler);
-  window.swap = function(){
+  var swap = function(){
     mod.setTransform(Matrix.translate(-window.innerWidth, 0, 200), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7});
     // mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [window.innerWidth*0.7, 0, -500]), {duration: 500, curve: 'easeOut'}, secondSwap);
     mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7}, secondSwap)
@@ -51,7 +51,7 @@ define(function(require, exports, module) {
     scrollmod.setTransform(Matrix.translate(0, -30, 0), {duration: 400, method: 'stiffSpring'});
    };
 
-  window.swapBack = function(){
+  var swapBack = function(){
     mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [250, 0, 50]), {duration: 700, curve: 'easeOut'});
     mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-950, 0, -50]), {duration: 700, curve: 'easeOut'}, secondSwapBack);
     scrollmod.setTransform(Matrix.translate(0, -height, 60), {duration: 700});
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
   // }
 
 
-  eventHandler.on('loadmap', function(){
+  eventHandler.on('loadmap', function(category){
     mainDisplay.add(mod2).link(mapNode);
   });
 

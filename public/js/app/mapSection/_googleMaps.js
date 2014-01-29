@@ -132,7 +132,8 @@ define(function(require, exports, module){
         data: {
           lat: currentLatLng.lat,
           long: currentLatLng.lng,
-          radius: queryRadius
+          radius: queryRadius,
+          cat: category
         },
         success: function(apiData){
           data = apiData;
@@ -242,8 +243,10 @@ define(function(require, exports, module){
 
       // eventHandler.emit('maploaded')
       startQuery();
+      createHackReactorMarker();
+    };
 
-      // create Hack Reactor marker easter egg
+    var createHackReactorMarker = function(){
       var hackReactorMarker = new google.maps.Marker({
         position: new google.maps.LatLng(37.783594, -122.408904),
         draggable: false,
@@ -272,7 +275,7 @@ define(function(require, exports, module){
           photo: '/img/hackreactor.jpg'
         }
       }
-    };
+    }
 
     var getCurrentPosition = function(){
       navigator.geolocation.getCurrentPosition(function(position){
