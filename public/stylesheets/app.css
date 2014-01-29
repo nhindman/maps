@@ -76,7 +76,7 @@ body {
 .card {
   box-sizing: border-box;
   font-size: 14px;
-  font-family: 'amertype_md_btmedium', serif;
+  font-family: 'open_sansbold', serif;
   color: rgba(255,255,255, 0.8);
   text-align: center;
   line-height: 1.1em;
@@ -90,7 +90,7 @@ body {
 .cardFocus {
   box-sizing: border-box;
   font-size: 14px;
-  font-family: 'amertype_md_btmedium', serif;
+  font-family: 'open_sansbold', serif;
   text-align: center;
   line-height: 1.1em;
   letter-spacing: -1px;
