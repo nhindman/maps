@@ -308,8 +308,7 @@ define(function(require, exports, module){
         });
 
         fetchData();
-
-        require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
+        require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng, map);
       });
     }
 

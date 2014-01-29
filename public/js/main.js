@@ -51,15 +51,15 @@ define(function(require, exports, module) {
     scrollmod.setTransform(Matrix.translate(0, -30, 0), {duration: 400, method: 'stiffSpring'});
    };
 
-  window.swapBack = function(){
-    mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [250, 0, 50]), {duration: 700, curve: 'easeOut'});
-    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-950, 0, -50]), {duration: 700, curve: 'easeOut'}, secondSwapBack);
-    scrollmod.setTransform(Matrix.translate(0, -height, 60), {duration: 700});
-  };
-  var secondSwapBack = function(){
-    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeIn'})
-    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 700, curve: 'easeIn'});
-  };
+  // window.swapBack = function(){
+  //   mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [250, 0, 50]), {duration: 700, curve: 'easeOut'});
+  //   mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-950, 0, -50]), {duration: 700, curve: 'easeOut'}, secondSwapBack);
+  //   scrollmod.setTransform(Matrix.translate(0, -height, 60), {duration: 700});
+  // };
+  // var secondSwapBack = function(){
+  //   mod.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeIn'})
+  //   mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 700, curve: 'easeIn'});
+  // };
   // var thirdSwapBack = function(){
   //   mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 400});
   // };
