@@ -177,10 +177,10 @@ define(function(require, exports, module){
         });
       }
 
-      cardSurface.pipe(renderNode);
+      cardSurface.pipe(blockingSurface);
       renderNode.link(modifier).link(cardSurface);
       // renderNode.pipe(scrollview);
-      renderNode.pipe(blockingSurface);
+      // renderNode.pipe(blockingSurface);
 
       var endMatrix = (cardSurfaces.length) ? 
         Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 
