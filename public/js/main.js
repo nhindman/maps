@@ -69,7 +69,8 @@ define(function(require, exports, module) {
   mainDisplay.add(mod).link(splashNode);
 
 
-  eventHandler.on('loadmap', function(category){
+
+  eventHandler.on('loadmap', function(){
     mainDisplay.add(mod2).link(mapNode);
   });
 

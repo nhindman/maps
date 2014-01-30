@@ -64,7 +64,7 @@ define(function(require, exports, module){
     }
   };
 
-  module.exports = function(mapNode, Engine, eventHandler, allMarkers, currentLoc){
+  module.exports = function(mapNode, Engine, eventHandler, allMarkers, currentLoc, googleMap){
 
     /////////////
     // BLOCKER //
@@ -112,7 +112,6 @@ define(function(require, exports, module){
 
     var modalExists = false;
 
-
     var setFace = function(faceIndex){
       faceIndex = faceIndex || scrollview.node.index;
 
@@ -140,15 +139,13 @@ define(function(require, exports, module){
       currentFace = faceIndex;
     };
 
-
     ///////////////////////
     // CARD MANIPULATION //
     ///////////////////////
 
-    var resetCard;
+    var resetCard, cardUp;
 
     var addCard = function(location){
-
       var cardSurface = new Surface({
         size: cardSize,
         content: location.name,
@@ -182,7 +179,8 @@ define(function(require, exports, module){
 
       cardSurface.pipe(renderNode);
       renderNode.link(modifier).link(cardSurface);
-      renderNode.pipe(scrollview);
+      // renderNode.pipe(scrollview);
+      renderNode.pipe(blockingSurface);
 
       var endMatrix = (cardSurfaces.length) ? 
         Matrix.move(Matrix.rotateY(-rotateYAngle), [0, 0, 60]) : 
@@ -191,14 +189,12 @@ define(function(require, exports, module){
       cardSurfaces.push(renderNode);
       modifier.setTransform(endMatrix, {duration: 300, curve: 'easeIn'});
 
-
       /**********************************************************/
       /**************** Card Pop / Swipe Out*********************/
       /**********************************************************/
 
       // Create vars to be captured in closure
       var index, node, nodeSurface, newNode, part, PhyEng, spring, draggable, map, emitInfo, setWalkDirListener;
-
       var startX, startY;
       cardSurface.on('touchstart', function(event) {
         startX = event.touches[0].clientX;
@@ -212,9 +208,9 @@ define(function(require, exports, module){
             index = i;
           }
         }
-
-        // Only pop-up if center item and card swiped up.
-        if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40) {
+        // Only pop-up if center item, card swiped up, and another card isn't already swiped up.
+        if(scrollview.node.array[index].angle === "center" && (touchEvent.changedTouches[0].clientY - startY) < -40 && !cardUp) {
+          cardUp = true;
           // FIXME: look into using a get() here.
           node = scrollview.node.array[index];
 
@@ -238,29 +234,6 @@ define(function(require, exports, module){
                 ((findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long })) !== "NaN" ? '<p class="distance"><span class="distanceAwayNum">' + findDistance(currentLoc, { lat: allMarkers[node.id].data.lat, lng: allMarkers[node.id].data.long }) + '</p>' : '') +
               '</div>'
           });
-
-          //When walking icon is clicked, event and rendernode is emitted          
-          setWalkDirListener = function(){
-            // $('.icon').on({'tap': emitInfo, 'click': emitInfo});
-            $('.bigCard').on('tap', function(event){
-              if (event.target.className === "icon-pitch" || event.target.className === "icon walking-dir"){
-                emitInfo();
-                $('.bigCard').off('tap');
-              } else {
-                resetCard();
-                $('.bigCard').off('tap');
-              }
-            });
-          };
-
-          newNode.on('deploy', setWalkDirListener);
-          emitInfo = function(){
-            // hide cards
-
-            $('.walking-dir').html('<i class="icon-spin4 animate-spin"></i>')
-            eventHandler.emit('walking-dir', scrollview.node.array[index]);
-          };
-
           PhyEng = new PhysicsEngine();
           part = PhyEng.createBody({
             shape : PhyEng.BODIES.RECTANGLE,
@@ -277,7 +250,9 @@ define(function(require, exports, module){
           
           modalExists ? mapNode.object.pop() : modalExists = true;
           mapNode.add(newNode).add(new Modifier({ origin : [0.5, 0.98], transform : node.modifiers[0].getTransform() } )).link(PhyEng);
-
+          //Disable dragging of the map and disable scrollview
+          googleMap.setOptions({draggable: false});
+          blockingSurface.unpipe(scrollview);
           // Blur the map after transform has completed.
           // Otherwise there's performance issues on mobile.
           // Don't fuck with the DOM!
@@ -302,7 +277,31 @@ define(function(require, exports, module){
             // Change the anchor point for it springs off screen
             spring.setOpts({ anchor : [ 0, 200, 0] });
             newNode.size = cardSize;
+            //Allow map to be draggable again and reenable scrollview
+            googleMap.setOptions({draggable: true});
+            blockingSurface.pipe(scrollview);
+            cardUp = false;
           }
+
+          //When walking icon is clicked, event and rendernode is emitted
+          setWalkDirListener = function(){
+            // $('.icon').on({'tap': emitInfo, 'click': emitInfo});
+            $('.bigCard').on('tap', function(event){
+              if (event.target.className === "icon-pitch" || event.target.className === "icon walking-dir"){
+                emitInfo();
+                $('.bigCard').off('tap');
+              } else {
+                resetCard();
+                $('.bigCard').off('tap');
+              }
+            });
+          };
+          newNode.on('deploy', setWalkDirListener);
+          emitInfo = function(){
+            // hide cards
+            $('.walking-dir').html('<i class="icon-spin4 animate-spin"></i>')
+            eventHandler.emit('walking-dir', scrollview.node.array[index]);
+          };
 
 
         }

@@ -82,8 +82,6 @@ define(function(require, exports, module){
       initialize();
     });
 
-    eventHandler.on('startQuery', startQuery)
-
     mapSurface.on('click', function(e) {
       applyTorque(e, 1);
     });
@@ -306,16 +304,6 @@ define(function(require, exports, module){
       }
     }
 
-    var getCurrentPosition = function(){
-      navigator.geolocation.getCurrentPosition(function(position){
-        currentLatLng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-        return new google.maps.LatLng(currentLatLng.lat, currentLatLng.lng);
-      });
-    };
-
     var startQuery = function(){
       navigator.geolocation.getCurrentPosition(function(position){
         currentLatLng = {
@@ -341,7 +329,7 @@ define(function(require, exports, module){
 
         fetchData();
 
-        require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
+        require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng, map);
         require('app/mapSection/_mapHeader')(mapNode, eventHandler);
       });
     }
@@ -349,7 +337,10 @@ define(function(require, exports, module){
 
     var calcRoute = function(lat, lng, name) {
       var newLocation = new google.maps.LatLng(lat, lng);
+      var currentCoord;
+      // eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
+        currentCoord = {lat: position.coords.latitude, lng: position.coords.longitude};
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
         var directionsService = new google.maps.DirectionsService();
@@ -369,7 +360,11 @@ define(function(require, exports, module){
             eventHandler.emit('slideUpHeader');
           }
         });
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend(new google.maps.LatLng(lat,lng));
+        bounds.extend(new google.maps.LatLng(currentCoord.lat, currentCoord.lng));
       });
+      map.fitBounds();
     };
 
 //Walking Directions//
@@ -410,7 +405,13 @@ define(function(require, exports, module){
       toggleMarkers(map);
       dropMarkers();
       map.setZoom(15);
-      map.setCenter(getCurrentPosition());
+      // // var currentPos = getCurrentPosition();
+      // var currentCoord = getCurrentPosition();
+      // console.log(currentCoord)
+      // map.setCenter(new google.maps.LatLng(currentCoord.lat, currentCoord.lng));
+      navigator.geolocation.getCurrentPosition(function(position){
+        map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+      });
       directionsDisplay.setMap(null);
       exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 500, curve: 'easeOutBounce'}, function(){
         eventHandler.emit('showCards');
