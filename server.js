@@ -5,7 +5,7 @@ var config      = require('./config.js'),
 
 var app = express();
 
-app.get('/points', function(req, res) {
+  app.get('/points', function(req, res) {
 
   var query = url.parse(req.url, true).query;
 
@@ -78,10 +78,12 @@ app.get('/points', function(req, res) {
 
 });
 
+
 // Serve every static file in public dir
 app.use(express.static(__dirname + "/public"));
 
 app.listen(config.port);
+
+module.exports = app;
+
 console.log('Listening on port ' + config.port);
-
-
