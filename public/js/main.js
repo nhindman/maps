@@ -9,7 +9,8 @@ define(function(require, exports, module) {
     Matrix                = require('famous/Matrix'),
     EventHandler          = require('famous/EventHandler'),
     Transitionable        = require('famous/Transitionable'),
-    StiffSpringTransition = require('famous-physics/utils/StiffSpringTransition');
+    StiffSpringTransition = require('famous-physics/utils/StiffSpringTransition'),
+    Time                  = require('famous-utils/Time');
 
 
 
@@ -40,6 +41,7 @@ define(function(require, exports, module) {
 
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
   var splashNode = require('app/splashSection/splashSection')(eventHandler);
+
   var swap = function(){
     mod.setTransform(Matrix.translate(-window.innerWidth, 0, 200), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7});
     mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7}, secondSwap)
@@ -48,6 +50,7 @@ define(function(require, exports, module) {
     scrollmod = mapNode.object[3].modifiers[0];
     scrollmod.setTransform(Matrix.translate(0, -30, 0), {duration: 400, method: 'stiffSpring'});
     eventHandler.emit('slideDownHeader');
+    eventHandler.emit('removeSpinner');
    };
 
   var swapBack = function(){
@@ -55,7 +58,9 @@ define(function(require, exports, module) {
   };
 
   var secondSwapBack = function(){
-    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7})
+    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7}, function(){
+      eventHandler.emit('slideDownSplashButtons');
+    });
     mod2.setTransform(Matrix.translate(-window.innerWidth, 0, 200), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7})
   };
 
@@ -67,7 +72,7 @@ define(function(require, exports, module) {
   });
 
   eventHandler.on('swap', function(){
-    setTimeout(function(){
+    Time.setTimeout(function(){
       swap();
     }, 500)
   });

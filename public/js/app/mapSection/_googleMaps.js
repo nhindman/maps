@@ -112,18 +112,18 @@ define(function(require, exports, module){
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
         boundMarkers[highlightedID].marker.setOptions({
-          icon : 'img/blueMarker.png'
+          icon : 'img/' + category + 'Marker.png'
         });
       }
       boundMarkers[id].marker.setOptions({
-        icon: 'img/blueMarkerHighlight.png'
+        icon: 'img/' + category + 'MarkerHighlight.png'
       });
       highlightedID = id;
     });
 
     eventHandler.on('unfocus', function(id){
       allMarkers[id].marker.setOptions({
-        icon : 'img/blueMarker.png'
+        icon : 'img/' + category + 'Marker.png'
       });
     });
 
@@ -154,7 +154,7 @@ define(function(require, exports, module){
           console.log('something weird happened: ' + err)
         }
       });
-    }
+    };
 
     var findDistance = function(coord1, coord2) {
 
@@ -185,7 +185,7 @@ define(function(require, exports, module){
           draggable: false,
           animation: !first && google.maps.Animation.DROP,
           // icon: 'img/blueMarker.png'
-          icon: 'img/blueMarker.png'
+          icon: 'img/' + category + 'Marker.png'
         });
 
         google.maps.event.addListener(marker, 'click', function(){
@@ -202,6 +202,21 @@ define(function(require, exports, module){
         first = false;
       }
     }
+
+    // if we move back to the splash screen, we need to emit a 'swap' event again.
+    eventHandler.on('swapBack', function(){
+      first = true;
+    });
+
+    var switchCategory = function(){
+      toggleMarkers(null);
+      allMarkers = {};
+      boundMarkers = {};
+      fetchData();
+      eventHandler.emit('removeAllCards');
+    };
+
+    eventHandler.on('switchCategory', switchCategory);
 
 
     var addAndRemoveCards = function(){
@@ -259,7 +274,7 @@ define(function(require, exports, module){
       var hackReactorMarker = new google.maps.Marker({
         position: new google.maps.LatLng(37.783594, -122.408904),
         draggable: false,
-        icon: '/img/blueMarker.png',
+        icon: '/img/' + category + 'Marker.png',
         map: map
       });
 
@@ -424,7 +439,7 @@ define(function(require, exports, module){
     exitRouteSurface.on('deploy', function(){
 
       // FIXME: "button" is way  too general of a selector. However, "back-button" isn't targeted on iOS devices
-      $('button').on({
+      $('.back-button').on({
         'tap': exitRoute,
         'click': exitRoute
       });

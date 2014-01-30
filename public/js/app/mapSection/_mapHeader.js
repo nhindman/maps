@@ -46,8 +46,14 @@ define(function(require, exports, module){
       });
     };
 
+    var switchCategory = function(){
+      headerSurface.setClasses(['map-header', category]);
+      headerSurface.setContent(category);
+    };
+
     eventHandler.on('slideDownHeader', slideDownHeader);
     eventHandler.on('slideUpHeader',   slideUpHeader);
+    eventHandler.on('switchCategory',  switchCategory);
 
     mapNode.add(headerNode);
 

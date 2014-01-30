@@ -116,15 +116,18 @@ define(function(require, exports, module){
     var buttonModifier = new Modifier(Matrix.translate(0,-400,0));
     splashNode.add(buttonModifier).link(buttonContainer);
 
-    var slideDownButtons = function(){
+    var slideDownSplashButtons = function(){
       buttonModifier.setTransform(Matrix.identity, {method: 'spring', period: 400, dampingRatio: 0.5});
     };
 
-    var slideUpButtons = function(){
+    var slideUpSplashButtons = function(){
       buttonModifier.setTransform(Matrix.translate(0,-400,0), {curve: 'easeIn'});
+      currentActive.removeClass('splash-button-active');
+      currentActive = null;
+      ballModifier = null;
     }
 
-    slideDownButtons();
+    slideDownSplashButtons();
 
 
     //////////
@@ -183,13 +186,24 @@ define(function(require, exports, module){
       ballNode = splashNode.add(ballModifier).link(ballSurface);
     }
 
-    var switchPage = function(category){
+    var mapExists = false;
+    var previousCategory;
+
+    var switchPage = function(targetCategory){
       releaseBall();
-      slideUpButtons();
+      slideUpSplashButtons();
       addSpinner();
-      setTimeout(function(){
-        eventHandler.emit('loadmap', category);
-      }, 1000)
+      var vent = !mapExists ? 'loadmap' : targetCategory === previousCategory ? 'swap' : 'switchCategory';
+      console.log(vent);
+      if(vent === 'loadmap'){
+        setTimeout(function(){
+          eventHandler.emit(vent);
+          mapExists = true;
+        }, 1000)
+      } else {
+        eventHandler.emit(vent);
+      }
+      previousCategory = targetCategory;
     };
 
 
@@ -209,8 +223,14 @@ define(function(require, exports, module){
       });
     }
 
+    /////////////
+    // SPINNER //
+    /////////////
+
+    var spinner;
+
     var addSpinner = function(){
-      splashNode.add(new Surface({
+      spinner = splashNode.add(new Surface({
         content: '<i class="icon-spin4 animate-spin"></i>',
         properties: {
           color: '#ccc',
@@ -218,6 +238,19 @@ define(function(require, exports, module){
         }
       }))
     }
+
+    var removeSpinner = function(){
+      splashNode.get().splice(splashNode.get().indexOf(spinner));
+    };
+
+
+    ////////////
+    // EVENTS //
+    ////////////
+
+    eventHandler.on('removeSpinner',          removeSpinner)
+    eventHandler.on('slideDownSplashButtons', slideDownSplashButtons);
+    eventHandler.on('slideUpSplashButtons',   slideUpSplashButtons);
 
     return splashNode;
   };

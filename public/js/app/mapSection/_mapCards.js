@@ -362,6 +362,10 @@ define(function(require, exports, module){
       }
     };
 
+    var removeAllCards = function(){
+      cardSurfaces = [];
+    };
+
     var focusCard = function(id){
       for(var i = 0; i < cardSurfaces.length; i++){
         if(cardSurfaces[i].id === id){
@@ -379,6 +383,7 @@ define(function(require, exports, module){
     eventHandler.on('focusCard',  focusCard);
     eventHandler.on('hideCards',  hideCards);
     eventHandler.on('showCards',  showCards);
+    eventHandler.on('removeAllCards', removeAllCards);
 
 
     /////////////////////////////////////////////
