@@ -82,6 +82,8 @@ define(function(require, exports, module){
       initialize();
     });
 
+    eventHandler.on('startQuery', startQuery)
+
     mapSurface.on('click', function(e) {
       applyTorque(e, 1);
     });
@@ -103,7 +105,7 @@ define(function(require, exports, module){
       if (findDistance(currentLatLng, newCenter) > queryRadius / 2){
         currentLatLng = newCenter;
         fetchData();
-        dropMarkers();
+        // dropMarkers();
       }
     };
 
@@ -123,6 +125,14 @@ define(function(require, exports, module){
       allMarkers[id].marker.setOptions({
         icon : 'img/blueMarker.png'
       });
+    });
+
+    eventHandler.on('clearMarkers', function(){
+      toggleMarkers(null);
+      allMarkers = {};
+      boundMarkers = {};
+      createHackReactorMarker();
+      addAndRemoveCards();
     });
 
     var fetchData = function(){
@@ -241,7 +251,6 @@ define(function(require, exports, module){
 
       directionsDisplay.setMap(map);
 
-      // eventHandler.emit('maploaded')
       startQuery();
       createHackReactorMarker();
     };
@@ -313,14 +322,13 @@ define(function(require, exports, module){
         fetchData();
 
         require('app/mapSection/_mapCards')(mapNode, FamousEngine, eventHandler, allMarkers, currentLatLng);
+        require('app/mapSection/_mapHeader')(mapNode, eventHandler);
       });
     }
 
-    // eventHandler.on('startQuery', startQuery)
 
     var calcRoute = function(lat, lng, name) {
       var newLocation = new google.maps.LatLng(lat, lng);
-      // eventHandler.on('startQuery', startQuery)
       navigator.geolocation.getCurrentPosition(function(position) {
         var currentPos = new google.maps.LatLng(position.coords.latitude,
                        position.coords.longitude);
@@ -338,6 +346,7 @@ define(function(require, exports, module){
             toggleMarkers(null);
             showDirections(result.routes[0].legs[0], name);
             eventHandler.emit('hideCards');
+            eventHandler.emit('slideUpHeader');
           }
         });
       });
@@ -383,8 +392,9 @@ define(function(require, exports, module){
       map.setZoom(15);
       map.setCenter(getCurrentPosition());
       directionsDisplay.setMap(null);
-      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 800}, function(){
+      exitRouteModifier.setTransform(Matrix.translate(0,400,50), {duration: 500, curve: 'easeOutBounce'}, function(){
         eventHandler.emit('showCards');
+        eventHandler.emit('slideDownHeader');
       });
       google.maps.event.addListener(map, 'bounds_changed', function() {
         addAndRemoveCards();

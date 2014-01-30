@@ -335,7 +335,7 @@ define(function(require, exports, module){
     };
 
     var hideCards = function(){
-      scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400});
+      scrollviewMod.setTransform(Matrix.translate(0,400,0), {duration: 400, curve: 'easeOutBounce'});
       resetCard();
     }
 

@@ -42,8 +42,10 @@ define(function(require, exports, module){
 
     var buttonContainer = new RenderNode();
 
+    var buttonSize = [window.innerWidth/4, Math.min(window.innerWidth/4, window.innerHeight/6)]
+
     var sightsButton = new Surface({
-      size: [window.innerWidth/4, window.innerWidth/4],
+      size: buttonSize,
       classes: ['splash-button', 'splash-button-sights'],
       content: '<button><i class="icon-picture"></i><div>Sights</div></button>'
     });
@@ -60,7 +62,7 @@ define(function(require, exports, module){
     });
 
     var foodButton = new Surface({
-      size: [window.innerWidth/4, window.innerWidth/4],
+      size: buttonSize,
       classes: ['splash-button', 'splash-button-food'],
       content: '<button><i class="icon-food"></i><div>Food</div></button>'
     });
@@ -77,7 +79,7 @@ define(function(require, exports, module){
     });
 
     var artsButton = new Surface({
-      size: [window.innerWidth/4, window.innerWidth/4],
+      size: buttonSize,
       classes: ['splash-button', 'splash-button-arts'],
       content: '<button><i class="icon-art-gallery"></i><div>Arts</div></button>'
     });
@@ -94,7 +96,7 @@ define(function(require, exports, module){
     });
 
     var shopButton = new Surface({
-      size: [window.innerWidth/4, window.innerWidth/4],
+      size: buttonSize,
       classes: ['splash-button', 'splash-button-shop'],
       content: '<button><i class="icon-shop"></i><div>Shop</div></button>'
     });
@@ -158,7 +160,7 @@ define(function(require, exports, module){
 
     var dropNewBall = function(category){
       var ballSurface = new Surface({
-        classes: ['buttonBall', 'buttonBall-' + category],
+        classes: ['buttonBall', category],
         size: [ballSize, ballSize],
         properties: {
           lineHeight: ballSize + 'px',

@@ -228,19 +228,19 @@ body {
     }
 }
 
-.buttonBall-sights {
+.sights {
     background-color: #00a8ff;
 }
 
-.buttonBall-food {
+.food {
     background-color: #d7c25f;
 }
 
-.buttonBall-arts {
+.arts {
     background-color: #97c77f;
 }
 
-.buttonBall-shop {
+.shop {
     background-color: #b56a41;
 }
 
@@ -328,6 +328,29 @@ body {
 
 .splash-button-shop i {
   color: #b56a41;
+}
+
+
+/* HEADER STUFF */
+
+.map-header {
+  font-size: 25px;
+  font-family: 'open_sansregular';
+  text-align: center;
+  line-height: 50px;
+}
+
+button.header-button {
+  height: 50px;
+  width: 50px;
+  font-size: 25px;
+  background-color: transparent;
+  border: 0;
+  color: white;
+}
+
+button.header-button:focus {
+  outline: none;
 }
 
 .animate-spin {

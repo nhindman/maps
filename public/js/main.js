@@ -37,38 +37,29 @@ define(function(require, exports, module) {
   mod2 = new Modifier({
     transform: Matrix.translate(window.innerWidth*1.2, 0, -100)
   });
+
   var mapNode = require('app/mapSection/_googleMaps')(mainDisplay, eventHandler);
   var splashNode = require('app/splashSection/splashSection')(eventHandler);
   var swap = function(){
     mod.setTransform(Matrix.translate(-window.innerWidth, 0, 200), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7});
-    // mod2.setTransform(Matrix.move(Matrix.rotateY(0.05), [window.innerWidth*0.7, 0, -500]), {duration: 500, curve: 'easeOut'}, secondSwap);
     mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7}, secondSwap)
   }
   var secondSwap = function(){
-    // mod.setTransform(Matrix.move(Matrix.rotateY(0), [-window.innerWidth, 0, 400]), {duration: 700, curve: 'easeOut'});    
-    // mod2.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeOutBounce'}, emitQuery)
     scrollmod = mapNode.object[3].modifiers[0];
     scrollmod.setTransform(Matrix.translate(0, -30, 0), {duration: 400, method: 'stiffSpring'});
+    eventHandler.emit('slideDownHeader');
    };
 
   var swapBack = function(){
-    mod.setTransform(Matrix.move(Matrix.rotateY(0.05), [250, 0, 50]), {duration: 700, curve: 'easeOut'});
-    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [-950, 0, -50]), {duration: 700, curve: 'easeOut'}, secondSwapBack);
-    scrollmod.setTransform(Matrix.translate(0, -height, 60), {duration: 700});
+    scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 60), {duration: 400, curve: 'easeOut'}, secondSwapBack);
   };
+
   var secondSwapBack = function(){
-    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 700, curve: 'easeIn'})
-    mod2.setTransform(Matrix.move(Matrix.rotateY(-0.05), [0, 0, -100]), {duration: 700, curve: 'easeIn'});
+    mod.setTransform(Matrix.translate(0, 0, 0), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7})
+    mod2.setTransform(Matrix.translate(-window.innerWidth, 0, 200), {duration: 1000, method: 'stiffSpring', period: 400, dampingRatio: 0.7})
   };
-  // var thirdSwapBack = function(){
-  //   mod2.setTransform(Matrix.translate(window.innerWidth/1000, 0, -100), {duration: 400});
-  // };
 
   mainDisplay.add(mod).link(splashNode);
-
-  // var emitQuery = function(){
-  //   eventHandler.emit('startQuery');
-  // }
 
 
   eventHandler.on('loadmap', function(category){
@@ -79,7 +70,9 @@ define(function(require, exports, module) {
     setTimeout(function(){
       swap();
     }, 500)
-  })
+  });
+
+  eventHandler.on('swapBack', swapBack);
 
 
 });
