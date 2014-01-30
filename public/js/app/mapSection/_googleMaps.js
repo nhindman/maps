@@ -385,8 +385,8 @@ define(function(require, exports, module){
     showRoute = function(e){
       var lat = allMarkers[e.id].data.lat;
       var lng = allMarkers[e.id].data.long;
-      calcRoute(lat, lng, allMarkers[e.id].data.name);
       google.maps.event.clearInstanceListeners(map);
+      calcRoute(lat, lng, allMarkers[e.id].data.name);
     };
 
     showDirections = function(directions, name){
