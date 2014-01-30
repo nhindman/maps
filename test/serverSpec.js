@@ -23,16 +23,11 @@ describe('GET /nekothedog', function() {
   })
 })
 
-describe('GET /points', function() {
-  it("should create a new org with valid privileges and input with status 201", function(done) {
-    request(app)
-      .get("/points/")
-      .send({ lat: 37.783594, long:  -122.408904 })
-      .expect(201)
-      .end(function(err, res) {
-        console.log(res);
-        res.body.should.include("response");
-        done();
-      });
-  });
-});
+// describe('GET /points/', function() {
+//   it("should return a JSON object", function(done) {
+//     request(app)
+//       .get("/points/")
+//       .expect('Content-Type', /json/)
+//       .expect(200, done);
+//   })
+// })
