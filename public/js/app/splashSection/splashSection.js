@@ -239,7 +239,7 @@ define(function(require, exports, module){
     }
 
     var removeSpinner = function(){
-      splashNode.get().splice(splashNode.get().indexOf(spinner));
+      splashNode.get().splice(splashNode.get().indexOf(spinner), 1);
     };
 
 
