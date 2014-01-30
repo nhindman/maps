@@ -194,7 +194,6 @@ define(function(require, exports, module){
       slideUpSplashButtons();
       addSpinner();
       var vent = !mapExists ? 'loadmap' : targetCategory === previousCategory ? 'swap' : 'switchCategory';
-      console.log(vent);
       if(vent === 'loadmap'){
         setTimeout(function(){
           eventHandler.emit(vent);

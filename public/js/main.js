@@ -54,7 +54,9 @@ define(function(require, exports, module) {
    };
 
   var swapBack = function(){
+    // eventHandler.emit('hideCards');
     scrollmod.setTransform(Matrix.translate(0, window.innerHeight, 60), {duration: 400, curve: 'easeOut'}, secondSwapBack);
+    eventHandler.emit('slideUpHeader');
   };
 
   var secondSwapBack = function(){

@@ -109,6 +109,10 @@ define(function(require, exports, module){
       }
     };
 
+    eventHandler.on('fetchMarkers', function(){
+      eventHandler.emit('returnMarkers', allMarkers);
+    });
+
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
         boundMarkers[highlightedID].marker.setOptions({
