@@ -2,7 +2,7 @@ var request = require('supertest'),
     config      = require('../config.js'),
     express     = require('express'),
     url         = require('url'),
-    app      = require('../server');
+    app         = require('../server');
     foursquare  = require('node-foursquare-venues')(config.fourSquare.clientId, config.fourSquare.clientSecret);
 
 describe('GET /index.html', function() {
