@@ -387,13 +387,13 @@ define(function(require, exports, module){
     // EVENT LISTENERS //
     /////////////////////
 
-    eventHandler.on('addCard',    addCard);
-    eventHandler.on('removeCard', removeCard);
-    eventHandler.on('focusCard',  focusCard);
-    eventHandler.on('hideCards',  hideCards);
-    eventHandler.on('showCards',  showCards);
+    eventHandler.on('addCard',        addCard);
+    eventHandler.on('removeCard',     removeCard);
+    eventHandler.on('focusCard',      focusCard);
+    eventHandler.on('hideCards',      hideCards);
+    eventHandler.on('showCards',      showCards);
     eventHandler.on('removeAllCards', removeAllCards);
-    eventHandler.on('returnMarkers', returnMarkers);
+    eventHandler.on('returnMarkers',  returnMarkers);
 
 
     /////////////////////////////////////////////

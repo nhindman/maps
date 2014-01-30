@@ -176,9 +176,9 @@ define(function(require, exports, module){
       });
       ballModifier = new Modifier({
         transform: Matrix.translate(0,-400,0),
-        origin: [0.5, 0.5]
+        origin: [0.5, 0.78]
       });
-      ballModifier.setTransform(Matrix.translate(0,window.innerWidth*0.28,0), {
+      ballModifier.setTransform(Matrix.identity, {
         method: 'wall',
         period: 500,
         dampingRatio: .1
