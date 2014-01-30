@@ -222,11 +222,6 @@ define(function(require, exports, module){
           nodeSurface = node.object;
           nodeSurface.setOptions({ properties : { 'visibility' : 'hidden' }});
 
-          // retrieve new allMarkers if the current allMarkers is outdated
-          if(!allMarkers[node.id]){
-            eventHandler.emit('fetchMarkers');
-          }
-
           // New surface for larger card.
           var bigSize = (window.innerWidth * 0.8 > 400) ? [350, 450] : [window.innerWidth * 0.8, window.innerHeight * 0.8];
           newNode = new Surface({
@@ -379,9 +374,6 @@ define(function(require, exports, module){
       }
     };
 
-    var returnMarkers = function(markers){
-      allMarkers = markers;
-    }
 
     /////////////////////
     // EVENT LISTENERS //
@@ -393,7 +385,6 @@ define(function(require, exports, module){
     eventHandler.on('hideCards',      hideCards);
     eventHandler.on('showCards',      showCards);
     eventHandler.on('removeAllCards', removeAllCards);
-    eventHandler.on('returnMarkers',  returnMarkers);
 
 
     /////////////////////////////////////////////

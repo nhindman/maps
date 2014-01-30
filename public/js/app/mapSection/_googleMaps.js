@@ -109,10 +109,6 @@ define(function(require, exports, module){
       }
     };
 
-    eventHandler.on('fetchMarkers', function(){
-      eventHandler.emit('returnMarkers', allMarkers);
-    });
-
     eventHandler.on('focus', function(id) {
       if(boundMarkers[highlightedID]){
         boundMarkers[highlightedID].marker.setOptions({
@@ -214,8 +210,13 @@ define(function(require, exports, module){
 
     var switchCategory = function(){
       toggleMarkers(null);
-      allMarkers = {};
-      boundMarkers = {};
+      var ID;
+      for(ID in allMarkers){
+        delete allMarkers[ID];
+      }
+      for(ID in boundMarkers){
+        delete boundMarkers[ID];
+      }
       fetchData();
       eventHandler.emit('removeAllCards');
     };
